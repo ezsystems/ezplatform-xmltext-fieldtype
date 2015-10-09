@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File containing the eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5 class.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.

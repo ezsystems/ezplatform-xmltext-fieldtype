@@ -1,14 +1,14 @@
 <?php
 
 /**
- * File containing the LegacyStorageTest for XmlText FieldType.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\Core\FieldType\Tests\XmlText\Gateway;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Gateway;
 
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;

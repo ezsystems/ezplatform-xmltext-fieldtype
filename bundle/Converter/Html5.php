@@ -1,14 +1,14 @@
 <?php
 
 /**
- * File containing the Html5 class.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Bundle\EzPublishCoreBundle\FieldType\XmlText\Converter;
+namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\Html5 as BaseHtml5Converter;
 use eZ\Publish\Core\MVC\ConfigResolverInterface;

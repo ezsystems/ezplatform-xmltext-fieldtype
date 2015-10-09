@@ -1,0 +1,6 @@
+system:
+    default:
+        field_templates:
+            - {template: 'EzSystemsEzPlatformXmlTextFieldTypeBundle::content_fields.html.twig', priority: 10}
+        fielddefinition_settings_templates:
+            - {template: 'EzSystemsEzPlatformXmlTextFieldTypeBundle::fielddefinition_settings.html.twig', priority: 10}

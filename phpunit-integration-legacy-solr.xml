@@ -1,0 +1,28 @@
+<?xml version = '1.0' encoding = 'utf-8'?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="./tests/bootstrap.php"
+         processIsolation="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         colors="true">
+    <php>
+        <env name="setupFactory" value="EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacySolrSetupFactory"/>
+        <env name="backendVersion" value="5"/>
+        <env name="fixtureDir" value="Solr"/>
+        <env name="CORES_SETUP" value="dedicated"/>
+    </php>
+    <testsuites>
+        <testsuite name="eZ\Publish\API\Repository">
+            <file>./tests/lib/XmlTextAPIIntegrationTest.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./bundle</directory>
+            <directory>./lib</directory>
+            <directory>./vendor</directory>
+        </whitelist>
+    </filter>
+</phpunit>

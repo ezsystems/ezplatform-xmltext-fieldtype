@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File containing the eZ\Publish\Core\FieldType\XmlText\Input\EzXml class.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.

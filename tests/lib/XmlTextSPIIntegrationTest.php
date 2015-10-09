@@ -1,15 +1,16 @@
 <?php
 
 /**
- * File contains: eZ\Publish\SPI\Tests\FieldType\XmlTextIntegrationTest class.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\SPI\Tests\FieldType;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests;
 
+use eZ\Publish\SPI\Tests\FieldType\BaseIntegrationTest;
 use eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter;
 use eZ\Publish\Core\FieldType;
 use eZ\Publish\Core\FieldType\FieldSettings;
@@ -38,7 +39,7 @@ use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\LegacyStorage as UrlGateway
  *
  * @group integration
  */
-class XmlTextIntegrationTest extends BaseIntegrationTest
+class XmlTextSPIIntegrationTest extends BaseIntegrationTest
 {
     /**
      * Get name of tested field type.

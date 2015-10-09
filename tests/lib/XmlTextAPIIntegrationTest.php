@@ -1,15 +1,16 @@
 <?php
 
 /**
- * File contains: eZ\Publish\API\Repository\Tests\FieldType\XmlTextIntegrationTest class.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\API\Repository\Tests\FieldType;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests;
 
+use eZ\Publish\API\Repository\Tests\FieldType\RelationSearchBaseIntegrationTest;
 use eZ\Publish\Core\FieldType\XmlText\Value as XmlTextValue;
 use eZ\Publish\Core\FieldType\XmlText\Type as XmlTextType;
 use eZ\Publish\API\Repository\Values\Content\Field;
@@ -23,7 +24,7 @@ use eZ\Publish\API\Repository\Values\Content\Content;
  * @group integration
  * @group field-type
  */
-class XmlTextIntegrationTest extends RelationSearchBaseIntegrationTest
+class XmlTexAPItIntegrationTest extends RelationSearchBaseIntegrationTest
 {
     /**
      * @var \DOMDocument
@@ -555,11 +556,12 @@ EOT
         $contentTypeService = $repository->getContentTypeService();
         $locationService = $repository->getLocationService();
 
-        // Create a folder for tests
-        $createStruct = $contentService->newContentCreateStruct(
-            $contentTypeService->loadContentTypeByIdentifier('folder'),
-            'eng-GB'
+        // Create test content type
+        $contentType = $this->createContentType(
+            $this->getValidFieldSettings(),
+            $this->getValidValidatorConfiguration()
         );
+        $createStruct = $contentService->newContentCreateStruct($contentType, 'eng-GB');
 
         $createStruct->setField('name', 'Folder Link');
         $draft = $contentService->createContent(
@@ -567,22 +569,19 @@ EOT
             array($locationService->newLocationCreateStruct(2))
         );
 
-        $folder = $contentService->publishVersion(
+        $target = $contentService->publishVersion(
             $draft->versionInfo
         );
 
-        $object_id = $folder->versionInfo->contentInfo->id;
-        $node_id = $folder->versionInfo->contentInfo->mainLocationId;
-        $remote_id = $folder->versionInfo->contentInfo->remoteId;
+        $object_id = $target->versionInfo->contentInfo->id;
+        $node_id = $target->versionInfo->contentInfo->mainLocationId;
+        $remote_id = $target->versionInfo->contentInfo->remoteId;
 
         // create value to be tested
-        $testStruct = $contentService->newContentCreateStruct(
-            $contentTypeService->loadContentTypeByIdentifier('article'),
-            'eng-GB'
-        );
-        $testStruct->setField('title', 'Article - test');
+        $testStruct = $contentService->newContentCreateStruct($contentType, 'eng-GB');
+        $testStruct->setField('name', 'Article - test');
         $testStruct->setField(
-            'intro',
+            'data',
             str_replace(
                 '[RemoteId]',
                 $remote_id,
@@ -595,14 +594,14 @@ EOT
         );
 
         $this->assertEquals(
-            $test->getField('intro')->value->xml->saveXML(),
+            $test->getField('data')->value->xml->saveXML(),
             str_replace('[ObjectId]', $object_id, $expected)
         );
     }
 
     protected function checkSearchEngineSupport()
     {
-        if (ltrim(get_class($this->getSetupFactory()), '\\') === 'eZ\\Publish\\API\\Repository\\Tests\\SetupFactory\\Legacy') {
+        if (ltrim(get_class($this->getSetupFactory()), '\\') === 'EzSystems\\EzPlatformXmlTextFieldType\\Tests\\SetupFactory\\LegacySetupFactory') {
             $this->markTestSkipped(
                 "'ezxmltext' field type is not searchable with Legacy Search Engine"
             );

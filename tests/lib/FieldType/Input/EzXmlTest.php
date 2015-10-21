@@ -1,14 +1,14 @@
 <?php
 
 /**
- * File containing the XmlText EzXml test.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\Core\FieldType\Tests\XmlText\Input;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Input;
 
 use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
 use PHPUnit_Framework_TestCase;

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This file is part of the eZ Publish Kernel package.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\Core\MVC\Symfony\Templating\Twig\Extension;
+namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Templating\Twig\Extension;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\Html5 as Html5Converter;
 use Twig_Extension;
@@ -45,7 +45,7 @@ class XmlTextExtension extends Twig_Extension
     /**
      * Implements the "xmltext_to_html5" filter.
      *
-     * @param string $xmlData
+     * @param \DOMDocument $xmlData
      *
      * @return string
      */

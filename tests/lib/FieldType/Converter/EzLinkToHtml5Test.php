@@ -1,14 +1,14 @@
 <?php
 
 /**
- * File containing the EzLinkToHtml5 EzXml test.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\Core\FieldType\Tests\XmlText\Converter;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5;
 use PHPUnit_Framework_TestCase;

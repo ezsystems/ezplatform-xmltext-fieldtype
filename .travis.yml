@@ -1,0 +1,27 @@
+language: php
+
+matrix:
+    include:
+        - php: 5.4
+          env: TEST_CONFIG="phpunit.xml"
+        - php: 5.5
+          env: TEST_CONFIG="phpunit-integration-legacy.xml"
+        - php: 5.6
+          env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CONFS="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
+
+# test only master (+ Pull requests)
+branches:
+    only:
+        - master
+
+before_script:
+#    - composer selfupdate
+    - curl -sS https://getcomposer.org/installer | php
+    - php -d memory_limit=-1 composer.phar install --prefer-dist
+    - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
+
+script:
+    - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
+
+notifications:
+    email: false

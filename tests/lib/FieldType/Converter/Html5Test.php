@@ -1,14 +1,14 @@
 <?php
 
 /**
- * File containing the Html5 converter test.
+ * This file is part of the eZ Platform XmlText Field Type package.
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  *
  * @version //autogentag//
  */
-namespace eZ\Publish\Core\FieldType\Tests\XmlText\Converter;
+namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
@@ -31,7 +31,7 @@ class Html5Test extends PHPUnit_Framework_TestCase
             return $this->file;
         }
 
-        $file = __DIR__ . '/../../../XmlText/Input/Resources/stylesheets/eZXml2Html5_core.xsl';
+        $file = __DIR__ . '/../../../../lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5_core.xsl';
         if (!file_exists($file)) {
             throw new \InvalidArgumentException('Could not find: ' . $file);
         }

@@ -125,7 +125,7 @@ class Html5 implements Converter
 
             $newEl = $xslDoc->createElement('xsl:import');
             $hrefAttr = $xslDoc->createAttribute('href');
-            $hrefAttr->value = $stylesheet;
+            $hrefAttr->value = str_replace('\\', '/', $stylesheet);
             $newEl->appendChild($hrefAttr);
             $xslDoc->documentElement->insertBefore($newEl, $insertBeforeEl);
         }

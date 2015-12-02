@@ -16,7 +16,7 @@
     "phpunit/phpunit": "~4.7",
     "matthiasnoback/symfony-dependency-injection-test": "0.*",
     "zendframework/zend-code": "~2.4.3",
-    "ezsystems/ezplatform-solr-search-engine": "~1.0.0@dev"
+    "ezsystems/ezplatform-solr-search-engine": "^1.0"
   },
   "autoload": {
     "psr-4": {

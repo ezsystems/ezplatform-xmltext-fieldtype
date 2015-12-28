@@ -39,6 +39,13 @@
   <xs:complexType name="header" mixed="true">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:group ref="commonInlineElements"/>
+      <xs:element name="line">
+        <xs:complexType mixed="true">
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="commonInlineElements"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
     </xs:choice>
     <xs:attributeGroup ref="align"/>
     <xs:attribute name="anchor_name" type="xs:string"/>

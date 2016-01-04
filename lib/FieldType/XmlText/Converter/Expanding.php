@@ -50,18 +50,9 @@ class Expanding implements Converter
 
     public function convert(DOMDocument $document)
     {
-        // First mark temporary paragraphs by checking the namespace as an attribute.
-        // Reason: as namespace on an element is inherited for all children, it is unusable
-        // in XSL transformation.
-        /** @var \DOMElement $paragraph */
-        foreach ($document->getElementsByTagName('paragraph') as $paragraph) {
-            if ($paragraph->hasAttribute('xmlns:tmp')) {
-                $paragraph->setAttribute('ez-temporary', 1);
-            }
-        }
-
+        $this->markTemporaryParagraphs($document);
         $xpath = new DOMXPath($document);
-        $containedExpression = '//' . implode('|//', array_keys($this->containmentMap));
+        $containedExpression = $this->getContainmentMapXPathExpression(true);
         // Select all paragraphs containing elements that need expansion,
         // except temporary paragraphs
         $xpathExpression = "//paragraph[not(@ez-temporary=1) and ($containedExpression)]";
@@ -82,6 +73,98 @@ class Expanding implements Converter
                 $this->expandParagraph($document, $paragraph);
             }
         }
+    }
+
+    /**
+     * Marks temporary paragraph with the `ez-temporary` attribute. Those
+     * paragraph are simply ignored when generating the HTML5 code of the field.
+     *
+     * @param \DOMDocument $document
+     */
+    private function markTemporaryParagraphs($document)
+    {
+        /** @var \DOMElement $paragraph */
+        foreach ($document->getElementsByTagName('paragraph') as $paragraph) {
+            if ($this->isTemporary($paragraph)) {
+                $paragraph->setAttribute('ez-temporary', 1);
+            }
+        }
+    }
+
+    /**
+     * Generates an XPath expression to search for the elements referenced in
+     * the containment map. Depending on the `global` value, the generated
+     * expression search for the elements in the whole document or only as
+     * descendant.
+     *
+     * @param bool $global
+     * @return string
+     */
+    private function getContainmentMapXPathExpression($global)
+    {
+        $axis = $global ? '//' : '';
+        return $axis . implode('|' . $axis, array_keys($this->containmentMap));
+    }
+
+    /**
+     * Checks whether a paragraph can be considered as temporary and can then be
+     * ignored later.
+     *
+     * @param \DOMElement $paragraph
+     * @return bool
+     */
+    private function isTemporary(DOMElement $paragraph) {
+
+        return (
+            $paragraph->hasAttribute('xmlns:tmp')
+            && (
+                $this->containsBlock($paragraph)
+                || $this->isChildOfListItem($paragraph)
+                || $this->isEmpty($paragraph)
+            )
+        );
+    }
+
+    /**
+     * Checks whether the paragraph is empty.
+     *
+     * @param \DOMElement $paragraph
+     * @return bool
+     */
+    private function isEmpty(DOMElement $paragraph)
+    {
+        return ($paragraph->childNodes->length === 0);
+    }
+
+    /**
+     * Checks whether the paragraph is a child of a list item element.
+     *
+     * @param \DOMElement $paragraph
+     * @return bool
+     */
+    private function isChildOfListItem(DOMElement $paragraph)
+    {
+        return ($paragraph->parentNode->localName === 'li');
+    }
+
+    /**
+     * Check whether the paragraph contains a block element. The block elements
+     * are listed in the containment map. In addition, the custom tags can also
+     * be a block element. This is detected by checking if the paragraph
+     * contains a `custom` element which also contains a `paragraph`.
+     *
+     * @param \DOMElement $paragraph
+     * @return bool
+     */
+    private function containsBlock(DOMElement $paragraph)
+    {
+        $xpath = new DOMXPath($paragraph->ownerDocument);
+        $containedExpression = $this->getContainmentMapXPathExpression(false);
+
+        return (
+            $xpath->query($containedExpression, $paragraph)->length !== 0
+            || $xpath->query('custom/paragraph', $paragraph)->length !== 0
+        );
     }
 
     /**

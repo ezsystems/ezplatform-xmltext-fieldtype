@@ -6,3 +6,11 @@ services:
         class: %ezpublish_rest.field_type_processor.ezxmltext.class%
         tags:
             - { name: ezpublish_rest.field_type_processor, alias: ezxmltext }
+
+    ezxmltext.command.convert_to_richtexst:
+        class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
+        arguments:
+            - "@ezpublish.api.storage_engine.legacy.dbhandler"
+            - "@?logger"
+        tags:
+            -  { name: console.command }

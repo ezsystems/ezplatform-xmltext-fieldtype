@@ -16,7 +16,7 @@ branches:
 
 before_script:
 #    - composer selfupdate
-    - curl -sS https://getcomposer.org/installer | php
+    - curl -sS https://getcomposer.org/installer | php && cp bin/.travis/composer-auth.json ~/.composer/auth.json
     - php -d memory_limit=-1 composer.phar install --prefer-dist
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 

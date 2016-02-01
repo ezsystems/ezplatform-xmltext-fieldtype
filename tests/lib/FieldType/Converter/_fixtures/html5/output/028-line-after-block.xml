@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://ez.no/namespaces/ezpublish5/xhtml5">
+  <ol>
+    <li>Here is the list<ol><li>Item 1</li></ol>Please no br</li>
+  </ol>
+</section>

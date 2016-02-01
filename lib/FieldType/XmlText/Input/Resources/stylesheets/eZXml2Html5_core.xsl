@@ -47,10 +47,17 @@
         </p>
     </xsl:template>
 
+    <!--
+        <line> should be transformed to a <br /> only if it is right after
+        another <line> element, in the others case, it follows a "block" element,
+        then the <br /> should not be generated, see https://jira.ez.no/browse/EZP-25172
+    -->
+    <xsl:template match="line[local-name(preceding-sibling::*[1]) = 'line']">
+        <br />
+        <xsl:apply-templates/>
+    </xsl:template>
+
     <xsl:template match="line">
-        <xsl:if test="count(preceding-sibling::*) &gt; 0">
-            <br/>
-        </xsl:if>
         <xsl:apply-templates/>
     </xsl:template>
 

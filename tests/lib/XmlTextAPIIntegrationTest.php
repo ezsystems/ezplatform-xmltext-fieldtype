@@ -10,7 +10,8 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests;
 
-use eZ\Publish\API\Repository\Tests\FieldType\RelationSearchBaseIntegrationTest;
+use eZ\Publish\API\Repository\Tests\FieldType\RelationSearchBaseIntegrationTestTrait;
+use eZ\Publish\API\Repository\Tests\FieldType\SearchBaseIntegrationTest;
 use eZ\Publish\Core\FieldType\XmlText\Value as XmlTextValue;
 use eZ\Publish\Core\FieldType\XmlText\Type as XmlTextType;
 use eZ\Publish\API\Repository\Values\Content\Field;
@@ -24,8 +25,10 @@ use eZ\Publish\API\Repository\Values\Content\Content;
  * @group integration
  * @group field-type
  */
-class XmlTexAPItIntegrationTest extends RelationSearchBaseIntegrationTest
+class XmlTexAPItIntegrationTest extends SearchBaseIntegrationTest
 {
+    use RelationSearchBaseIntegrationTestTrait;
+
     /**
      * @var \DOMDocument
      */

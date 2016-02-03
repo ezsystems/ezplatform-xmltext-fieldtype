@@ -130,10 +130,10 @@ EOT
             $this->db->quoteIdentifier('data_type_string'),
             $updateQuery->bindValue('ezrichtext', null, PDO::PARAM_STR)
         );
+        // was tagPreset in ezxmltext, unused in RichText
         $updateQuery->set(
             $this->db->quoteIdentifier('data_text2'),
-            // TODO maybe null and not empty string
-            $updateQuery->bindValue('', null, PDO::PARAM_STR)
+            $updateQuery->bindValue(null, null, PDO::PARAM_STR)
         );
         $updateQuery->where(
             $updateQuery->expr->eq(

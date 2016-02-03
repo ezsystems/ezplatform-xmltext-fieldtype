@@ -77,7 +77,14 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ezxmltext:convert-to-richtext')
-            ->setDescription('Converts XmlText fields from eZ Publish Platform to RichText fields');
+            ->setDescription( <<< EOT
+Converts XmlText fields from eZ Publish Platform to RichText fields.
+
+== WARNING ==
+
+This is a non-finalized work in progress. ALWAYS make sure you have a restorable backup of your database before using it.
+EOT
+);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

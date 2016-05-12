@@ -108,7 +108,7 @@ class XmlTextTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             array(),
             $validationResult,
-            'validateFieldSettings() did consider the input settings invalid, which should be valid: '
+            'validateFieldSettings() considered the input settings invalid, while they should be valid: '
         );
 
     }
@@ -130,7 +130,7 @@ class XmlTextTest extends PHPUnit_Framework_TestCase
         $this->assertNotEquals(
             array(),
             $validationResult,
-            'validateFieldSettings() did consider the input settings valid, which should be invalid.'
+            'validateFieldSettings() considered the input settings valid, while they should be invalid.'
         );
 
         foreach ($validationResult as $actualResultElement) {

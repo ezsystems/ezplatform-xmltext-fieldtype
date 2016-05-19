@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/"
+           xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"
+           xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/">
+    <custom name="factbox" custom:title="factbox" custom:align="left">
+        <section>
+            <header>header</header>
+            <paragraph>paragraph</paragraph>
+        </section>
+    </custom>
+</paragraph>

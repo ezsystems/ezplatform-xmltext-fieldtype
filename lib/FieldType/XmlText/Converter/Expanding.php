@@ -164,6 +164,7 @@ class Expanding implements Converter
         return (
             $xpath->query($containedExpression, $paragraph)->length !== 0
             || $xpath->query('custom/paragraph', $paragraph)->length !== 0
+            || $xpath->query('custom/section', $paragraph)->length !== 0
         );
     }
 

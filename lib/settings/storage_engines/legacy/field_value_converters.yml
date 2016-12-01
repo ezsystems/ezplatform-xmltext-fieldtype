@@ -5,6 +5,6 @@ services:
     # Note: converter services tagged with 'ezpublish.storageEngine.legacy.converter' are
     # registered to this one using compilation pass and factory
     ezpublish.fieldType.ezxmltext.converter:
-        class: %ezpublish.fieldType.ezxmltext.converter.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.class%"
         tags:
             - {name: ezpublish.storageEngine.legacy.converter, alias: ezxmltext, lazy: true, callback: '::create'}

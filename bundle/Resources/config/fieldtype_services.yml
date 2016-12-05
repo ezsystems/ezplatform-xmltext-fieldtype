@@ -1,6 +1,6 @@
 parameters:
     ezpublish.fieldType.ezxmltext.converter.html5.class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Converter\Html5
-    ezpublish.fieldType.ezxmltext.converter.html5.resources: %kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5.xsl
+    ezpublish.fieldType.ezxmltext.converter.html5.resources: "%kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5.xsl"
     ezpublish.fieldType.ezxmltext.converter.embedToHtml5.class: eZ\Publish\Core\FieldType\XmlText\Converter\EmbedToHtml5
     ezpublish.fieldType.ezxmlText.converter.embedToHtml5.excludedAttributes: [view, node_id, object_id]
     ezpublish.fieldType.ezxmltext.converter.ezLinkToHtml5.class: eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5
@@ -9,37 +9,37 @@ parameters:
 
 services:
     ezpublish.fieldType.ezxmltext.converter.html5:
-        class: %ezpublish.fieldType.ezxmltext.converter.html5.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.html5.class%"
         arguments:
-            - %ezpublish.fieldType.ezxmltext.converter.html5.resources%
-            - @ezpublish.config.resolver
+            - "%ezpublish.fieldType.ezxmltext.converter.html5.resources%"
+            - "@ezpublish.config.resolver"
 
     ezpublish.fieldType.ezxmltext.converter.expanding:
-        class: %ezpublish.fieldType.ezxmltext.converter.expanding.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.expanding.class%"
         tags:
             - { name: ezpublish.ezxml.converter, priority: 32 }
 
     ezpublish.fieldType.ezxmltext.converter.embedLinking:
-        class: %ezpublish.fieldType.ezxmltext.converter.embedLinking.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.embedLinking.class%"
         tags:
             - { name: ezpublish.ezxml.converter, priority: 24 }
 
     ezpublish.fieldType.ezxmltext.converter.ezLinkToHtml5:
-        class: %ezpublish.fieldType.ezxmltext.converter.ezLinkToHtml5.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.ezLinkToHtml5.class%"
         arguments:
-            - @ezpublish.api.service.location
-            - @ezpublish.api.service.content
-            - @ezpublish.urlalias_router
-            - @?logger
+            - "@ezpublish.api.service.location"
+            - "@ezpublish.api.service.content"
+            - "@ezpublish.urlalias_router"
+            - "@?logger"
         tags:
             - { name: ezpublish.ezxml.converter, priority: 16 }
 
     ezpublish.fieldType.ezxmltext.converter.embedToHtml5:
-        class: %ezpublish.fieldType.ezxmltext.converter.embedToHtml5.class%
+        class: "%ezpublish.fieldType.ezxmltext.converter.embedToHtml5.class%"
         arguments:
-            - @fragment.handler
-            - @ezpublish.api.repository
-            - %ezpublish.fieldType.ezxmlText.converter.embedToHtml5.excludedAttributes%
-            - @?logger
+            - "@fragment.handler"
+            - "@ezpublish.api.repository"
+            - "%ezpublish.fieldType.ezxmlText.converter.embedToHtml5.excludedAttributes%"
+            - "@?logger"
         tags:
             - { name: ezpublish.ezxml.converter, priority: 8 }

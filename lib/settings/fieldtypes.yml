@@ -3,7 +3,7 @@ parameters:
 
 services:
     ezpublish.fieldType.ezxmltext:
-        class: %ezpublish.fieldType.ezxmltext.class%
+        class: "%ezpublish.fieldType.ezxmltext.class%"
         parent: ezpublish.fieldType
         tags:
             - {name: ezpublish.fieldType, alias: ezxmltext}

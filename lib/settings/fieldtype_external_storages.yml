@@ -3,6 +3,6 @@ parameters:
 
 services:
     ezpublish.fieldType.ezxmltext.externalStorage:
-        class: %ezpublish.fieldType.ezxmltext.externalStorage.class%
+        class: "%ezpublish.fieldType.ezxmltext.externalStorage.class%"
         tags:
             - {name: ezpublish.fieldType.externalStorageHandler, alias: ezxmltext}

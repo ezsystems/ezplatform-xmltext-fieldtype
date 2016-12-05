@@ -3,6 +3,6 @@ parameters:
 
 services:
     ezpublish.fieldType.indexable.ezxmltext:
-        class: %ezpublish.fieldType.indexable.ezxmltext.class%
+        class: "%ezpublish.fieldType.indexable.ezxmltext.class%"
         tags:
             - {name: ezpublish.fieldType.indexable, alias: ezxmltext}

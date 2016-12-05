@@ -3,7 +3,7 @@ parameters:
 
 services:
     ezpublish.twig.extension.xml_text:
-        class: %ezpublish.twig.extension.xml_text.class%
-        arguments: [@ezpublish.fieldtype.ezxmltext.converter.html5]
+        class: "%ezpublish.twig.extension.xml_text.class%"
+        arguments: ["@ezpublish.fieldtype.ezxmltext.converter.html5"]
         tags:
             - { name: twig.extension }

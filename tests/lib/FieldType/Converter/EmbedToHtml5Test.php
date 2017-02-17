@@ -133,7 +133,7 @@ url="http://ez.no"
                     'noLayout' => true,
                     'linkParameters' => array(
                         'href' => 'http://ez.no',
-                        'resourceType' => null,
+                        'resourceType' => 'URL',
                         'resourceId' => null,
                         'wrapped' => false,
                     ),
@@ -212,7 +212,7 @@ url="http://ez.no"
                     ),
                     'linkParameters' => array(
                         'href' => 'http://ez.no',
-                        'resourceType' => null,
+                        'resourceType' => 'URL',
                         'resourceId' => null,
                         'wrapped' => false,
                     ),
@@ -237,7 +237,6 @@ ezlegacytmp-embed-link-target="target"
 ezlegacytmp-embed-link-title="title"
 ezlegacytmp-embed-link-id="id"
 ezlegacytmp-embed-link-class="class"
-ezlegacytmp-embed-link-url_id="333"
 />
 </paragraph>
 </section>',
@@ -259,7 +258,7 @@ ezlegacytmp-embed-link-url_id="333"
                         'id' => 'id',
                         'class' => 'class',
                         'resourceType' => 'URL',
-                        'resourceId' => '333',
+                        'resourceId' => null,
                         'wrapped' => false,
                     ),
                 ),
@@ -327,7 +326,6 @@ node_id="114"
 size="medium"
 view="embed"
 url="http://ez.no"
-ezlegacytmp-embed-link-url_id="111"
 ezlegacytmp-embed-link-node_id="222"
 ezlegacytmp-embed-link-object_id="333"
 />
@@ -372,7 +370,6 @@ ezlegacytmp-embed-link-target="target"
 ezlegacytmp-embed-link-title="title"
 ezlegacytmp-embed-link-id="id"
 ezlegacytmp-embed-link-class="class"
-ezlegacytmp-embed-link-url_id="333"
 ezlegacytmp-embed-link-anchor_name="anchovy"
 />
 </link>
@@ -395,7 +392,7 @@ ezlegacytmp-embed-link-anchor_name="anchovy"
                         'id' => 'id',
                         'class' => 'class',
                         'resourceType' => 'URL',
-                        'resourceId' => '333',
+                        'resourceId' => null,
                         'resourceFragmentIdentifier' => 'anchovy',
                         'wrapped' => false,
                     ),
@@ -451,7 +448,6 @@ ezlegacytmp-embed-link-target="target"
 ezlegacytmp-embed-link-title="title"
 ezlegacytmp-embed-link-id="id"
 ezlegacytmp-embed-link-class="class"
-ezlegacytmp-embed-link-url_id="111"
 ezlegacytmp-embed-link-node_id="222"
 />
 </paragraph>
@@ -501,7 +497,6 @@ ezlegacytmp-embed-link-target="target"
 ezlegacytmp-embed-link-title="title"
 ezlegacytmp-embed-link-id="id"
 ezlegacytmp-embed-link-class="class"
-ezlegacytmp-embed-link-url_id="111"
 ezlegacytmp-embed-link-node_id="222"
 />
 and that was embedded
@@ -553,7 +548,6 @@ ezlegacytmp-embed-link-target="target"
 ezlegacytmp-embed-link-title="title"
 ezlegacytmp-embed-link-id="id"
 ezlegacytmp-embed-link-class="class"
-ezlegacytmp-embed-link-url_id="111"
 ezlegacytmp-embed-link-node_id="222"
 />
 </link>
@@ -996,12 +990,6 @@ ezlegacytmp-embed-link-node_id="222"
         $logger->expects($this->at(0))
             ->method('error')
             ->with(
-                'Could not resolve XmlText embed link resource type and ID'
-            );
-
-        $logger->expects($this->at(1))
-            ->method('error')
-            ->with(
                 'While generating embed for xmltext, could not locate Content object with ID 42'
             );
 
@@ -1068,12 +1056,6 @@ ezlegacytmp-embed-link-node_id="222"
             );
 
         $logger->expects($this->at(0))
-            ->method('error')
-            ->with(
-                'Could not resolve XmlText embed link resource type and ID'
-            );
-
-        $logger->expects($this->at(1))
             ->method('error')
             ->with(
                 'While generating embed for xmltext, could not locate Location with ID 42'

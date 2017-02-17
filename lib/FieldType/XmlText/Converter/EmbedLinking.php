@@ -90,10 +90,6 @@ class EmbedLinking implements Converter
         if ($link->hasAttribute('url')) {
             $embed->setAttribute(static::TEMP_PREFIX . 'url', $link->getAttribute('url'));
         }
-
-        if ($link->hasAttribute('url_id')) {
-            $embed->setAttribute(static::TEMP_PREFIX . 'url_id', $link->getAttribute('url_id'));
-        }
     }
 
     /**

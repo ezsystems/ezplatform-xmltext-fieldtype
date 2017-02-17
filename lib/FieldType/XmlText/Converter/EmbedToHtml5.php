@@ -239,7 +239,7 @@ class EmbedToHtml5 implements Converter
         $id = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'id');
         $class = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'class');
         $resourceFragmentIdentifier = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'anchor_name');
-        $resourceType = null;
+        $resourceType = static::LINK_RESOURCE_URL;
         $resourceId = null;
 
         if ($embed->hasAttribute(EmbedLinking::TEMP_PREFIX . 'object_id')) {
@@ -248,13 +248,6 @@ class EmbedToHtml5 implements Converter
         } elseif ($embed->hasAttribute(EmbedLinking::TEMP_PREFIX . 'node_id')) {
             $resourceType = static::LINK_RESOURCE_LOCATION;
             $resourceId = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'node_id');
-        } elseif ($embed->hasAttribute(EmbedLinking::TEMP_PREFIX . 'url_id')) {
-            $resourceType = static::LINK_RESOURCE_URL;
-            $resourceId = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'url_id');
-        } else {
-            $this->logger->error(
-                'Could not resolve XmlText embed link resource type and ID'
-            );
         }
 
         $parameters = array(

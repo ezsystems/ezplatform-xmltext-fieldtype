@@ -59,15 +59,7 @@ class Html5 implements Converter
     public function __construct($stylesheet, array $customStylesheets = array(), array $preConverters = array())
     {
         $this->stylesheet = $stylesheet;
-
-        // Grouping stylesheets by priority.
-        foreach ($customStylesheets as $stylesheet) {
-            if (!isset($this->customStylesheets[$stylesheet['priority']])) {
-                $this->customStylesheets[$stylesheet['priority']] = array();
-            }
-
-            $this->customStylesheets[$stylesheet['priority']][] = $stylesheet['path'];
-        }
+        $this->setCustomStylesheets($customStylesheets);
 
         foreach ($preConverters as $preConverter) {
             if (!$preConverter instanceof Converter) {
@@ -80,6 +72,27 @@ class Html5 implements Converter
         }
 
         $this->preConverters = $preConverters;
+    }
+
+    /**
+     * Sets the custom stylesheets grouped by priority.
+     *
+     * @param array $customStylesheets Array of XSL stylesheets. Each entry
+     * consists in a hash having "path" and "priority" keys.
+     */
+    public function setCustomStylesheets($customStylesheets)
+    {
+        $this->customStylesheets = [];
+        if (!$customStylesheets) {
+            return;
+        }
+        foreach ($customStylesheets as $stylesheet) {
+            if (!isset($this->customStylesheets[$stylesheet['priority']])) {
+                $this->customStylesheets[$stylesheet['priority']] = array();
+            }
+
+            $this->customStylesheets[$stylesheet['priority']][] = $stylesheet['path'];
+        }
     }
 
     /**

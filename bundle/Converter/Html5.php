@@ -15,6 +15,7 @@ use eZ\Publish\Core\MVC\ConfigResolverInterface;
 
 /**
  * Adds ConfigResolver awareness to the original Html5 converter.
+ * @deprecated Not in use anymore
  */
 class Html5 extends BaseHtml5Converter
 {

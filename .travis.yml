@@ -10,11 +10,13 @@ matrix:
           env: TEST_CONFIG="phpunit.xml"
         - php: 7.0
           env: TEST_CONFIG="phpunit.xml"
+        - php: 7.1
+          env: TEST_CONFIG="phpunit.xml"
         - php: 5.5
           env: TEST_CONFIG="phpunit-integration-legacy.xml"
         - php: 5.6
           env: TEST_CONFIG="phpunit-integration-legacy.xml"
-        - php: 7.0
+        - php: 7.1
           env: TEST_CONFIG="phpunit-integration-legacy.xml"
         - php: 5.6
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CONFS="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"

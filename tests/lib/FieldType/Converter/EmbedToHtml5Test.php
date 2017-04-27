@@ -632,13 +632,16 @@ ezlegacytmp-embed-link-node_id="222"
         $repository = $this
             ->getMockBuilder($repositoryClass)
             ->disableOriginalConstructor()
-            ->setMethods(
-                array_diff(
-                    get_class_methods($repositoryClass),
-                    array('sudo')
-                )
-            )
             ->getMock();
+
+        $repository->expects($this->any())
+            ->method('sudo')
+            ->with($this->anything())
+            ->will($this->returnCallback(
+                function ($callback) use ($repository) {
+                    return $callback($repository);
+                }
+            ));
 
         $repository->expects($this->any())
             ->method('getContentService')
@@ -685,7 +688,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $repository = $this->getMockRepository($contentService, null);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 1))
+            $repository->expects($this->at($index + 2))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
@@ -751,7 +754,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $repository = $this->getMockRepository(null, $locationService);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 1))
+            $repository->expects($this->at($index + 2))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
@@ -873,7 +876,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $repository = $this->getMockRepository($contentService, null);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 1))
+            $repository->expects($this->at($index + 2))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
@@ -920,13 +923,13 @@ ezlegacytmp-embed-link-node_id="222"
             ->will($this->returnValue($location));
 
         $repository = $this->getMockRepository(null, $locationService);
-        $repository->expects($this->at(1))
+        $repository->expects($this->at(2))
             ->method('canUser')
             ->with('content', 'read', $contentInfo, $location)
             ->will(
                 $this->returnValue(false)
             );
-        $repository->expects($this->at(2))
+        $repository->expects($this->at(3))
             ->method('canUser')
             ->with('content', 'view_embed', $contentInfo, $location)
             ->will(

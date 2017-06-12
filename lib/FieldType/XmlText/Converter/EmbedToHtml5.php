@@ -182,6 +182,9 @@ class EmbedToHtml5 implements Converter
                 // Remove empty embed
                 $embed->parentNode->removeChild($embed);
             } else {
+                while ($embed->hasChildNodes()) {
+                    $embed->removeChild($embed->firstChild);
+                }
                 $embed->appendChild($xmlDoc->createCDATASection($embedContent));
             }
         }

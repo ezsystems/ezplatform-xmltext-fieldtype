@@ -1081,4 +1081,105 @@ ezlegacytmp-embed-link-node_id="222"
 
         $this->assertEquals($outputDocument, $document);
     }
+
+    /**
+     * @param string $input
+     * @param string $output
+     * @param string $contentReplacement
+     * @param int    $contentId
+     *
+     * @dataProvider providerEmbedRemovesTextContent
+     */
+    public function testEmbedRemovesTextContent($input, $output, $contentReplacement, $contentId)
+    {
+        $status = APIVersionInfo::STATUS_DRAFT;
+        $permissionsMap = array(
+            array('content', 'read', true),
+            array('content', 'versionread', true),
+        );
+
+
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($input);
+
+        $fragmentHandler = $this->getMockFragmentHandler();
+        $contentService = $this->getMockContentService();
+
+        $versionInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\VersionInfo');
+        $versionInfo->expects($this->any())
+            ->method('__get')
+            ->with('status')
+            ->will($this->returnValue($status));
+
+        $content = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Content');
+        $content->expects($this->any())
+            ->method('getVersionInfo')
+            ->will($this->returnValue($versionInfo));
+
+        $contentService->expects($this->once())
+            ->method('loadContent')
+            ->with($this->equalTo($contentId))
+            ->will($this->returnValue($content));
+
+        $repository = $this->getMockRepository($contentService, null);
+        foreach ($permissionsMap as $index => $permissions) {
+            $repository->expects($this->at($index + 2))
+                ->method('canUser')
+                ->with(
+                    $permissions[0],
+                    $permissions[1],
+                    $content,
+                    null
+                )
+                ->will(
+                    $this->returnValue($permissions[2])
+                );
+        }
+
+        $fragmentHandler->expects($this->once())
+            ->method('render')
+            ->will($this->returnValue($contentReplacement));
+
+        $converter = new EmbedToHtml5(
+            $fragmentHandler,
+            $repository,
+            array('view', 'class', 'node_id', 'object_id'),
+            $this->getMock('Psr\\Log\\LoggerInterface')
+        );
+
+        $converter->convert($dom);
+
+        $outputDocument = new DOMDocument();
+        $outputDocument->loadXML($output);
+
+        $this->assertEquals($outputDocument, $dom);
+
+    }
+
+    public function providerEmbedRemovesTextContent()
+    {
+        $xmlFramework = '<?xml version="1.0" encoding="utf-8"?>
+<section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+<paragraph>eZ Publish</paragraph>
+<paragraph>
+%s
+</paragraph>
+</section>';
+
+        return array(
+            array(
+                sprintf($xmlFramework, '<embed-inline object_id="123">content to be removed</embed-inline>'),
+                sprintf($xmlFramework, '<embed-inline object_id="123">ContentReplacement</embed-inline>'),
+                'ContentReplacement',
+                123
+            ),
+            array(
+                sprintf($xmlFramework, '<embed object_id="789">Content to be removed</embed>'),
+                sprintf($xmlFramework, '<embed object_id="789">Other random content</embed>'),
+                'Other random content',
+                789
+            ),
+        );
+    }
 }

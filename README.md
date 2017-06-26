@@ -1,5 +1,10 @@
 # XmlText field type for eZ Platform
 
+[![Build Status](https://img.shields.io/travis/ezsystems/ezplatform-xmltext-fieldtype.svg?style=flat-square&branch=master)](https://travis-ci.org/ezsystems/ezplatform-xmltext-fieldtype)
+[![Downloads](https://img.shields.io/packagist/dt/ezsystems/ezplatform-xmltext-fieldtype.svg?style=flat-square)](https://packagist.org/packages/ezsystems/ezplatform-xmltext-fieldtype)
+[![Latest release](https://img.shields.io/github/release/ezsystems/ezplatform-xmltext-fieldtype.svg?style=flat-square)](https://github.com/ezsystems/ezplatform-xmltext-fieldtype/releases)
+[![License](https://img.shields.io/packagist/l/ezsystems/ezplatform-xmltext-fieldtype.svg?style=flat-square)](LICENSE)
+
 This is the XmlText field type for eZ Platform. It was extracted from the eZ Publish / Platform 5.x as it has been suceeded by docbook based [RichText](https://github.com/ezsystems/ezpublish-kernel/tree/master/eZ/Publish/Core/FieldType/RichText) field type.
 
 _Note: This Field Type supports editing via Platform UI v1, however only as raw (simplified) xml. There has currently not been any attempts at getting Online Editor from legacy extension to work with within Platform UI, to do that among other things someone would need to port the custom html to xml handler from oe extension to this field type. So this Field Type is mainly meant for use for migrating to RichText, see below._

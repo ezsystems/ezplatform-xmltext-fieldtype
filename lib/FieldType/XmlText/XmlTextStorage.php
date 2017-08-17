@@ -10,7 +10,7 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText;
 
-use eZ\Publish\Core\FieldType\GatewayBasedStorage;
+use eZ\Publish\SPI\FieldType\GatewayBasedStorage;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;
 
@@ -21,7 +21,7 @@ class XmlTextStorage extends GatewayBasedStorage
      */
     public function storeFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
-        $update = $this->getGateway($context)->storeFieldData($versionInfo, $field);
+        $update = $this->gateway->storeFieldData($versionInfo, $field);
 
         if ($update) {
             return true;
@@ -37,16 +37,13 @@ class XmlTextStorage extends GatewayBasedStorage
      */
     public function getFieldData(VersionInfo $versionInfo, Field $field, array $context)
     {
-        $this->getGateway($context)->getFieldData($field);
+        $this->gateway->getFieldData($field);
     }
 
     public function deleteFieldData(VersionInfo $versionInfo, array $fieldIds, array $context)
     {
-        /** @var \eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway $gateway */
-        $gateway = $this->getGateway($context);
-
         foreach ($fieldIds as $fieldId) {
-            $gateway->unlinkUrl($fieldId, $versionInfo->versionNo);
+            $this->gateway->unlinkUrl($fieldId, $versionInfo->versionNo);
         }
     }
 

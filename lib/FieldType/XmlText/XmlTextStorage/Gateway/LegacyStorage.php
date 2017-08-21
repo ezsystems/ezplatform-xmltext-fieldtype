@@ -15,50 +15,22 @@ use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;
+use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
 use DOMDocument;
 use PDO;
-use RuntimeException;
 
 class LegacyStorage extends Gateway
 {
+    /**
+     * @var \eZ\Publish\Core\Persistence\Database\DatabaseHandler
+     */
     protected $dbHandler;
 
-    /**
-     * Set database handler for this gateway.
-     *
-     * @param mixed $dbHandler
-     *
-     * @throws RuntimeException if $dbHandler is not an instance of
-     *         {@link \eZ\Publish\Core\Persistence\Database\DatabaseHandler}
-     */
-    public function setConnection($dbHandler)
+    public function __construct(DatabaseHandler $dbHandler, UrlGateway $urlGateway)
     {
-        // This obviously violates the Liskov substitution Principle, but with
-        // the given class design there is no sane other option. Actually the
-        // dbHandler *should* be passed to the constructor, and there should
-        // not be the need to post-inject it.
-        if (!$dbHandler instanceof DatabaseHandler) {
-            throw new RuntimeException('Invalid dbHandler passed');
-        }
+        parent::__construct($urlGateway);
 
-        $this->urlGateway->setConnection($dbHandler);
         $this->dbHandler = $dbHandler;
-    }
-
-    /**
-     * Returns the active connection.
-     *
-     * @throws RuntimeException if no connection has been set, yet.
-     *
-     * @return DatabaseHandler
-     */
-    protected function getConnection()
-    {
-        if ($this->dbHandler === null) {
-            throw new RuntimeException('Missing database connection.');
-        }
-
-        return $this->dbHandler;
     }
 
     /**
@@ -237,7 +209,7 @@ class LegacyStorage extends Gateway
 
         if (!empty($linksRemoteIds)) {
             /** @var $q \eZ\Publish\Core\Persistence\Database\SelectQuery */
-            $q = $this->getConnection()->createSelectQuery();
+            $q = $this->dbHandler->createSelectQuery();
             $q
                 ->select('id', 'remote_id')
                 ->from('ezcontentobject')

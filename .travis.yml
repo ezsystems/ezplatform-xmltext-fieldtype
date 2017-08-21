@@ -2,18 +2,12 @@ language: php
 
 matrix:
     include:
-        - php: 5.4
-          env: TEST_CONFIG="phpunit.xml"
-        - php: 5.5
-          env: TEST_CONFIG="phpunit.xml"
         - php: 5.6
           env: TEST_CONFIG="phpunit.xml"
         - php: 7.0
           env: TEST_CONFIG="phpunit.xml"
         - php: 7.1
           env: TEST_CONFIG="phpunit.xml"
-        - php: 5.5
-          env: TEST_CONFIG="phpunit-integration-legacy.xml"
         - php: 5.6
           env: TEST_CONFIG="phpunit-integration-legacy.xml"
         - php: 7.1

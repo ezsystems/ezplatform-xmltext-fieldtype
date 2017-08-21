@@ -66,8 +66,11 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
             $fieldType,
             new XmlTextConverter(),
             new FieldType\XmlText\XmlTextStorage(
-                array(
-                    'LegacyStorage' => new LegacyStorage(new UrlGateway()),
+                new LegacyStorage(
+                    $this->getDatabaseHandler(),
+                    new UrlGateway(
+                        $this->getDatabaseHandler()
+                    )
                 )
             )
         );

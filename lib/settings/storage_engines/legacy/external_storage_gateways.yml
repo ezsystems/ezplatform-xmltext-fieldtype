@@ -4,6 +4,6 @@ parameters:
 services:
     ezpublish.fieldType.ezxmltext.storage_gateway:
         class: "%ezpublish.fieldType.ezxmltext.storage_gateway.class%"
-        arguments: ["@ezpublish.fieldType.ezurl.storage_gateway"]
-        tags:
-            - {name: ezpublish.fieldType.externalStorageHandler.gateway, alias: ezxmltext, identifier: LegacyStorage}
+        arguments:
+            - "@ezpublish.api.storage_engine.legacy.dbhandler"
+            - "@ezpublish.fieldType.ezurl.storage_gateway"

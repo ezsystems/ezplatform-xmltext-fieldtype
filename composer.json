@@ -5,11 +5,10 @@
   "type": "ezplatform-bundle",
   "authors": [
     {
-      "name": "eZ Systems dev team",
-      "email": "dev-team@ez.no"
+      "name": "eZ dev-team & eZ Community",
+      "homepage": "https://github.com/ezsystems/ezplatform-xmltext-fieldtype/contributors"
     }
   ],
-  "minimum-stability": "alpha",
   "require": {
     "ezsystems/ezpublish-kernel": "^6.11@dev"
   },

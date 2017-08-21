@@ -12,6 +12,8 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedToHtml5;
 use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
+use eZ\Publish\Core\Repository\Values\Content\Location;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use PHPUnit_Framework_TestCase;
 use DOMDocument;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -705,7 +707,7 @@ ezlegacytmp-embed-link-node_id="222"
             ->method('render')
             ->with(
                 new ControllerReference(
-                    'ez_content:embedContent',
+                    'ez_content:embedAction',
                     array(
                         'contentId' => $contentId,
                         'viewType' => $view,
@@ -740,12 +742,8 @@ ezlegacytmp-embed-link-node_id="222"
         $fragmentHandler = $this->getMockFragmentHandler();
         $locationService = $this->getMockLocationService();
 
-        $contentInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\ContentInfo');
-        $location = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Location');
-        $location
-            ->expects($this->atLeastOnce())
-            ->method('getContentInfo')
-            ->will($this->returnValue($contentInfo));
+        $contentInfo = new ContentInfo(array('id' => 42));
+        $location = new Location(array('id' => $locationId, 'contentInfo' => $contentInfo));
 
         $locationService->expects($this->once())
             ->method('loadLocation')
@@ -771,9 +769,10 @@ ezlegacytmp-embed-link-node_id="222"
             ->method('render')
             ->with(
                 new ControllerReference(
-                    'ez_content:embedLocation',
+                    'ez_content:embedAction',
                     array(
-                        'locationId' => $locationId,
+                        'contentId' => $location->getContentInfo()->id,
+                        'locationId' => $location->id,
                         'viewType' => $view,
                         'layout' => false,
                         'params' => $parameters,

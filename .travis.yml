@@ -1,4 +1,13 @@
+# Use trusty for better performance (and avoiding mysql/postgres/solr gone issues on precise and container infra)
+dist: trusty
+sudo: required
+
 language: php
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
+
 
 matrix:
     include:
@@ -15,7 +24,7 @@ matrix:
         - php: 5.6
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CONFS="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
         - php: 7.0
-          env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CONFS="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
+          env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.0" CORES_SETUP="single" SOLR_CONFS="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
 
 # test only master (+ Pull requests)
 branches:
@@ -23,9 +32,13 @@ branches:
         - master
 
 before_script:
-#    - composer selfupdate
-    - curl -sS https://getcomposer.org/installer | php && cp bin/.travis/composer-auth.json ~/.composer/auth.json
-    - php -d memory_limit=-1 composer.phar install --prefer-dist
+    - phpenv config-rm xdebug.ini
+    # Setup GitHub key to avoid api rate limit (pure auth read only key, no rights, for use by ezsystems repos only!)
+    - composer config -g github-oauth.github.com "d0285ed5c8644f30547572ead2ed897431c1fc09"
+    # Avoid memory issues on composer install
+    - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+    - if [ "$COMPOSER_REQUIRE" != "" ] ; then composer require --no-update $COMPOSER_REQUIRE ; fi
+    - travis_retry composer update --prefer-dist --no-interaction
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 
 script:

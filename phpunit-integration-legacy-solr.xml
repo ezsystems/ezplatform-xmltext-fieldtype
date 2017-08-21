@@ -9,9 +9,11 @@
          colors="true">
     <php>
         <env name="setupFactory" value="EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacySolrSetupFactory"/>
-        <env name="backendVersion" value="5"/>
-        <env name="fixtureDir" value="Solr"/>
-        <env name="CORES_SETUP" value="dedicated"/>
+        <env name="backendVersion" value="5" />
+        <env name="fixtureDir" value="Solr" />
+        <env name="solrServer" value="http://localhost:8983/" />
+        <env name="CORES_SETUP" value="dedicated" />
+        <ini name="error_reporting" value="-1" />
     </php>
     <testsuites>
         <testsuite name="eZ\Publish\API\Repository">

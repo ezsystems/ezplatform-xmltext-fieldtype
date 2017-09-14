@@ -36,7 +36,7 @@ class XmlTextConverterPassTest extends AbstractCompilerPassTestCase
         $this->assertSame(1, count($calls));
         list($method, $arguments) = $calls[0];
         $this->assertSame('addPreConverter', $method);
-        $this->assertInstanceOf('Symfony\\Component\\DependencyInjection\\Reference', $arguments[0]);
+        $this->assertInstanceOf(Reference::class, $arguments[0]);
         $this->assertSame('foo.converter', (string)$arguments[0]);
     }
 
@@ -71,12 +71,9 @@ class XmlTextConverterPassTest extends AbstractCompilerPassTestCase
     public function testSortConverterIds()
     {
         $container = new ContainerBuilder();
-        $html5ConvertDef = $this->getMock(
-            'Symfony\\Component\\DependencyInjection\\Definition',
-            array(
-                'addMethodCall',
-            )
-        );
+        $html5ConvertDef = $this->getMockBuilder(Definition::class)
+            ->setMethods(['addMethodCall'])
+            ->getMock();
         $container->setDefinition('ezpublish.fieldType.ezxmltext.converter.html5', $html5ConvertDef);
 
         $preConverterDef1 = new Definition();

@@ -11,18 +11,26 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedToHtml5;
+use eZ\Publish\Core\Repository\LocationService;
+use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
 use eZ\Publish\Core\Repository\Values\Content\Location;
+use eZ\Publish\Core\Repository\ContentService;
+use eZ\Publish\API\Repository\Values\Content\Location as APILocation;
+use eZ\Publish\API\Repository\Values\Content\Content;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;
-use PHPUnit_Framework_TestCase;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests the EmbedToHtml5 Preconverter
  * Class EmbedToHtml5Test.
  */
-class EmbedToHtml5Test extends PHPUnit_Framework_TestCase
+class EmbedToHtml5Test extends TestCase
 {
     /**
      * @return array
@@ -589,9 +597,7 @@ ezlegacytmp-embed-link-node_id="222"
      */
     protected function getMockFragmentHandler()
     {
-        return $this->getMockBuilder('Symfony\\Component\\HttpKernel\\Fragment\\FragmentHandler')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(FragmentHandler::class);
     }
 
     /**
@@ -599,9 +605,7 @@ ezlegacytmp-embed-link-node_id="222"
      */
     protected function getMockContentService()
     {
-        return $this->getMockBuilder('eZ\\Publish\\Core\\Repository\\ContentService')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(ContentService::class);
     }
 
     /**
@@ -609,9 +613,7 @@ ezlegacytmp-embed-link-node_id="222"
      */
     protected function getMockLocationService()
     {
-        return $this->getMockBuilder('eZ\\Publish\\Core\\Repository\\LocationService')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(LocationService::class);
     }
 
     /**
@@ -619,7 +621,7 @@ ezlegacytmp-embed-link-node_id="222"
      */
     protected function getLoggerMock()
     {
-        return $this->getMock('Psr\\Log\\LoggerInterface');
+        return $this->createMock(LoggerInterface::class);
     }
 
     /**
@@ -630,11 +632,7 @@ ezlegacytmp-embed-link-node_id="222"
      */
     protected function getMockRepository($contentService, $locationService)
     {
-        $repositoryClass = 'eZ\\Publish\\Core\\Repository\\Repository';
-        $repository = $this
-            ->getMockBuilder($repositoryClass)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $repository = $this->createMock(Repository::class);
 
         $repository->expects($this->any())
             ->method('sudo')
@@ -672,13 +670,13 @@ ezlegacytmp-embed-link-node_id="222"
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
 
-        $versionInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\VersionInfo');
+        $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
             ->will($this->returnValue($status));
 
-        $content = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Content');
+        $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
             ->will($this->returnValue($versionInfo));
@@ -721,7 +719,7 @@ ezlegacytmp-embed-link-node_id="222"
             $fragmentHandler,
             $repository,
             array('view', 'class', 'node_id', 'object_id'),
-            $this->getMock('Psr\\Log\\LoggerInterface')
+            $this->getLoggerMock()
         );
 
         $converter->convert($dom);
@@ -784,7 +782,7 @@ ezlegacytmp-embed-link-node_id="222"
             $fragmentHandler,
             $repository,
             array('view', 'class', 'node_id', 'object_id'),
-            $this->getMock('Psr\\Log\\LoggerInterface')
+            $this->getLoggerMock()
         );
 
         $converter->convert($dom);
@@ -857,13 +855,13 @@ ezlegacytmp-embed-link-node_id="222"
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
 
-        $versionInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\VersionInfo');
+        $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
             ->will($this->returnValue(APIVersionInfo::STATUS_DRAFT));
 
-        $content = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Content');
+        $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
             ->will($this->returnValue($versionInfo));
@@ -892,7 +890,7 @@ ezlegacytmp-embed-link-node_id="222"
             $fragmentHandler,
             $repository,
             array('view', 'class', 'node_id', 'object_id'),
-            $this->getMock('Psr\\Log\\LoggerInterface')
+            $this->getLoggerMock()
         );
 
         $converter->convert($dom);
@@ -909,8 +907,8 @@ ezlegacytmp-embed-link-node_id="222"
         $fragmentHandler = $this->getMockFragmentHandler();
         $locationService = $this->getMockLocationService();
 
-        $contentInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\ContentInfo');
-        $location = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Location');
+        $contentInfo = $this->createMock(ContentInfo::class);
+        $location = $this->createMock(APILocation::class);
         $location
             ->expects($this->exactly(2))
             ->method('getContentInfo')
@@ -939,7 +937,7 @@ ezlegacytmp-embed-link-node_id="222"
             $fragmentHandler,
             $repository,
             array('view', 'class', 'node_id', 'object_id'),
-            $this->getMock('Psr\\Log\\LoggerInterface')
+            $this->getLoggerMock()
         );
 
         $converter->convert($dom);
@@ -985,7 +983,7 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo(42))
             ->will(
                 $this->throwException(
-                    $this->getMock('eZ\\Publish\\API\\Repository\\Exceptions\\NotFoundException')
+                    $this->createMock(NotFoundException::class)
                 )
             );
 
@@ -1053,7 +1051,7 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo(42))
             ->will(
                 $this->throwException(
-                    $this->getMock('eZ\\Publish\\API\\Repository\\Exceptions\\NotFoundException')
+                    $this->createMock(NotFoundException::class)
                 )
             );
 
@@ -1105,13 +1103,13 @@ ezlegacytmp-embed-link-node_id="222"
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
 
-        $versionInfo = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\VersionInfo');
+        $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
             ->will($this->returnValue($status));
 
-        $content = $this->getMock('eZ\\Publish\\API\\Repository\\Values\\Content\\Content');
+        $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
             ->will($this->returnValue($versionInfo));
@@ -1144,7 +1142,7 @@ ezlegacytmp-embed-link-node_id="222"
             $fragmentHandler,
             $repository,
             array('view', 'class', 'node_id', 'object_id'),
-            $this->getMock('Psr\\Log\\LoggerInterface')
+            $this->getLoggerMock()
         );
 
         $converter->convert($dom);

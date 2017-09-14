@@ -18,6 +18,8 @@ use eZ\Publish\API\Repository\Values\Content\Field;
 use DOMDocument;
 use eZ\Publish\Core\Repository\Values\Content\Relation;
 use eZ\Publish\API\Repository\Values\Content\Content;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacySetupFactory;
 
 /**
  * Integration test for use field type.
@@ -268,7 +270,7 @@ EOT
     public function assertFieldDataLoadedCorrect(Field $field)
     {
         $this->assertInstanceOf(
-            'eZ\\Publish\\Core\\FieldType\\XmlText\\Value',
+            XmlTextValue::class,
             $field->value
         );
 
@@ -306,7 +308,7 @@ EOT
         return array(
             array(
                 new \stdClass(),
-                'eZ\\Publish\\Core\\Base\\Exceptions\\InvalidArgumentType',
+                InvalidArgumentType::class,
             ),
         );
     }
@@ -331,7 +333,7 @@ EOT
     public function assertUpdatedFieldDataLoadedCorrect(Field $field)
     {
         $this->assertInstanceOf(
-            'eZ\\Publish\\Core\\FieldType\\XmlText\\Value',
+            XmlTextValue::class,
             $field->value
         );
 
@@ -380,7 +382,7 @@ EOT
     public function assertCopiedFieldDataLoadedCorrectly(Field $field)
     {
         $this->assertInstanceOf(
-            'eZ\\Publish\\Core\\FieldType\\XmlText\\Value',
+            XmlTextValue::class,
             $field->value
         );
 
@@ -466,7 +468,7 @@ EOT
                 ->getFieldType($this->getTypeName())
                 ->fromHash($hash);
         $this->assertInstanceOf(
-            'eZ\\Publish\\Core\\FieldType\\XmlText\\Value',
+            XmlTextValue::class,
             $xmlTextValue
         );
         $this->assertInstanceOf('DOMDocument', $xmlTextValue->xml);
@@ -566,7 +568,6 @@ EOT
         $repository = $this->getRepository();
 
         $contentService = $repository->getContentService();
-        $contentTypeService = $repository->getContentTypeService();
         $locationService = $repository->getLocationService();
 
         // Create test content type
@@ -614,7 +615,7 @@ EOT
 
     protected function checkSearchEngineSupport()
     {
-        if (ltrim(get_class($this->getSetupFactory()), '\\') === 'EzSystems\\EzPlatformXmlTextFieldType\\Tests\\SetupFactory\\LegacySetupFactory') {
+        if (ltrim(get_class($this->getSetupFactory()), '\\') === LegacySetupFactory::class) {
             $this->markTestSkipped(
                 "'ezxmltext' field type is not searchable with Legacy Search Engine"
             );

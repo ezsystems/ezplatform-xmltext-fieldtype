@@ -11,13 +11,13 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use DOMDocument;
 
 /**
  * Tests the Expanding converter.
  */
-class ExpandingTest extends PHPUnit_Framework_TestCase
+class ExpandingTest extends TestCase
 {
     /**
      * Provider for conversion test.

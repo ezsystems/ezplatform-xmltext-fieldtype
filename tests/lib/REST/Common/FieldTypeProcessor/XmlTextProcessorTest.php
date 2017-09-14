@@ -11,26 +11,23 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\REST\Common\FieldTypeProcessor;
 
 use eZ\Publish\Core\REST\Common\FieldTypeProcessor\XmlTextProcessor;
-use PHPUnit_Framework_TestCase;
+use eZ\Publish\Core\FieldType\XmlText\Type;
+use PHPUnit\Framework\TestCase;
 
-class XmlTextProcessorTest extends PHPUnit_Framework_TestCase
+class XmlTextProcessorTest extends TestCase
 {
-    protected $constants = array(
-        'TAG_PRESET_DEFAULT',
-        'TAG_PRESET_SIMPLE_FORMATTING',
-    );
-
     public function fieldSettingsHashes()
     {
-        return array_map(
-            function ($constantName) {
-                return array(
-                    array('tagPreset' => $constantName),
-                    array('tagPreset' => constant("eZ\\Publish\\Core\\FieldType\\XmlText\\Type::{$constantName}")),
-                );
-            },
-            $this->constants
-        );
+        return [
+            [
+                array('tagPreset' => 'TAG_PRESET_DEFAULT'),
+                array('tagPreset' => Type::TAG_PRESET_DEFAULT),
+            ],
+            [
+                array('tagPreset' => 'TAG_PRESET_SIMPLE_FORMATTING'),
+                array('tagPreset' => Type::TAG_PRESET_SIMPLE_FORMATTING),
+            ]
+        ];
     }
 
     /**

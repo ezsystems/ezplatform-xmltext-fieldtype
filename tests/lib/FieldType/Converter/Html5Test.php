@@ -13,7 +13,8 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
 use eZ\Publish\Core\FieldType\XmlText\Converter\Html5;
-use PHPUnit_Framework_TestCase;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
+use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
@@ -21,7 +22,7 @@ use DOMXPath;
 /**
  * Tests the Html5 converter.
  */
-class Html5Test extends PHPUnit_Framework_TestCase
+class Html5Test extends TestCase
 {
     protected $file;
 
@@ -41,7 +42,7 @@ class Html5Test extends PHPUnit_Framework_TestCase
 
     protected function getPreConvertMock()
     {
-        return $this->getMockBuilder('eZ\Publish\Core\FieldType\XmlText\Converter')
+        return $this->getMockBuilder(Converter::class)
             ->getMock();
     }
 

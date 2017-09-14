@@ -13,16 +13,19 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType;
 use eZ\Publish\Core\FieldType\XmlText\Type as XmlTextType;
 use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
+use eZ\Publish\Core\Persistence\TransformationProcessor;
 use eZ\Publish\API\Repository\Values\Content\Relation;
+use eZ\Publish\SPI\FieldType\ValidationError;
+use eZ\Publish\Core\FieldType\Value;
 use Exception;
 use DOMDocument;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group fieldType
  * @group ezxmltext
  */
-class XmlTextTest extends PHPUnit_Framework_TestCase
+class XmlTextTest extends TestCase
 {
     /**
      * Normally this should be enough:.
@@ -49,7 +52,7 @@ class XmlTextTest extends PHPUnit_Framework_TestCase
     protected function getTransformationProcessorMock()
     {
         return $this->getMockForAbstractClass(
-            'eZ\\Publish\\Core\\Persistence\\TransformationProcessor',
+            TransformationProcessor::class,
             array(),
             '',
             false,
@@ -135,7 +138,7 @@ class XmlTextTest extends PHPUnit_Framework_TestCase
 
         foreach ($validationResult as $actualResultElement) {
             $this->assertInstanceOf(
-                'eZ\\Publish\\SPI\\FieldType\\ValidationError',
+                ValidationError::class,
                 $actualResultElement,
                 'Validation result of incorrect type.'
             );
@@ -148,7 +151,7 @@ class XmlTextTest extends PHPUnit_Framework_TestCase
      */
     public function testAcceptValueInvalidType()
     {
-        $this->getFieldType()->acceptValue($this->getMockBuilder('eZ\\Publish\\Core\\FieldType\\Value')->disableOriginalConstructor()->getMock());
+        $this->getFieldType()->acceptValue($this->createMock(Value::class));
     }
 
     /**

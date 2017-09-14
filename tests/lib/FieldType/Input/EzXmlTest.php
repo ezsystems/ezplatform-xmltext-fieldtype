@@ -11,10 +11,10 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Input;
 
 use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Exception;
 
-class EzXmlTest extends PHPUnit_Framework_TestCase
+class EzXmlTest extends TestCase
 {
     /**
      * @dataProvider providerForTestConvertCorrect

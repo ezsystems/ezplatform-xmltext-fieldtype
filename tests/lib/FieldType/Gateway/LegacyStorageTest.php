@@ -13,26 +13,24 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Gateway;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
-use PHPUnit_Framework_TestCase;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the LegacyStorage
  * Class LegacyStorageTest.
  */
-class LegacyStorageTest extends PHPUnit_Framework_TestCase
+class LegacyStorageTest extends TestCase
 {
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
      */
     protected function getPartlyMockedLegacyStorage(array $testMethods = null)
     {
-        return $this->getMock(
-            'eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage',
-            $testMethods,
-            array(),
-            '',
-            false
-        );
+        return $this->getMockBuilder(LegacyStorage::class)
+            ->disableOriginalConstructor()
+            ->setMethods($testMethods)
+            ->getMock();
     }
 
     /**

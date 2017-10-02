@@ -11,16 +11,24 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
+use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException as APINotFoundException;
 use eZ\Publish\Core\Base\Exceptions\UnauthorizedException as APIUnauthorizedException;
+use eZ\Publish\Core\Repository\ContentService;
+use eZ\Publish\Core\Repository\LocationService;
+use eZ\Publish\Core\Repository\URLAliasService;
+use eZ\Publish\Core\MVC\Symfony\Routing\UrlAliasRouter;
+use eZ\Publish\API\Repository\Values\Content\Location;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use DOMXPath;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests the EzLinkToHtml5 Preconverter
  * Class EmbedToHtml5Test.
  */
-class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
+class EzLinkToHtml5Test extends TestCase
 {
     /**
      * @return array
@@ -288,9 +296,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
      */
     protected function getMockContentService()
     {
-        return $this->getMockBuilder('eZ\Publish\Core\Repository\ContentService')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(ContentService::class);
     }
 
     /**
@@ -298,9 +304,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
      */
     protected function getMockLocationService()
     {
-        return $this->getMockBuilder('eZ\Publish\Core\Repository\LocationService')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(LocationService::class);
     }
 
     /**
@@ -308,9 +312,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
      */
     protected function getMockURLAliasService()
     {
-        return $this->getMockBuilder('eZ\Publish\Core\Repository\URLAliasService')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(URLAliasService::class);
     }
 
     /**
@@ -318,10 +320,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
      */
     protected function getMockUrlAliasRouter()
     {
-        return $this
-            ->getMockBuilder('eZ\\Publish\\Core\\MVC\\Symfony\\Routing\\UrlAliasRouter')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock(UrlAliasRouter::class);
     }
 
     /**
@@ -332,7 +331,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
      */
     protected function getMockRepository($contentService, $locationService, $urlAliasService)
     {
-        $repository = $this->getMock('eZ\Publish\API\Repository\Repository');
+        $repository = $this->createMock(Repository::class);
 
         $repository->expects($this->any())
             ->method('getContentService')
@@ -409,7 +408,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
         $locationService = $this->getMockLocationService();
         $urlAliasRouter = $this->getMockUrlAliasRouter();
 
-        $location = $this->getMock('eZ\Publish\API\Repository\Values\Content\Location');
+        $location = $this->createMock(Location::class);
 
         $locationService->expects($this->once())
             ->method('loadLocation')
@@ -455,8 +454,8 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
         $locationService = $this->getMockLocationService();
         $urlAliasRouter = $this->getMockUrlAliasRouter();
 
-        $contentInfo = $this->getMock('eZ\Publish\API\Repository\Values\Content\ContentInfo');
-        $location = $this->getMock('eZ\Publish\API\Repository\Values\Content\Location');
+        $contentInfo = $this->createMock(ContentInfo::class);
+        $location = $this->createMock(Location::class);
 
         $contentInfo->expects($this->once())
             ->method('__get')
@@ -509,7 +508,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
         $contentService = $this->getMockContentService();
         $locationService = $this->getMockLocationService();
         $urlAliasRouter = $this->getMockUrlAliasRouter();
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock(LoggerInterface::class);
 
         $logger->expects($this->once())
             ->method($logType)
@@ -543,7 +542,7 @@ class EzLinkToHtml5Test extends PHPUnit_Framework_TestCase
         $contentService = $this->getMockContentService();
         $locationService = $this->getMockLocationService();
         $urlAliasRouter = $this->getMockUrlAliasRouter();
-        $logger = $this->getMock('Psr\Log\LoggerInterface');
+        $logger = $this->createMock(LoggerInterface::class);
 
         $logger->expects($this->once())
             ->method($logType)

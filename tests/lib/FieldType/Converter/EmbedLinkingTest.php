@@ -11,13 +11,13 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use DOMDocument;
 
 /**
  * Tests the EmbedLinking converter.
  */
-class EmbedLinkingTest extends PHPUnit_Framework_TestCase
+class EmbedLinkingTest extends TestCase
 {
     /**
      * Provider for conversion test.

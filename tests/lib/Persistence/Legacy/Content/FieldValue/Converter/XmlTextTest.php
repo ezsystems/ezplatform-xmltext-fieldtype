@@ -13,7 +13,7 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\Persistence\Legacy\Content\
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
 use eZ\Publish\Core\Persistence\Legacy\Content\StorageFieldValue;
 use eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for XmlText converter in Legacy storage.
@@ -21,7 +21,7 @@ use PHPUnit_Framework_TestCase;
  * @group fieldType
  * @group ezxmltext
  */
-class XmlTextTest extends PHPUnit_Framework_TestCase
+class XmlTextTest extends TestCase
 {
     /**
      * @var \eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter

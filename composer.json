@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "ezsystems/ezpublish-kernel": "^6.11@dev"
+        "ezsystems/ezpublish-kernel": "^6.11@dev || ^7.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

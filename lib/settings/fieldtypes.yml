@@ -5,5 +5,8 @@ services:
     ezpublish.fieldType.ezxmltext:
         class: "%ezpublish.fieldType.ezxmltext.class%"
         parent: ezpublish.fieldType
+        arguments:
+            - '@?ezpublish.fieldType.ezxmltext.validator.internal_link'
         tags:
             - {name: ezpublish.fieldType, alias: ezxmltext}
+

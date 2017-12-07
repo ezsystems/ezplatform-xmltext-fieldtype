@@ -10,6 +10,7 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText;
 
+use eZ\Publish\API\Repository\Values\ContentType\FieldDefinition;
 use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use eZ\Publish\Core\FieldType\ValidationError;
@@ -37,6 +38,11 @@ class Type extends FieldType
     const TAG_PRESET_SIMPLE_FORMATTING = 1;
 
     /**
+     * @var null|\eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator
+     */
+    protected $internalLinkValidator;
+
+    /**
      * List of settings available for this FieldType.
      *
      * The key is the setting name, and the value is the default value for this setting
@@ -53,6 +59,16 @@ class Type extends FieldType
             'default' => self::TAG_PRESET_DEFAULT,
         ),
     );
+
+    /**
+     * Type constructor.
+     *
+     * @param null|\eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator $internalLinkValidator
+     */
+    public function __construct(InternalLinkValidator $internalLinkValidator = null)
+    {
+        $this->internalLinkValidator = $internalLinkValidator;
+    }
 
     /**
      * Returns the field type identifier for this field type.
@@ -243,6 +259,30 @@ class Type extends FieldType
     public function isSearchable()
     {
         return true;
+    }
+
+    /**
+     * Validates a field.
+     *
+     * @throws \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
+     *
+     * @param \eZ\Publish\API\Repository\Values\ContentType\FieldDefinition $fieldDefinition The field definition of the field
+     * @param \eZ\Publish\Core\FieldType\XmlText\Value $value The field value for which an action is performed
+     *
+     * @return \eZ\Publish\SPI\FieldType\ValidationError[]
+     */
+    public function validate(FieldDefinition $fieldDefinition, SPIValue $value)
+    {
+        $validationErrors = array();
+
+        if ($this->internalLinkValidator !== null) {
+            $errors = $this->internalLinkValidator->validate($value->xml);
+            foreach ($errors as $error) {
+                $validationErrors[] = new ValidationError($error);
+            }
+        }
+
+        return $validationErrors;
     }
 
     /**

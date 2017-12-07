@@ -6,6 +6,7 @@ parameters:
     ezpublish.fieldType.ezxmltext.converter.ezLinkToHtml5.class: eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5
     ezpublish.fieldType.ezxmltext.converter.expanding.class: eZ\Publish\Core\FieldType\XmlText\Converter\Expanding
     ezpublish.fieldType.ezxmltext.converter.embedLinking.class: eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking
+    ezpublish.fieldType.ezxmltext.validator.internal_link.class: eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator
 
 services:
     ezpublish.fieldType.ezxmltext.converter.html5:
@@ -44,3 +45,10 @@ services:
             - "@?logger"
         tags:
             - { name: ezpublish.ezxml.converter, priority: 8 }
+
+    ezpublish.fieldType.ezxmltext.validator.internal_link:
+        class: '%ezpublish.fieldType.ezxmltext.validator.internal_link.class%'
+        arguments:
+            - '@ezpublish.spi.persistence.cache.contentHandler'
+            - '@ezpublish.spi.persistence.cache.locationHandler'
+

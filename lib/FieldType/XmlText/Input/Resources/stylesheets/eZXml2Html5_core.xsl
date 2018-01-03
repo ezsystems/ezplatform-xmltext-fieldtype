@@ -163,26 +163,33 @@
     </xsl:template>
 
     <xsl:template match="link">
-        <a>
-            <xsl:attribute name="href">
-                <xsl:value-of select="@url"/>
-            </xsl:attribute>
-            <xsl:attribute name="target">
-                <xsl:choose>
-                    <xsl:when test="@target">
-                        <xsl:value-of select="@target"/>
-                    </xsl:when>
-                    <xsl:otherwise>_self</xsl:otherwise>
-                </xsl:choose>
-            </xsl:attribute>
-            <xsl:if test="@xhtml:title">
-                <xsl:attribute name="title">
-                    <xsl:value-of select="@xhtml:title"/>
-                </xsl:attribute>
-            </xsl:if>
-            <xsl:copy-of select="@class"/>
-            <xsl:apply-templates/>
-        </a>
+        <xsl:choose>
+            <xsl:when test="@url">
+                <a>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="@url"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="target">
+                        <xsl:choose>
+                            <xsl:when test="@target">
+                                <xsl:value-of select="@target"/>
+                            </xsl:when>
+                            <xsl:otherwise>_self</xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:attribute>
+                    <xsl:if test="@xhtml:title">
+                        <xsl:attribute name="title">
+                            <xsl:value-of select="@xhtml:title"/>
+                        </xsl:attribute>
+                    </xsl:if>
+                    <xsl:copy-of select="@class"/>
+                    <xsl:apply-templates/>
+                </a>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template match="embed">

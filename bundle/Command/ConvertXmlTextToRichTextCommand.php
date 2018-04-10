@@ -11,6 +11,7 @@ use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use PDO;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
@@ -42,6 +43,11 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var bool
+     */
+    private $dryRun = false;
 
     public function __construct(DatabaseHandler $db, LoggerInterface $logger = null)
     {
@@ -84,11 +90,22 @@ Converts XmlText fields from eZ Publish Platform to RichText fields.
 
 This is a non-finalized work in progress. ALWAYS make sure you have a restorable backup of your database before using it.
 EOT
-);
+            )
+            ->addOption(
+                'dry-run',
+                null,
+                InputOption::VALUE_NONE,
+                'Run the converter without writing anything to the database'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if ($input->getOption('dry-run')) {
+            $output->writeln("Running in dry-run mode. No changes will actually be written to database\n");
+            $this->dryRun = true;
+        }
+
         $this->convertFieldDefinitions($output);
         $this->convertFields($output);
     }
@@ -142,7 +159,9 @@ EOT
             )
         );
 
-        $updateQuery->prepare()->execute();
+        if (!$this->dryRun) {
+            $updateQuery->prepare()->execute();
+        }
 
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
     }
@@ -209,7 +228,9 @@ EOT
                     )
                 )
             );
-            $updateQuery->prepare()->execute();
+            if (!$this->dryRun) {
+                $updateQuery->prepare()->execute();
+            }
 
             $this->logger->info(
                 "Converted ezxmltext field #{$row['id']} to richtext",

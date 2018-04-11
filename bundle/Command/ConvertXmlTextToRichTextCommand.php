@@ -44,11 +44,6 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     private $logger;
 
-    /**
-     * @var bool
-     */
-    private $dryRun = false;
-
     public function __construct(DatabaseHandler $db, LoggerInterface $logger = null)
     {
         parent::__construct();
@@ -96,21 +91,34 @@ EOT
                 null,
                 InputOption::VALUE_NONE,
                 'Run the converter without writing anything to the database'
+            )
+            ->addOption(
+                'test-content-object',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Test if converting object with the given id succeeds'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dryRun = false;
         if ($input->getOption('dry-run')) {
             $output->writeln("Running in dry-run mode. No changes will actually be written to database\n");
-            $this->dryRun = true;
+            $dryRun = true;
         }
 
-        $this->convertFieldDefinitions($output);
-        $this->convertFields($output);
+        $testContentObjectId = $input->getOption('test-content-object');
+
+        if ($testContentObjectId === null) {
+            $this->convertFieldDefinitions($dryRun, $output);
+        } else {
+            $dryRun = true;
+        }
+        $this->convertFields($dryRun, $testContentObjectId, $output);
     }
 
-    function convertFieldDefinitions(OutputInterface $output)
+    function convertFieldDefinitions($dryRun, OutputInterface $output)
     {
         $query = $this->db->createSelectQuery();
         $query->select($query->expr->count('*'));
@@ -159,24 +167,37 @@ EOT
             )
         );
 
-        if (!$this->dryRun) {
+        if (!$dryRun) {
             $updateQuery->prepare()->execute();
         }
 
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
     }
 
-    function convertFields(OutputInterface $output)
+    function convertFields($dryRun, $contentObjectId, OutputInterface $output)
     {
         $query = $this->db->createSelectQuery();
         $query->select($query->expr->count('*'));
         $query->from('ezcontentobject_attribute');
-        $query->where(
-            $query->expr->eq(
-                $this->db->quoteIdentifier('data_type_string'),
-                $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
-            )
-        );
+        if ($contentObjectId === null) {
+            $query->where(
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('data_type_string'),
+                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+                )
+            );
+        } else {
+            $query->where(
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('contentobject_id'),
+                    $query->bindValue($contentObjectId, null, PDO::PARAM_STR)
+                ),
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('data_type_string'),
+                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+                )
+            );
+        }
 
         $statement = $query->prepare();
         $statement->execute();
@@ -187,12 +208,25 @@ EOT
         $query = $this->db->createSelectQuery();
         $query->select('*');
         $query->from('ezcontentobject_attribute');
-        $query->where(
-            $query->expr->eq(
-                $this->db->quoteIdentifier('data_type_string'),
-                $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
-            )
-        );
+        if ($contentObjectId === null) {
+            $query->where(
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('data_type_string'),
+                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+                )
+            );
+        } else {
+            $query->where(
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('contentobject_id'),
+                    $query->bindValue($contentObjectId, null, PDO::PARAM_STR)
+                ),
+                $query->expr->eq(
+                    $this->db->quoteIdentifier('data_type_string'),
+                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+                )
+            );
+        }
 
         $statement = $query->prepare();
         $statement->execute();
@@ -228,7 +262,7 @@ EOT
                     )
                 )
             );
-            if (!$this->dryRun) {
+            if (!$dryRun) {
                 $updateQuery->prepare()->execute();
             }
 

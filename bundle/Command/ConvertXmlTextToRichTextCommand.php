@@ -93,6 +93,12 @@ EOT
                 'Run the converter without writing anything to the database'
             )
             ->addOption(
+                'disable-duplicate-id-check',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable the check for duplicate html ids in every attribute. This might increase execution time on large databases'
+            )
+            ->addOption(
                 'test-content-object',
                 null,
                 InputOption::VALUE_OPTIONAL,
@@ -115,7 +121,7 @@ EOT
         } else {
             $dryRun = true;
         }
-        $this->convertFields($dryRun, $testContentObjectId, $output);
+        $this->convertFields($dryRun, $testContentObjectId, !$input->getOption('disable-duplicate-id-check'), $output);
     }
 
     function convertFieldDefinitions($dryRun, OutputInterface $output)
@@ -174,7 +180,7 @@ EOT
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
     }
 
-    function convertFields($dryRun, $contentObjectId, OutputInterface $output)
+    function convertFields($dryRun, $contentObjectId, $checkDuplicateIds, OutputInterface $output)
     {
         $query = $this->db->createSelectQuery();
         $query->select($query->expr->count('*'));
@@ -238,7 +244,7 @@ EOT
                 $inputValue = $row['data_text'];
             }
 
-            $converted = $this->convert($inputValue);
+            $converted = $this->convert($inputValue, $checkDuplicateIds, $row['id']);
 
             $updateQuery = $this->db->createUpdateQuery();
             $updateQuery->update($this->db->quoteIdentifier('ezcontentobject_attribute'));
@@ -301,13 +307,29 @@ EOT
         }
     }
 
-    function convert($xmlString)
+    function reportNonUniqueIds(DOMDocument $document, $contentObjectAttributeId)
+    {
+        $xpath = new DOMXPath($document);
+        $ns = $document->documentElement->namespaceURI;
+        $nodes = $xpath->query("//*[contains(@xml:id, 'duplicated_id_')]");
+        foreach ($nodes as $node) {
+            $id=$node->attributes->getNamedItem('id')->nodeValue;
+            // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
+            $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
+            $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentObjectAttributeId, automatically generated new id : $duplicatedId --> $id");
+        }
+    }
+
+    function convert($xmlString, $checkDuplicateIds, $contentObjectAttributeId)
     {
         $inputDocument = $this->createDocument($xmlString);
 
         $this->removeComments($inputDocument);
 
         $convertedDocument = $this->converter->convert($inputDocument);
+        if ($checkDuplicateIds) {
+            $this->reportNonUniqueIds($convertedDocument, $contentObjectAttributeId);
+        }
 
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
         $convertedDocumentNormalized = new DOMDocument();

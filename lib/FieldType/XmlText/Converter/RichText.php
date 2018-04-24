@@ -5,8 +5,6 @@
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
- *
- * @version //autogentag//
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
@@ -57,7 +55,8 @@ class RichText implements Converter
             )
         );
     }
-    function removeComments(DOMDocument $document)
+
+    protected function removeComments(DOMDocument $document)
     {
         $xpath = new DOMXpath($document);
         $nodes = $xpath->query('//comment()');
@@ -67,7 +66,7 @@ class RichText implements Converter
         }
     }
 
-    function reportNonUniqueIds(DOMDocument $document, $contentObjectAttributeId)
+    protected function reportNonUniqueIds(DOMDocument $document, $contentObjectAttributeId)
     {
         $xpath = new DOMXPath($document);
         $ns = $document->documentElement->namespaceURI;

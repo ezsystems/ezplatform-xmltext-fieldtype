@@ -100,7 +100,7 @@ class RichText implements Converter
 
         if (!empty($errors) && $this->logger !== null) {
             $this->logger->error(
-                "Validation errors when converting xmlstring",
+                "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentObjectAttributeId",
                 ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]
             );
         }

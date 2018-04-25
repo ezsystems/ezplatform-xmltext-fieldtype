@@ -5,7 +5,6 @@
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
 use DOMDocument;
-use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use PDO;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -14,24 +13,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
+use Doctrine\DBAL\Connection;
 
 class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
 {
     /**
-     * @var \eZ\Publish\Core\Persistence\Database\DatabaseHandler
+     * @var \Doctrine\DBAL\Connection
      */
-    private $db;
-    
+    private $dbal;
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
-    public function __construct(DatabaseHandler $db, LoggerInterface $logger = null)
+    public function __construct(Connection $dbal, LoggerInterface $logger = null)
     {
         parent::__construct();
 
-        $this->db = $db;
+        $this->dbal = $dbal;
         $this->logger = $logger;
     }
 
@@ -87,55 +87,41 @@ EOT
 
     protected function convertFieldDefinitions($dryRun, OutputInterface $output)
     {
-        $query = $this->db->createSelectQuery();
-        $query->select($query->expr->count('*'));
-        $query->from('ezcontentclass_attribute');
-        $query->where(
-            $query->expr->eq(
-                $this->db->quoteIdentifier('data_type_string'),
-                $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+        $query = $this->dbal->createQueryBuilder();
+        $query->select('count(a.id)')
+            ->from('ezcontentclass_attribute', 'a')
+            ->where(
+                $query->expr()->eq(
+                    'a.data_type_string',
+                    ':datatypestring'
+                )
             )
-        );
+            ->setParameter(':datatypestring','ezxmltext');
 
-        $statement = $query->prepare();
-        $statement->execute();
-        $count = $statement->fetchColumn();
+        $statement = $query->execute();
+        $count = (int) $statement->fetchColumn();
 
         $output->writeln("Found $count field definiton to convert.");
 
-        $query = $this->db->createSelectQuery();
-        $query->select('*');
-        $query->from('ezcontentclass_attribute');
-        $query->where(
-            $query->expr->eq(
-                $this->db->quoteIdentifier('data_type_string'),
-                $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+        $updateQuery = $this->dbal->createQueryBuilder();
+        $updateQuery->update('ezcontentclass_attribute', 'a')
+            ->set('a.data_type_string', ':newdatatypestring')
+            // was tagPreset in ezxmltext, unused in RichText
+            ->set('a.data_text2', ':datatext2')
+            ->where(
+                $updateQuery->expr()->eq(
+                    'a.data_type_string',
+                    ':olddatatypestring'
+                )
             )
-        );
-
-        $statement = $query->prepare();
-        $statement->execute();
-
-        $updateQuery = $this->db->createUpdateQuery();
-        $updateQuery->update($this->db->quoteIdentifier('ezcontentclass_attribute'));
-        $updateQuery->set(
-            $this->db->quoteIdentifier('data_type_string'),
-            $updateQuery->bindValue('ezrichtext', null, PDO::PARAM_STR)
-        );
-        // was tagPreset in ezxmltext, unused in RichText
-        $updateQuery->set(
-            $this->db->quoteIdentifier('data_text2'),
-            $updateQuery->bindValue(null, null, PDO::PARAM_STR)
-        );
-        $updateQuery->where(
-            $updateQuery->expr->eq(
-                $this->db->quoteIdentifier('data_type_string'),
-                $updateQuery->bindValue('ezxmltext', null, PDO::PARAM_STR)
-            )
-        );
+            ->setParameters([
+                ':newdatatypestring' => 'ezrichtext',
+                ':datatext2' => null,
+                ':olddatatypestring' => 'ezxmltext'
+            ]);
 
         if (!$dryRun) {
-            $updateQuery->prepare()->execute();
+            $updateQuery->execute();
         }
 
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
@@ -144,60 +130,53 @@ EOT
     protected function convertFields($dryRun, $contentObjectId, $checkDuplicateIds, OutputInterface $output)
     {
         $converter = new RichTextConverter($this->logger);
-        $query = $this->db->createSelectQuery();
-        $query->select($query->expr->count('*'));
-        $query->from('ezcontentobject_attribute');
-        if ($contentObjectId === null) {
-            $query->where(
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('data_type_string'),
-                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+        $query = $this->dbal->createQueryBuilder();
+        $query->select('count(a.id)')
+            ->from('ezcontentobject_attribute', 'a')
+            ->where(
+                $query->expr()->eq(
+                    'a.data_type_string',
+                    ':datatypestring'
                 )
-            );
-        } else {
-            $query->where(
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('contentobject_id'),
-                    $query->bindValue($contentObjectId, null, PDO::PARAM_STR)
-                ),
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('data_type_string'),
-                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+            )
+            ->setParameter(':datatypestring','ezxmltext');
+
+        if ($contentObjectId !== null) {
+            $query->andWhere(
+                $query->expr()->eq(
+                    'a.contentobject_id',
+                    ':contentobjectid'
                 )
-            );
+            )
+            ->setParameter(':contentobjectid', $contentObjectId);
         }
 
-        $statement = $query->prepare();
-        $statement->execute();
-        $count = $statement->fetchColumn();
+        $statement = $query->execute();
+        $count = (int) $statement->fetchColumn();
 
         $output->writeln("Found $count field rows to convert.");
 
-        $query = $this->db->createSelectQuery();
-        $query->select('*');
-        $query->from('ezcontentobject_attribute');
-        if ($contentObjectId === null) {
-            $query->where(
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('data_type_string'),
-                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
+        $query = $this->dbal->createQueryBuilder();
+        $query->select('a.*')
+            ->from('ezcontentobject_attribute', 'a')
+            ->where(
+                $query->expr()->eq(
+                    'a.data_type_string',
+                    ':datatypestring'
                 )
-            );
-        } else {
-            $query->where(
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('contentobject_id'),
-                    $query->bindValue($contentObjectId, null, PDO::PARAM_STR)
-                ),
-                $query->expr->eq(
-                    $this->db->quoteIdentifier('data_type_string'),
-                    $query->bindValue('ezxmltext', null, PDO::PARAM_STR)
-                )
-            );
-        }
+            )
+            ->setParameter(':datatypestring','ezxmltext');
 
-        $statement = $query->prepare();
-        $statement->execute();
+        if ($contentObjectId !== null) {
+            $query->andWhere(
+                $query->expr()->eq(
+                    'a.contentobject_id',
+                    ':contentobjectid'
+                )
+            )
+                ->setParameter(':contentobjectid', $contentObjectId);
+        }
+        $statement = $query->execute();
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if (empty($row['data_text'])) {
@@ -208,30 +187,31 @@ EOT
 
             $converted = $converter->convert($this->createDocument($inputValue), $checkDuplicateIds, $row['id']);
 
-            $updateQuery = $this->db->createUpdateQuery();
-            $updateQuery->update($this->db->quoteIdentifier('ezcontentobject_attribute'));
-            $updateQuery->set(
-                $this->db->quoteIdentifier('data_type_string'),
-                $updateQuery->bindValue('ezrichtext', null, PDO::PARAM_STR)
-            );
-            $updateQuery->set(
-                $this->db->quoteIdentifier('data_text'),
-                $updateQuery->bindValue($converted, null, PDO::PARAM_STR)
-            );
-            $updateQuery->where(
-                $updateQuery->expr->lAnd(
-                    $updateQuery->expr->eq(
-                        $this->db->quoteIdentifier('id'),
-                        $updateQuery->bindValue($row['id'], null, PDO::PARAM_INT)
-                    ),
-                    $updateQuery->expr->eq(
-                        $this->db->quoteIdentifier('version'),
-                        $updateQuery->bindValue($row['version'], null, PDO::PARAM_INT)
+            $updateQuery = $this->dbal->createQueryBuilder();
+            $updateQuery->update('ezcontentobject_attribute', 'a')
+                ->set('a.data_type_string', ':datatypestring')
+                ->set('a.data_text', ':datatext')
+                ->where(
+                    $updateQuery->expr()->eq(
+                        'a.id',
+                        ':id'
                     )
                 )
-            );
+                ->andWhere(
+                    $updateQuery->expr()->eq(
+                        'a.version',
+                        ':version'
+                    )
+                )
+                ->setParameters([
+                    ':datatypestring' => 'ezrichtext',
+                    ':datatext' => $converted,
+                    ':id' => $row['id'],
+                    ':version' => $row['version']
+                ]);
+
             if (!$dryRun) {
-                $updateQuery->prepare()->execute();
+                $updateQuery->execute();
             }
 
             $this->logger->info(
@@ -242,7 +222,6 @@ EOT
                 ]
             );
         }
-
 
         $output->writeln("Converted $count ezxmltext fields to richtext");
     }

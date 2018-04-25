@@ -10,7 +10,7 @@ services:
     ezxmltext.command.convert_to_richtexst:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
         arguments:
-            - "@ezpublish.api.storage_engine.legacy.dbhandler"
+            - "@ezpublish.persistence.connection"
             - "@?logger"
         tags:
             -  { name: console.command }

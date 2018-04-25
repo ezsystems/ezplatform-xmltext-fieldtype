@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">foobar test : embed</paragraph><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/"><embed xhtml:id="myembed_id" view="embed" size="medium" custom:offset="0" custom:limit="5" object_id="84"/></paragraph><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">qweqweqwe : embed inline</paragraph><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/"><embed-inline xhtml:id="myembed_id" view="embed-inline" size="medium" object_id="59"/>ezembedezembed</paragraph></section>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">foobar test : embed
+    </paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <embed xhtml:id="myembed_id" view="embed" size="medium" custom:offset="0" custom:limit="5" object_id="84"/>
+    </paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">qweqweqwe : embed inline
+    </paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <embed-inline xhtml:id="myembed_id" view="embed-inline" size="medium" object_id="59"/>ezembedezembed
+    </paragraph>
+</section>

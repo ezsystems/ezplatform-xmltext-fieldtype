@@ -85,7 +85,7 @@ EOT
         $this->convertFields($dryRun, $testContentObjectId, !$input->getOption('disable-duplicate-id-check'), $output);
     }
 
-    function convertFieldDefinitions($dryRun, OutputInterface $output)
+    protected function convertFieldDefinitions($dryRun, OutputInterface $output)
     {
         $query = $this->db->createSelectQuery();
         $query->select($query->expr->count('*'));
@@ -141,7 +141,7 @@ EOT
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
     }
 
-    function convertFields($dryRun, $contentObjectId, $checkDuplicateIds, OutputInterface $output)
+    protected function convertFields($dryRun, $contentObjectId, $checkDuplicateIds, OutputInterface $output)
     {
         $converter = new RichTextConverter($this->logger);
         $query = $this->db->createSelectQuery();
@@ -247,7 +247,7 @@ EOT
         $output->writeln("Converted $count ezxmltext fields to richtext");
     }
 
-    function createDocument($xmlString)
+    protected function createDocument($xmlString)
     {
         $document = new DOMDocument();
 

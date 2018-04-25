@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <section>
+        <header>header1text</header>
+        <paragraph>some paragraph</paragraph>
+        <section>
+            <header>header2text</header>
+            <paragraph>paragraph2</paragraph>
+            <section>
+                <header>header3text</header>
+                <paragraph>paragraph3</paragraph>
+                <section>
+                    <header>header4text</header>
+                    <paragraph>paragraph4</paragraph>
+                    <section>
+                        <header>header5text</header>
+                        <paragraph>paragraph5</paragraph>
+                        <section>
+                            <header>header6text</header>
+                            <paragraph>paragraph6</paragraph>
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>

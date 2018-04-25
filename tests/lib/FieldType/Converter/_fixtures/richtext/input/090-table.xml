@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>some table</paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <table class="default" border="0" width="100%" custom:summary="custom summary" custom:caption="custom caption">
+            <tr>
+                <td>
+                    <paragraph>column1</paragraph>
+                </td>
+                <td>
+                    <paragraph>column2</paragraph>
+                </td>
+                <td>
+                    <paragraph>column3</paragraph>
+                </td>
+                <td>
+                    <paragraph>column4</paragraph>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <paragraph>text1</paragraph>
+                </td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td/>
+                <td/>
+                <td>
+                    <paragraph>text2</paragraph>
+                </td>
+                <td/>
+            </tr>
+        </table>
+    </paragraph>
+</section>

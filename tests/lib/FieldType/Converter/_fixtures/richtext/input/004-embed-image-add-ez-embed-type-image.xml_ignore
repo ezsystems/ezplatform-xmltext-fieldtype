@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>Here we have a nice image</paragraph>
+    <paragraph>
+        <embed view="embed" size="medium" object_id="126" custom:offset="0" custom:limit="5"/>
+    </paragraph>
+    <paragraph>And here we have a file</paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <embed view="embed" size="medium" object_id="128" custom:offset="0" custom:limit="5"/>
+    </paragraph>
+</section>

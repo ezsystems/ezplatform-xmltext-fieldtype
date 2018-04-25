@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="Anchor1"/>
+    </para>
+    <para ezxhtml:textalign="justify">Let's link to
+        <link xlink:href="#anchor1" xlink:show="none">the anchor</link>
+    </para>
+    <para ezxhtml:textalign="justify">Link to
+        <link xlink:href="ezurl://8" xlink:show="none">site</link>
+    </para>
+    <para ezxhtml:textalign="justify">Link to
+        <link xlink:href="ezlocation://61" xlink:show="new" xlink:title="customTitle" xml:id="customnodelinkid">node</link>
+    </para>
+    <para ezxhtml:textalign="justify">link to
+        <link xlink:href="ezcontent://88" xlink:show="none">object</link>
+    </para>
+</section>

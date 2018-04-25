@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph align="justify">Here is an anchor
+        <anchor name="Anchor1"/>
+    </paragraph>
+    <paragraph align="justify">Let's link to
+        <link anchor_name="anchor1">the anchor</link>
+    </paragraph>
+    <paragraph align="justify">Link to
+        <link url_id="8">site</link>
+    </paragraph>
+    <paragraph align="justify">Link to
+        <link target="_blank" xhtml:title="customTitle" xhtml:id="customnodelinkid" node_id="61">node</link>
+    </paragraph>
+    <paragraph align="justify">link to
+        <link object_id="88">object</link>
+    </paragraph>
+</section>

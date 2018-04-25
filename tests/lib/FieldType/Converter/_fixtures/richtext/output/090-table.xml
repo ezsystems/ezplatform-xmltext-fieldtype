@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para>some table</para>
+    <table class="default" width="100%" title="custom summary">
+        <caption>custom caption</caption>
+        <tbody>
+            <tr>
+                <td>
+                    <para>column1</para>
+                </td>
+                <td>
+                    <para>column2</para>
+                </td>
+                <td>
+                    <para>column3</para>
+                </td>
+                <td>
+                    <para>column4</para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>text1</para>
+                </td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+            <tr>
+                <td/>
+                <td/>
+                <td>
+                    <para>text2</para>
+                </td>
+                <td/>
+            </tr>
+        </tbody>
+    </table>
+</section>

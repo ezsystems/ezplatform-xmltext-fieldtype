@@ -11,11 +11,14 @@ namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 use eZ\Publish\Core\FieldType\XmlText\Converter;
 use DOMDocument;
 use DOMXPath;
+use DOMNode;
 use Psr\Log\LoggerInterface;
 use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
 use eZ\Publish\Core\FieldType\RichText\Converter\Ezxml\ToRichTextPreNormalize;
 use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
 use eZ\Publish\Core\FieldType\RichText\Validator;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use Psr\Log\NullLogger;
 
 class RichText implements Converter
 {
@@ -35,10 +38,17 @@ class RichText implements Converter
 
     private $apiRepository;
 
-    public function __construct(LoggerInterface $logger = null, $apiRepository = null, $imageContentTypes = array())
+    /**
+     * Holds the id of the current contentField being converted.
+     *
+     * @var null|int
+     */
+    private $currentContentFieldId;
+
+    public function __construct($apiRepository = null, LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
-        $this->imageContentTypes = $imageContentTypes;
+        $this->logger = $logger instanceof LoggerInterface ? $logger : new NullLogger();
+        $this->imageContentTypes = [];
         $this->apiRepository = $apiRepository;
 
         $this->converter = new Aggregate(
@@ -82,62 +92,151 @@ class RichText implements Converter
         }
     }
 
-    protected function reportNonUniqueIds(DOMDocument $document, $contentObjectAttributeId)
+    protected function reportNonUniqueIds(DOMDocument $document, $contentFieldId)
     {
         $xpath = new DOMXPath($document);
-        $ns = $document->documentElement->namespaceURI;
         $nodes = $xpath->query("//*[contains(@xml:id, 'duplicated_id_')]");
+        if ($contentFieldId === null) {
+            $contentFieldId = '[unknown]';
+        }
         foreach ($nodes as $node) {
             $id = $node->attributes->getNamedItem('id')->nodeValue;
             // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
             $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
             if ($this->logger !== null) {
-                $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentObjectAttributeId, automatically generated new id : $duplicatedId --> $id");
+                $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
             }
         }
     }
 
-    protected function isImageClass($contentId)
+    /**
+     * @param $id
+     * @param bool $isContentId Whatever provided $id is a content id or location id
+     * @param $contentFieldId
+     * @return bool
+     */
+    protected function isImageContentType($id, $isContentId, $contentFieldId)
     {
-        $contentService = $this->apiRepository->getContentService();
-        $contentInfo = $contentService->loadContentInfo($contentId);
+        if ($contentFieldId === null) {
+            $contentFieldId = '[unknown]';
+        }
+
+        try {
+            if ($isContentId) {
+                $contentService = $this->apiRepository->getContentService();
+                $contentInfo = $contentService->loadContentInfo($id);
+            } else {
+                $locationService = $this->apiRepository->getLocationService();
+                try {
+                    $location = $locationService->loadLocation($id);
+                } catch (NotFoundException $e) {
+                    $this->logger->warning("Unable to find node_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
+
+                    return false;
+                }
+                $contentInfo = $location->getContentInfo();
+            }
+        } catch (NotFoundException $e) {
+            $this->logger->warning("Unable to find content_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
+
+            return false;
+        }
+
         return in_array($contentInfo->contentTypeId, $this->imageContentTypes);
     }
 
     /**
-     * Embedded images needs to include an attribute (ezxhtml:class="ez-embed-type-image) in order to be recognized by editor
+     * @param DOMNode $node
+     * @param $value
+     * @return bool returns true if node was changed
+     */
+    private function addXhtmlClassValue(DOMNode $node, $value)
+    {
+        $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
+        if ($classAttributes == null) {
+            $node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+
+            return true;
+        }
+
+        $attributes = explode(' ', $classAttributes->nodeValue);
+
+        $key = array_search($value, $attributes);
+        if ($key === false) {
+            $classAttributes->value = $classAttributes->nodeValue . " $value";
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param DOMNode $node
+     * @param $value
+     * @return bool returns true if node was changed
+     */
+    private function removeXhtmlClassValue(DOMNode $node, $value)
+    {
+        $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
+        if ($classAttributes == null) {
+            return false;
+        }
+
+        $attributes = explode(' ', $classAttributes->nodeValue);
+
+        $classNameFound = false;
+        $key = array_search($value, $attributes);
+        if ($key !== false) {
+            unset($attributes[$key]);
+            $classNameFound = true;
+        }
+
+        if ($classNameFound) {
+            if (count($attributes) === 0) {
+                $node->removeAttribute('ezxhtml:class');
+            } else {
+                $classAttributes->value = implode(' ', $attributes);
+            }
+        }
+
+        return $classNameFound;
+    }
+
+    /**
+     * Embedded images needs to include an attribute (ezxhtml:class="ez-embed-type-image) in order to be recognized by editor.
      *
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded in the $richtextDocument.
      *
      * @param DOMDocument $richtextDocument
+     * @param $contentFieldId
      * @return int Number of ezembed tags which where changed
      */
-    public function tagEmbeddedImages(DOMDocument $richtextDocument)
+    public function tagEmbeddedImages(DOMDocument $richtextDocument, $contentFieldId)
     {
         $count = 0;
         $xpath = new DOMXPath($richtextDocument);
         $ns = $richtextDocument->documentElement->namespaceURI;
         $xpath->registerNamespace('doc', $ns);
-        $nodes = $xpath->query('//doc:ezembed');
+        $nodes = $xpath->query('//doc:ezembed | //doc:ezembedinline');
         foreach ($nodes as $node) {
-            //href is in format : ezcontent://123
-            $href=$node->attributes->getNamedItem('href')->nodeValue;
-            $contentId = (int) substr($href, strrpos($href, '/')+1);
-            $classAttribute = $node->attributes->getNamedItem('class');
-            if ($this->isImageClass($contentId)) {
-                if (($classAttribute === null) || (($classAttribute !== null) && ($node->attributes->getNamedItem('class')->nodeValue !== 'ez-embed-type-image'))) {
-                    $node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+            //href is in format : ezcontent://123 or ezlocation://123
+            $href = $node->attributes->getNamedItem('href')->nodeValue;
+            $isContentId = strpos($href, 'ezcontent') === 0;
+            $id = (int) substr($href, strrpos($href, '/') + 1);
+            $isImage = $this->isImageContentType($id, $isContentId, $contentFieldId);
+            if ($isImage) {
+                if ($this->addXhtmlClassValue($node, 'ez-embed-type-image')) {
                     ++$count;
                 }
             } else {
-                if (($classAttribute !== null) && ($node->attributes->getNamedItem('class')->nodeValue === 'ez-embed-type-image')) {
-                    $node->removeAttribute('ezxhtml:class');
-                    //$node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+                if ($this->removeXhtmlClassValue($node, 'ez-embed-type-image')) {
                     ++$count;
                 }
             }
         }
+
         return $count;
     }
 
@@ -147,22 +246,22 @@ class RichText implements Converter
      *
      * @param DOMDocument $inputDocument
      * @param bool $checkDuplicateIds
-     * @param null $contentObjectAttributeId
+     * @param null|int $contentFieldId
      * @return string
      */
-    public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $contentObjectAttributeId = null)
+    public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $contentFieldId = null)
     {
         $this->removeComments($inputDocument);
 
         $convertedDocument = $this->converter->convert($inputDocument);
         if ($checkDuplicateIds) {
-            $this->reportNonUniqueIds($convertedDocument, $contentObjectAttributeId);
+            $this->reportNonUniqueIds($convertedDocument, $contentFieldId);
         }
 
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
         $convertedDocumentNormalized = new DOMDocument();
         $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
-        $this->tagEmbeddedImages($convertedDocumentNormalized);
+        $this->tagEmbeddedImages($convertedDocumentNormalized, $contentFieldId);
 
         $errors = $this->validator->validate($convertedDocumentNormalized);
 
@@ -170,7 +269,7 @@ class RichText implements Converter
 
         if (!empty($errors) && $this->logger !== null) {
             $this->logger->error(
-                "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentObjectAttributeId",
+                "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentFieldId",
                 ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]
             );
         }

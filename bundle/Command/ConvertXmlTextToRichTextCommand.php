@@ -8,6 +8,7 @@ use DOMDocument;
 use PDO;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,7 +33,7 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     private $converter;
 
-    public function __construct(Connection $dbal, RichTextConverter $converter, LoggerInterface $logger = null)
+    public function __construct(Connection $dbal, RichTextConverter $converter, LoggerInterface $logger)
     {
         parent::__construct();
 
@@ -75,7 +76,7 @@ EOT
                 'image-content-types',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Comma separated list of content types which are considered as images when converting embedded tags. Default value is 27'
+                'Comma separated list of content type identifiers which are considered as images when converting embedded tags. Default value is image'
             )
             ->addOption(
                 'fix-embedded-images-only',
@@ -96,34 +97,59 @@ EOT
             $dryRun = true;
         }
 
-        $testContentObjectId = $input->getOption('test-content-object');
+        $testContentId = $input->getOption('test-content-object');
 
         if ($input->getOption('image-content-types')) {
-            $contentTypes = explode(',', $input->getOption('image-content-types'));
+            $contentTypeIdentifiers = explode(',', $input->getOption('image-content-types'));
         } else {
-            $contentTypes = array(27);
+            $contentTypeIdentifiers = ['image'];
         }
-        $this->converter->setImageContentTypes($contentTypes);
+        $contentTypeIds = $this->getContentTypeIds($contentTypeIdentifiers);
+        if (count($contentTypeIds) !== count($contentTypeIdentifiers)) {
+            throw new RuntimeException('Unable to lookup all content type identifiers, found : ' . implode(',', $contentTypeIds));
+        }
+        $this->converter->setImageContentTypes($contentTypeIds);
 
         if ($input->getOption('fix-embedded-images-only')) {
             $output->writeln("Fixing embedded images only. No other changes are done to the database\n");
-            $this->fixEmbeddedImages($dryRun, $testContentObjectId, $output);
+            $this->fixEmbeddedImages($dryRun, $testContentId, $output);
+
             return;
         }
 
-        if ($testContentObjectId === null) {
+        if ($testContentId === null) {
             $this->convertFieldDefinitions($dryRun, $output);
         } else {
             $dryRun = true;
         }
 
-        $this->convertFields($dryRun, $testContentObjectId, !$input->getOption('disable-duplicate-id-check'), $output);
+        $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), $output);
+    }
+
+    protected function getContentTypeIds($contentTypeIdentifiers)
+    {
+        $query = $this->dbal->createQueryBuilder();
+
+        $query->select('c.id')
+            ->from('ezcontentclass', 'c')
+            ->where(
+                $query->expr()->in(
+                    'c.identifier',
+                    ':contentTypeIdentifiers'
+                )
+            )
+            ->setParameter(':contentTypeIdentifiers', $contentTypeIdentifiers, Connection::PARAM_STR_ARRAY);
+
+        $statement = $query->execute();
+
+        return $statement->fetchAll(PDO::FETCH_COLUMN);
     }
 
     protected function loginAsAdmin()
     {
         $userService = $this->getContainer()->get('ezpublish.api.service.user');
-        $permissionResolver = $this->getContainer()->get('date_based_publisher.permission_resolver');
+        $repository = $this->getContainer()->get('ezpublish.api.repository');
+        $permissionResolver = $repository->getPermissionResolver();
         $permissionResolver->setCurrentUserReference($userService->loadUserByLogin('admin'));
     }
 
@@ -154,10 +180,9 @@ EOT
                 $this->logger->info(
                     "No embedded image(s) in ezrichtext field #{$row['id']} needed to be updated",
                     [
-                        'original' => $inputValue
+                        'original' => $inputValue,
                     ]
                 );
-
             } else {
                 $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
 
@@ -165,7 +190,7 @@ EOT
                     "Updated $count embded image(s) in ezrichtext field #{$row['id']}",
                     [
                         'original' => $inputValue,
-                        'converted' => $converted
+                        'converted' => $converted,
                     ]
                 );
             }
@@ -216,7 +241,7 @@ EOT
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
     }
 
-    protected function getRowCountOfContentObjectAttributes($datatypeString, $contentObjectId)
+    protected function getRowCountOfContentObjectAttributes($datatypeString, $contentId)
     {
         $query = $this->dbal->createQueryBuilder();
         $query->select('count(a.id)')
@@ -227,19 +252,20 @@ EOT
                     ':datatypestring'
                 )
             )
-            ->setParameter(':datatypestring',$datatypeString);
+            ->setParameter(':datatypestring', $datatypeString);
 
-        if ($contentObjectId !== null) {
+        if ($contentId !== null) {
             $query->andWhere(
                 $query->expr()->eq(
                     'a.contentobject_id',
-                    ':contentobjectid'
+                    ':contentid'
                 )
             )
-                ->setParameter(':contentobjectid', $contentObjectId);
+                ->setParameter(':contentid', $contentId);
         }
 
         $statement = $query->execute();
+
         return (int) $statement->fetchColumn();
     }
 
@@ -259,17 +285,18 @@ EOT
                     ':datatypestring'
                 )
             )
-            ->setParameter(':datatypestring',$datatypeString);
+            ->setParameter(':datatypestring', $datatypeString);
 
         if ($contentId !== null) {
             $query->andWhere(
                 $query->expr()->eq(
                     'a.contentobject_id',
-                    ':contentobjectid'
+                    ':contentid'
                 )
             )
-                ->setParameter(':contentobjectid', $contentId);
+                ->setParameter(':contentid', $contentId);
         }
+
         return $query->execute();
     }
 
@@ -291,25 +318,25 @@ EOT
                     ':version'
                 )
             )
-            ->setParameters(array(
+            ->setParameters([
                 ':datatypestring' => 'ezrichtext',
                 ':datatext' => $datatext,
                 ':id' => $id,
-                ':version' => $version
-            ));
+                ':version' => $version,
+            ]);
 
         if (!$dryRun) {
             $updateQuery->execute();
         }
     }
 
-    protected function convertFields($dryRun, $contentObjectId, $checkDuplicateIds, OutputInterface $output)
+    protected function convertFields($dryRun, $contentId, $checkDuplicateIds, OutputInterface $output)
     {
-        $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', $contentObjectId);
+        $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', $contentId);
 
         $output->writeln("Found $count field rows to convert.");
 
-        $statement = $this->getFieldRows('ezxmltext', $contentObjectId);
+        $statement = $this->getFieldRows('ezxmltext', $contentId);
 
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if (empty($row['data_text'])) {

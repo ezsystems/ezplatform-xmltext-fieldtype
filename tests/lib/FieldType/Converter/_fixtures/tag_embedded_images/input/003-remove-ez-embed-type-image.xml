@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para>And here we have a file which should not contain ez-embed-type-image</para>
+    <ezembed xlink:href="ezcontent://128" view="embed" ezxhtml:class="ez-embed-type-image">
+        <ezconfig>
+            <ezvalue key="size">medium</ezvalue>
+            <ezvalue key="offset">0</ezvalue>
+            <ezvalue key="limit">5</ezvalue>
+        </ezconfig>
+    </ezembed>
+    <para>And here we have a file which should only have foobar</para>
+    <ezembed xlink:href="ezcontent://128" view="embed" ezxhtml:class="foobar ez-embed-type-image">
+        <ezconfig>
+            <ezvalue key="size">medium</ezvalue>
+            <ezvalue key="offset">0</ezvalue>
+            <ezvalue key="limit">5</ezvalue>
+        </ezconfig>
+    </ezembed>
+    <para>Here we have a nice image which should keep class as is</para>
+    <ezembed xlink:href="ezcontent://126" view="embed" ezxhtml:class="ez-embed-type-image">
+        <ezconfig>
+            <ezvalue key="size">medium</ezvalue>
+            <ezvalue key="offset">0</ezvalue>
+            <ezvalue key="limit">5</ezvalue>
+        </ezconfig>
+    </ezembed>
+</section>

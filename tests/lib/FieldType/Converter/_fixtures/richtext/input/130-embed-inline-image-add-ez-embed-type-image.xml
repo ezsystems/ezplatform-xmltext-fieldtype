@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>Here we have a nice image
+        <embed-inline view="embed" size="medium" object_id="126"/>
+    </paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">And here we have a file
+        <embed-inline view="embed" size="medium" object_id="128"/>
+    </paragraph>
+    <paragraph>Here we have a nice image with node_id
+        <embed-inline view="embed" size="medium" node_id="200"/>
+    </paragraph>
+</section>

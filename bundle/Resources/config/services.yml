@@ -19,5 +19,5 @@ services:
     ezxmltext.richtext_converter:
         class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText
         arguments:
-            - "@?logger"
             - "@ezpublish.api.repository"
+            - "@?logger"

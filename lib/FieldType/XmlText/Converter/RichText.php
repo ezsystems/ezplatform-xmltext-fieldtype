@@ -25,13 +25,21 @@ class RichText implements Converter
     private $converter;
 
     /**
+     * @var int[]
+     */
+    private $imageContentTypes;
+    /**
      * @var \eZ\Publish\Core\FieldType\RichText\Validator
      */
     private $validator;
 
-    public function __construct(LoggerInterface $logger = null)
+    private $apiRepository;
+
+    public function __construct(LoggerInterface $logger = null, $apiRepository = null, $imageContentTypes = array())
     {
         $this->logger = $logger;
+        $this->imageContentTypes = $imageContentTypes;
+        $this->apiRepository = $apiRepository;
 
         $this->converter = new Aggregate(
             [
@@ -54,6 +62,14 @@ class RichText implements Converter
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
             ]
         );
+    }
+
+    /**
+     * @param array $imageContentTypes List of ContentType Ids which are considered as images
+     */
+    public function setImageContentTypes(array $imageContentTypes)
+    {
+        $this->imageContentTypes = $imageContentTypes;
     }
 
     protected function removeComments(DOMDocument $document)
@@ -81,6 +97,59 @@ class RichText implements Converter
         }
     }
 
+    protected function isImageClass($contentId)
+    {
+        $contentService = $this->apiRepository->getContentService();
+        $contentInfo = $contentService->loadContentInfo($contentId);
+        return in_array($contentInfo->contentTypeId, $this->imageContentTypes);
+    }
+
+    /**
+     * Embedded images needs to include an attribute (ezxhtml:class="ez-embed-type-image) in order to be recognized by editor
+     *
+     * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
+     * being embedded in the $richtextDocument.
+     *
+     * @param DOMDocument $richtextDocument
+     * @return int Number of ezembed tags which where changed
+     */
+    public function tagEmbeddedImages(DOMDocument $richtextDocument)
+    {
+        $count = 0;
+        $xpath = new DOMXPath($richtextDocument);
+        $ns = $richtextDocument->documentElement->namespaceURI;
+        $xpath->registerNamespace('doc', $ns);
+        $nodes = $xpath->query('//doc:ezembed');
+        foreach ($nodes as $node) {
+            //href is in format : ezcontent://123
+            $href=$node->attributes->getNamedItem('href')->nodeValue;
+            $contentId = (int) substr($href, strrpos($href, '/')+1);
+            $classAttribute = $node->attributes->getNamedItem('class');
+            if ($this->isImageClass($contentId)) {
+                if (($classAttribute === null) || (($classAttribute !== null) && ($node->attributes->getNamedItem('class')->nodeValue !== 'ez-embed-type-image'))) {
+                    $node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+                    ++$count;
+                }
+            } else {
+                if (($classAttribute !== null) && ($node->attributes->getNamedItem('class')->nodeValue === 'ez-embed-type-image')) {
+                    $node->removeAttribute('ezxhtml:class');
+                    //$node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+                    ++$count;
+                }
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
+     * being embedded in the $inputDocument.
+     *
+     * @param DOMDocument $inputDocument
+     * @param bool $checkDuplicateIds
+     * @param null $contentObjectAttributeId
+     * @return string
+     */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $contentObjectAttributeId = null)
     {
         $this->removeComments($inputDocument);
@@ -93,8 +162,9 @@ class RichText implements Converter
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
         $convertedDocumentNormalized = new DOMDocument();
         $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
+        $this->tagEmbeddedImages($convertedDocumentNormalized);
 
-        $errors = $this->validator->validate($convertedDocument);
+        $errors = $this->validator->validate($convertedDocumentNormalized);
 
         $result = $convertedDocumentNormalized->saveXML();
 

@@ -12,6 +12,9 @@ use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
 use DOMDocument;
 use DOMXPath;
 use PHPUnit\Framework\TestCase;
+use eZ\Publish\Core\SignalSlot\Repository;
+use eZ\Publish\API\Repository\ContentService;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 
 class RichTextTest extends TestCase
 {
@@ -76,8 +79,27 @@ class RichTextTest extends TestCase
      */
     public function testConvert($inputFilePath, $outputFilePath)
     {
+        $apiRepositoryStub = $this->createMock(Repository::class);
+        $contentServiceStub = $this->createMock(ContentService::class);
+        $contentInfoImageStub = $this->createMock(ContentInfo::class);
+        $contentInfoFileStub = $this->createMock(ContentInfo::class);
+        // content with id=126 is an image, content with id=128,129 is a file
+        $map = [
+            [126, $contentInfoImageStub],
+            [128, $contentInfoFileStub],
+            [129, $contentInfoFileStub]
+        ];
+        $apiRepositoryStub->method('getContentService')
+            ->willReturn($contentServiceStub);
+        $contentServiceStub->method('loadContentInfo')
+            ->will($this->returnValueMap($map));
+
+        // image content type has id=27, file content type has id=27
+        $contentInfoImageStub->method('__get')->willReturn(27);
+        $contentInfoFileStub->method('__get')->willReturn(25);
+
         $inputDocument = $this->createDocument($inputFilePath);
-        $richText = new RichText(null);
+        $richText = new RichText(null, $apiRepositoryStub, array(27));
 
         $result = $richText->convert($inputDocument, true);
 

@@ -6,7 +6,7 @@
         xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
     <para>foobar test : embed
     </para>
-    <ezembed xlink:href="ezcontent://84" xml:id="duplicated_id_foobar0" view="embed">
+    <ezembed xlink:href="ezcontent://128" xml:id="duplicated_id_foobar0" view="embed">
         <ezconfig>
             <ezvalue key="size">medium</ezvalue>
             <ezvalue key="offset">0</ezvalue>
@@ -16,7 +16,7 @@
     <para>qweqweqwe : embed inline
     </para>
     <para>
-        <ezembedinline xlink:href="ezcontent://59" xml:id="duplicated_id_foobar1" view="embed-inline">
+        <ezembedinline xlink:href="ezcontent://129" xml:id="duplicated_id_foobar1" view="embed-inline">
             <ezconfig>
                 <ezvalue key="size">medium</ezvalue>
             </ezconfig>

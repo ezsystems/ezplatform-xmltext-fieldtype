@@ -72,7 +72,7 @@ class RichText implements Converter
         $ns = $document->documentElement->namespaceURI;
         $nodes = $xpath->query("//*[contains(@xml:id, 'duplicated_id_')]");
         foreach ($nodes as $node) {
-            $id=$node->attributes->getNamedItem('id')->nodeValue;
+            $id = $node->attributes->getNamedItem('id')->nodeValue;
             // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
             $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
             if ($this->logger !== null) {

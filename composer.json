@@ -16,7 +16,8 @@
     "require-dev": {
         "phpunit/phpunit": "^5.7",
         "matthiasnoback/symfony-dependency-injection-test": "~1.0",
-        "ezsystems/ezplatform-solr-search-engine": "^1.0@dev,<1.3"
+        "ezsystems/ezplatform-solr-search-engine": "^1.0@dev,<1.3",
+        "friendsofphp/php-cs-fixer": "~2.7.1"
     },
     "autoload": {
         "psr-4": {
@@ -31,6 +32,9 @@
             "EzSystems\\EzPlatformXmlTextFieldTypeBundle\\Tests\\": "tests/bundle",
             "EzSystems\\EzPlatformXmlTextFieldType\\Tests\\": "tests/lib"
         }
+    },
+    "scripts": {
+        "fix-cs": "@php ./vendor/bin/php-cs-fixer fix -v --show-progress=estimating"
     },
     "extra": {
         "branch-alias": {

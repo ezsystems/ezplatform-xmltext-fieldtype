@@ -1095,8 +1095,6 @@ ezlegacytmp-embed-link-node_id="222"
             array('content', 'versionread', true),
         );
 
-
-
         $dom = new \DOMDocument();
         $dom->loadXML($input);
 
@@ -1151,7 +1149,6 @@ ezlegacytmp-embed-link-node_id="222"
         $outputDocument->loadXML($output);
 
         $this->assertEquals($outputDocument, $dom);
-
     }
 
     public function providerEmbedRemovesTextContent()
@@ -1169,13 +1166,13 @@ ezlegacytmp-embed-link-node_id="222"
                 sprintf($xmlFramework, '<embed-inline object_id="123">content to be removed</embed-inline>'),
                 sprintf($xmlFramework, '<embed-inline object_id="123">ContentReplacement</embed-inline>'),
                 'ContentReplacement',
-                123
+                123,
             ),
             array(
                 sprintf($xmlFramework, '<embed object_id="789">Content to be removed</embed>'),
                 sprintf($xmlFramework, '<embed object_id="789">Other random content</embed>'),
                 'Other random content',
-                789
+                789,
             ),
         );
     }

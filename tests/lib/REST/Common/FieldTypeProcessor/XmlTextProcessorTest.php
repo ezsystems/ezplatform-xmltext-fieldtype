@@ -26,7 +26,7 @@ class XmlTextProcessorTest extends TestCase
             [
                 array('tagPreset' => 'TAG_PRESET_SIMPLE_FORMATTING'),
                 array('tagPreset' => Type::TAG_PRESET_SIMPLE_FORMATTING),
-            ]
+            ],
         ];
     }
 

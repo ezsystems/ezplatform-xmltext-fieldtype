@@ -12,7 +12,6 @@ use eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator;
 use eZ\Publish\SPI\Persistence\Content\Handler as ContentHandler;
 use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 use eZ\Publish\API\Repository\Exceptions\NotFoundException;
-
 use PHPUnit\Framework\TestCase;
 
 class InternalLinkValidatorTest extends TestCase
@@ -48,8 +47,8 @@ class InternalLinkValidatorTest extends TestCase
             [
                 'scheme' => 'ezobject',
                 'target' => $objectId,
-                'anchor_name' => null
-            ]
+                'anchor_name' => null,
+            ],
         ]));
 
         $this->assertEmpty($errors);
@@ -74,8 +73,8 @@ class InternalLinkValidatorTest extends TestCase
             [
                 'scheme' => 'ezobject',
                 'target' => $objectId,
-                'anchor_name' => $anchorName
-            ]
+                'anchor_name' => $anchorName,
+            ],
         ]));
 
         $this->assertCount(1, $errors);
@@ -87,11 +86,11 @@ class InternalLinkValidatorTest extends TestCase
         return [
             [
                 'objectId' => 2,
-                'anchorName' => null
+                'anchorName' => null,
             ],
             [
                 'objectId' => 2,
-                'anchorName' => 'anchor'
+                'anchorName' => 'anchor',
             ],
         ];
     }
@@ -111,8 +110,8 @@ class InternalLinkValidatorTest extends TestCase
             [
                 'scheme' => 'eznode',
                 'target' => $nodeId,
-                'anchor_name' => null
-            ]
+                'anchor_name' => null,
+            ],
         ]));
 
         $this->assertEmpty($errors);
@@ -121,7 +120,7 @@ class InternalLinkValidatorTest extends TestCase
     /**
      * @dataProvider getValidateEzNodeNonExistingTargetData
      */
-    public function testValidateEzNodeNonExistingTarget($nodeId , $anchorName)
+    public function testValidateEzNodeNonExistingTarget($nodeId, $anchorName)
     {
         $exception = $this->createMock(NotFoundException::class);
         $this->locationHandler
@@ -136,8 +135,8 @@ class InternalLinkValidatorTest extends TestCase
             [
                 'scheme' => 'eznode',
                 'target' => $nodeId,
-                'anchor_name' => $anchorName
-            ]
+                'anchor_name' => $anchorName,
+            ],
         ]));
 
         $this->assertCount(1, $errors);
@@ -149,12 +148,12 @@ class InternalLinkValidatorTest extends TestCase
         return [
             [
                 'nodeId' => 2,
-                'anchorName' => null
+                'anchorName' => null,
             ],
             [
                 'nodeId' => 2,
-                'anchroName' => 'anchor'
-            ]
+                'anchroName' => 'anchor',
+            ],
         ];
     }
 
@@ -205,6 +204,7 @@ class InternalLinkValidatorTest extends TestCase
 
         $doc = new \DOMDocument();
         $doc->loadXML($xml);
+
         return $doc;
     }
 
@@ -226,4 +226,3 @@ class InternalLinkValidatorTest extends TestCase
         return sprintf('<link object_id="%s" anchor_name="%s">Link</link>', $id, $anchorName);
     }
 }
-

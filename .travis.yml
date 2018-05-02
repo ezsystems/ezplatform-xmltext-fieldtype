@@ -7,7 +7,7 @@ matrix:
         - php: 7.0
           env: TEST_CONFIG="phpunit.xml"
         - php: 7.1
-          env: TEST_CONFIG="phpunit.xml"
+          env: TEST_CONFIG="phpunit.xml" CHECK_CS=true
         - php: 5.6
           env: TEST_CONFIG="phpunit-integration-legacy.xml"
         - php: 7.1
@@ -30,6 +30,7 @@ before_script:
 
 script:
     - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
+    - if [ "$CHECK_CS" == "true" ]; then phpenv config-rm xdebug.ini && ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
 
 notifications:
     email: false

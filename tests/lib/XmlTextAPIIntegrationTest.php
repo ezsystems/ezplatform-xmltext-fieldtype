@@ -27,7 +27,7 @@ use EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacySetupFactory;
  * @group integration
  * @group field-type
  */
-class XmlTexAPItIntegrationTest extends SearchBaseIntegrationTest
+class XmlTextAPIIntegrationTest extends SearchBaseIntegrationTest
 {
     use RelationSearchBaseIntegrationTestTrait;
 

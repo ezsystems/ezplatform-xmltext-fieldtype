@@ -103,6 +103,7 @@ class Expanding implements Converter
     private function getContainmentMapXPathExpression($global)
     {
         $axis = $global ? '//' : '';
+
         return $axis . implode('|' . $axis, array_keys($this->containmentMap));
     }
 
@@ -113,16 +114,16 @@ class Expanding implements Converter
      * @param \DOMElement $paragraph
      * @return bool
      */
-    private function isTemporary(DOMElement $paragraph) {
-
-        return (
+    private function isTemporary(DOMElement $paragraph)
+    {
+        return
             $paragraph->hasAttribute('xmlns:tmp')
             && (
                 $this->containsBlock($paragraph)
                 || $this->isChildOfListItem($paragraph)
                 || $this->isEmpty($paragraph)
             )
-        );
+        ;
     }
 
     /**
@@ -133,7 +134,7 @@ class Expanding implements Converter
      */
     private function isEmpty(DOMElement $paragraph)
     {
-        return ($paragraph->childNodes->length === 0);
+        return $paragraph->childNodes->length === 0;
     }
 
     /**
@@ -144,7 +145,7 @@ class Expanding implements Converter
      */
     private function isChildOfListItem(DOMElement $paragraph)
     {
-        return ($paragraph->parentNode->localName === 'li');
+        return $paragraph->parentNode->localName === 'li';
     }
 
     /**
@@ -161,11 +162,11 @@ class Expanding implements Converter
         $xpath = new DOMXPath($paragraph->ownerDocument);
         $containedExpression = $this->getContainmentMapXPathExpression(false);
 
-        return (
+        return
             $xpath->query($containedExpression, $paragraph)->length !== 0
             || $xpath->query('custom/paragraph', $paragraph)->length !== 0
             || $xpath->query('custom/section', $paragraph)->length !== 0
-        );
+        ;
     }
 
     /**
@@ -293,10 +294,10 @@ class Expanding implements Converter
      */
     protected function isTangled(DOMNode $node)
     {
-        return (
+        return
             isset($this->containmentMap[$node->localName])
             || ($node instanceof DOMElement && $node->hasAttribute(static::ATTRIBUTE_INHERIT_TANGLEMENT))
-        );
+        ;
     }
 
     /**
@@ -309,10 +310,10 @@ class Expanding implements Converter
      */
     protected function isTangler(DOMElement $element, DOMNode $node)
     {
-        return (
+        return
             !isset($this->containmentMap[$node->localName][$element->localName])
             || ($node instanceof DOMElement && $node->hasAttribute(static::ATTRIBUTE_INHERIT_TANGLEMENT))
-        );
+        ;
     }
 
     /**

@@ -39,7 +39,7 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
     {
         $this
             ->setName('ezxmltext:convert-to-richtext')
-            ->setDescription( <<< EOT
+            ->setDescription(<<< EOT
 Converts XmlText fields from eZ Publish Platform to RichText fields.
 
 == WARNING ==
@@ -96,7 +96,7 @@ EOT
                     ':datatypestring'
                 )
             )
-            ->setParameter(':datatypestring','ezxmltext');
+            ->setParameter(':datatypestring', 'ezxmltext');
 
         $statement = $query->execute();
         $count = (int) $statement->fetchColumn();
@@ -117,7 +117,7 @@ EOT
             ->setParameters([
                 ':newdatatypestring' => 'ezrichtext',
                 ':datatext2' => null,
-                ':olddatatypestring' => 'ezxmltext'
+                ':olddatatypestring' => 'ezxmltext',
             ]);
 
         if (!$dryRun) {
@@ -139,7 +139,7 @@ EOT
                     ':datatypestring'
                 )
             )
-            ->setParameter(':datatypestring','ezxmltext');
+            ->setParameter(':datatypestring', 'ezxmltext');
 
         if ($contentObjectId !== null) {
             $query->andWhere(
@@ -165,7 +165,7 @@ EOT
                     ':datatypestring'
                 )
             )
-            ->setParameter(':datatypestring','ezxmltext');
+            ->setParameter(':datatypestring', 'ezxmltext');
 
         if ($contentObjectId !== null) {
             $query->andWhere(
@@ -207,7 +207,7 @@ EOT
                     ':datatypestring' => 'ezrichtext',
                     ':datatext' => $converted,
                     ':id' => $row['id'],
-                    ':version' => $row['version']
+                    ':version' => $row['version'],
                 ]);
 
             if (!$dryRun) {
@@ -218,7 +218,7 @@ EOT
                 "Converted ezxmltext field #{$row['id']} to richtext",
                 [
                     'original' => $inputValue,
-                    'converted' => $converted
+                    'converted' => $converted,
                 ]
             );
         }

@@ -113,7 +113,6 @@ class XmlTextTest extends TestCase
             $validationResult,
             'validateFieldSettings() considered the input settings invalid, while they should be valid: '
         );
-
     }
 
     /**
@@ -209,14 +208,14 @@ class XmlTextTest extends TestCase
             array(
                 array(
                     'numRows' => 10,
-                    'tagPreset' => ''
-                )
+                    'tagPreset' => '',
+                ),
             ),
             array(
                 array(
                     'numRows' => 10,
                     'tagPreset' => 0,
-                )
+                ),
             ),
         );
     }
@@ -227,28 +226,27 @@ class XmlTextTest extends TestCase
             array(
                 array(
                     'numRows' => '',
-                    'tagPreset' => ''
+                    'tagPreset' => '',
                 ),
             ),
             array(
                 array(
                     'numRows' => 10,
-                    'tagPreset' => 'a'
-                )
+                    'tagPreset' => 'a',
+                ),
             ),
             array(
                 array(
                     'numRows' => 'a',
-                    'tagPreset' => 0
-                )
-            )
+                    'tagPreset' => 0,
+                ),
+            ),
         );
     }
 
     public static function providerForTestAcceptValueValidFormat()
     {
         return array(
-
             array(
                 $xml = '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
@@ -270,7 +268,6 @@ class XmlTextTest extends TestCase
     public static function providerForTestAcceptValueInvalidFormat()
     {
         return array(
-
             array(
                 '<?xml version="1.0" encoding="utf-8"?>
 <section><h1>This is a piece of text</h1></section>',
@@ -320,7 +317,6 @@ class XmlTextTest extends TestCase
     public static function providerForTestGetName()
     {
         return array(
-
             array(
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"

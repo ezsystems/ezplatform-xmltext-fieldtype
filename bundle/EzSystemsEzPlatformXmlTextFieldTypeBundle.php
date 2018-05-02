@@ -24,7 +24,7 @@ class EzSystemsEzPlatformXmlTextFieldTypeBundle extends Bundle
         $container->addCompilerPass(new XmlTextConverterPass());
 
         /**
-         * @var \eZ\Bundle\EzPublishCoreBundle\DependencyInjection\EzPublishCoreExtension $eZExtension
+         * @var \eZ\Bundle\EzPublishCoreBundle\DependencyInjection\EzPublishCoreExtension
          */
         $eZExtension = $container->getExtension('ezpublish');
         $eZExtension->addConfigParser(new ConfigParser\FieldType\XmlText());

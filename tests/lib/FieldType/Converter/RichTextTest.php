@@ -62,7 +62,7 @@ class RichTextTest extends TestCase
         $xpath = new DOMXPath($xmlDoc);
         $nodes = $xpath->query("//*[contains(@xml:id, 'duplicated_id_')]");
         foreach ($nodes as $node) {
-            $id=$node->attributes->getNamedItem('id')->nodeValue;
+            $id = $node->attributes->getNamedItem('id')->nodeValue;
             $node->attributes->getNamedItem('id')->nodeValue = "duplicated_id_foobar$counter";
             ++$counter;
         }

@@ -237,6 +237,19 @@ class RichText implements Converter
     }
 
     /**
+     * Check if $inputDocument has any embed|embed-inline tags without node_id or object_id
+     * @param DOMDocument $inputDocument
+     */
+    protected function checkEmptyEmbedTags(DOMDocument $inputDocument)
+    {
+        $xpath = new DOMXPath($inputDocument);
+        $nodes = $xpath->query('//embed[not(@node_id|@object_id)] | //embed-inline[not(@node_id|@object_id)]');
+        if (count($nodes) > 0 ) {
+            $this->logger->warning("Warning: ezxmltext for contentobject_attribute.id=" . $this->currentContentFieldId . "contains embed or embed-inline tag(s) without node_id or object_id");
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded in the $inputDocument.
      *
@@ -250,6 +263,7 @@ class RichText implements Converter
         $this->currentContentFieldId = $contentFieldId;
         $this->removeComments($inputDocument);
 
+        $this->checkEmptyEmbedTags($inputDocument);
         $convertedDocument = $this->converter->convert($inputDocument);
         if ($checkDuplicateIds) {
             $this->reportNonUniqueIds($convertedDocument);

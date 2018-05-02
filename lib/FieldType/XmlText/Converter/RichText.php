@@ -34,25 +34,25 @@ class RichText implements Converter
         $this->logger = $logger;
 
         $this->converter = new Aggregate(
-            array(
+            [
                 new ToRichTextPreNormalize(new Expanding(), new EmbedLinking()),
                 new Xslt(
                     './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/stylesheets/ezxml/docbook/docbook.xsl',
-                    array(
-                        array(
+                    [
+                        [
                             'path' => './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/stylesheets/ezxml/docbook/core.xsl',
                             'priority' => 99,
-                        ),
-                    )
+                        ],
+                    ]
                 ),
-            )
+            ]
         );
 
         $this->validator = new Validator(
-            array(
+            [
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
-            )
+            ]
         );
     }
 

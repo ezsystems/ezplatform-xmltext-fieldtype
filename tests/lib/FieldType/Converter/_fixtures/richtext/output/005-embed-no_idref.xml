@@ -9,17 +9,17 @@
             <ezvalue key="size">original</ezvalue>
         </ezconfig>
     </ezembed>
-    <ezembed view="embed" ezxhtml:align="right" ezxhtml:class="right" xlink:href="ezcontent://128">
+    <ezembed view="embed" ezxhtml:align="right" xlink:href="ezcontent://128">
         <ezconfig>
             <ezvalue key="size">original</ezvalue>
         </ezconfig>
     </ezembed>
-    <ezembedinline view="embed" ezxhtml:align="right" ezxhtml:class="right" xlink:href="ezlocation://128">
+    <ezembedinline view="embed" ezxhtml:align="right" xlink:href="ezlocation://128">
         <ezconfig>
             <ezvalue key="size">original</ezvalue>
         </ezconfig>
     </ezembedinline>
-    <ezembedinline view="embed" ezxhtml:align="right" ezxhtml:class="right" xlink:href="ezcontent://128">
+    <ezembedinline view="embed" ezxhtml:align="right" xlink:href="ezcontent://128">
         <ezconfig>
             <ezvalue key="size">original</ezvalue>
         </ezconfig>

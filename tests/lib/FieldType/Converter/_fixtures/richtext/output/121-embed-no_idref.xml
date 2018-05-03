@@ -14,14 +14,4 @@
             <ezvalue key="size">original</ezvalue>
         </ezconfig>
     </ezembed>
-    <ezembedinline view="embed" ezxhtml:align="right" xlink:href="ezlocation://128">
-        <ezconfig>
-            <ezvalue key="size">original</ezvalue>
-        </ezconfig>
-    </ezembedinline>
-    <ezembedinline view="embed" ezxhtml:align="right" xlink:href="ezcontent://128">
-        <ezconfig>
-            <ezvalue key="size">original</ezvalue>
-        </ezconfig>
-    </ezembedinline>
 </section>

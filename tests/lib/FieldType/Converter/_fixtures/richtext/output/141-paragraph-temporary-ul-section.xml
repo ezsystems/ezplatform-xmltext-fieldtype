@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <itemizedlist>
+        <listitem>
+            <para>item1A</para>
+        </listitem>
+        <listitem>
+            <para><literallayout class="normal">item1B</literallayout>
+                <itemizedlist>
+                    <listitem>
+                        <para>subitem1B1</para>
+                    </listitem>
+                    <listitem>
+                        <para>subitem1B2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </listitem>
+    </itemizedlist>
+    <title ezxhtml:level="2">heading 1</title>
+    <para>list2</para>
+    <itemizedlist>
+        <listitem>
+            <para>item2A</para>
+        </listitem>
+        <listitem>
+            <para><literallayout class="normal">item2B</literallayout>
+                <itemizedlist>
+                    <listitem>
+                        <para>subitem2B1</para>
+                    </listitem>
+                    <listitem>
+                        <para>subitem2B2</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </listitem>
+    </itemizedlist>
+</section>

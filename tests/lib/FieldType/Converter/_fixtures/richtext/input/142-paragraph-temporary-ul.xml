@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <ul>
+            <li>
+                <paragraph
+                        xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">item1A
+                </paragraph>
+            </li>
+            <li>
+                <paragraph
+                        xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+                    <line>item1B</line>
+                    <ul>
+                        <li>
+                            <paragraph
+                                    xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">subitem1B1
+                            </paragraph>
+                        </li>
+                        <li>
+                            <paragraph
+                                    xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">subitem1B2
+                            </paragraph>
+                        </li>
+                    </ul>
+                </paragraph>
+            </li>
+        </ul>
+    </paragraph>
+</section>

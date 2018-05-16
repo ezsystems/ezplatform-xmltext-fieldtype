@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <table width="100%" title="test table summary">
+        <caption>my caption</caption>
+        <tbody>
+            <tr>
+                <td>
+                    <para>1a</para>
+                </td>
+                <td>
+                    <para>1b</para>
+                </td>
+                <td>
+                    <para>1c</para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>2a</para>
+                </td>
+                <td>
+                    <para>2b</para>
+                </td>
+                <td>
+                    <para>2c</para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>3a</para>
+                </td>
+                <td>
+                    <para>3b</para>
+                </td>
+                <td>
+                    <para>3c</para>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <title ezxhtml:level="2">Header 1</title>
+    <table class="default" width="100%" title="summary2">
+        <caption>caption2</caption>
+        <tbody>
+            <tr>
+                <td>
+                    <para>Aa</para>
+                </td>
+                <td>
+                    <para>Ab</para>
+                </td>
+                <td>
+                    <para>Ac</para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>Ba</para>
+                </td>
+                <td>
+                    <para>Bb</para>
+                </td>
+                <td>
+                    <para>Bc</para>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <para>Ca</para>
+                </td>
+                <td>
+                    <para>Cb</para>
+                </td>
+                <td>
+                    <para>Cc</para>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

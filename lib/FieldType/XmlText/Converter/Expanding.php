@@ -5,8 +5,6 @@
  *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
- *
- * @version //autogentag//
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
@@ -18,6 +16,9 @@ use DOMXPath;
 use DOMNode;
 
 /**
+ * Class Expanding.
+ *
+ * This class is used when preparing for xslt transformation of ezxmltext to xhtml
  * Expanding converter expands paragraphs by specific contained elements.
  */
 class Expanding implements Converter
@@ -28,6 +29,13 @@ class Expanding implements Converter
      * @const string
      */
     const ATTRIBUTE_INHERIT_TANGLEMENT = 'ez-inherit-tanglement';
+
+    /**
+     * Attribute denoting parent of paragraph.
+     *
+     * @const string
+     */
+    const ATTRIBUTE_PARAGRAPH_PARENT = 'ez-paragraph-parent';
 
     /**
      * Holds map of the elements that expand the paragraph.
@@ -114,7 +122,7 @@ class Expanding implements Converter
      * @param \DOMElement $paragraph
      * @return bool
      */
-    private function isTemporary(DOMElement $paragraph)
+    protected function isTemporary(DOMElement $paragraph)
     {
         return
             $paragraph->hasAttribute('xmlns:tmp')
@@ -132,7 +140,7 @@ class Expanding implements Converter
      * @param \DOMElement $paragraph
      * @return bool
      */
-    private function isEmpty(DOMElement $paragraph)
+    protected function isEmpty(DOMElement $paragraph)
     {
         return $paragraph->childNodes->length === 0;
     }
@@ -143,7 +151,7 @@ class Expanding implements Converter
      * @param \DOMElement $paragraph
      * @return bool
      */
-    private function isChildOfListItem(DOMElement $paragraph)
+    protected function isChildOfListItem(DOMElement $paragraph)
     {
         return $paragraph->parentNode->localName === 'li';
     }
@@ -157,7 +165,7 @@ class Expanding implements Converter
      * @param \DOMElement $paragraph
      * @return bool
      */
-    private function containsBlock(DOMElement $paragraph)
+    protected function containsBlock(DOMElement $paragraph)
     {
         $xpath = new DOMXPath($paragraph->ownerDocument);
         $containedExpression = $this->getContainmentMapXPathExpression(false);
@@ -203,6 +211,10 @@ class Expanding implements Converter
 
         /** @var \DOMElement $node */
         foreach ($element->childNodes as $node) {
+            // We store the paragraph's parent tag here. Used by ExpandingList
+            if ($node instanceof DOMElement) {
+                $node->setAttribute(static::ATTRIBUTE_PARAGRAPH_PARENT, $node->parentNode->parentNode->localName);
+            }
             // If node was untangled continue with next one
             // New expanding element will be started by the sub-routine in that case
             if ($this->isTangled($node)) {

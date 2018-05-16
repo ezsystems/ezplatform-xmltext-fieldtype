@@ -116,7 +116,7 @@ class RichText implements Converter
         if ($this->converter === null) {
             $this->converter = new Aggregate(
                 [
-                    new ToRichTextPreNormalize(new Expanding(), new EmbedLinking()),
+                    new ToRichTextPreNormalize([new ExpandingToRichText(), new ExpandingList(), new EmbedLinking()]),
                     new Xslt(
                         __DIR__ . '/../Input/Resources/stylesheets/eZXml2Docbook.xsl',
                         $this->styleSheets

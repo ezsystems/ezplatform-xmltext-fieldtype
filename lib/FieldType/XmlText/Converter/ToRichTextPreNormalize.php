@@ -14,14 +14,14 @@ use DOMDocument;
 /**
  * Expands paragraphs and links embeds of a XML document in legacy ezxml format.
  *
- * Relies on XmlText's Expanding and EmbedLinking converters implementation.
+ * Relies on XmlText's ExpandingToRichText, ExpandingSectionParagraph and EmbedLinking converters implementation.
  */
 class ToRichTextPreNormalize implements Converter
 {
     /**
-     * @var \eZ\Publish\Core\FieldType\XmlText\Converter\Expanding
+     * @var \eZ\Publish\Core\FieldType\XmlText\Converter[]
      */
-    protected $expandingConverter;
+    protected $converters;
 
     /**
      * @var \eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking
@@ -31,13 +31,11 @@ class ToRichTextPreNormalize implements Converter
     /**
      * Construct from XmlText converters implementation.
      *
-     * @param \eZ\Publish\Core\FieldType\XmlText\Converter\Expanding $expandingConverter
-     * @param \eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking $embedLinkingConverter
+     * @param \eZ\Publish\Core\FieldType\XmlText\Converter[] $converters
      */
-    public function __construct(Expanding $expandingConverter, EmbedLinking $embedLinkingConverter)
+    public function __construct(array $converters)
     {
-        $this->expandingConverter = $expandingConverter;
-        $this->embedLinkingConverter = $embedLinkingConverter;
+        $this->converters = $converters;
     }
 
     /**
@@ -49,10 +47,9 @@ class ToRichTextPreNormalize implements Converter
      */
     public function convert(DOMDocument $document)
     {
-        // First
-        $this->expandingConverter->convert($document);
-        // Second
-        $this->embedLinkingConverter->convert($document);
+        foreach ($this->converters as $converter) {
+            $converter->convert($document);
+        }
 
         return $document;
     }

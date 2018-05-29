@@ -35,7 +35,7 @@ class Expanding implements Converter
      *
      * @const string
      */
-    const ATTRIBUTE_PARAGRAPH_PARENT = 'ez-paragraph-parent';
+    const ATTRIBUTE_PARAGRAPH_PARENT = 'ez-tmp-paragraph-parent';
 
     /**
      * Holds map of the elements that expand the paragraph.
@@ -80,6 +80,19 @@ class Expanding implements Converter
             foreach ($paragraphs as $paragraph) {
                 $this->expandParagraph($document, $paragraph);
             }
+        }
+        $this->removeParagraphParentAttribute($document);
+        $document->formatOutput = true;
+    }
+
+    protected function removeParagraphParentAttribute(DOMDocument $document)
+    {
+        $xpath = new DOMXPath($document);
+        $xpathExpression = '//*[@' . static::ATTRIBUTE_PARAGRAPH_PARENT . ']';
+
+        $elements = $xpath->query($xpathExpression);
+        foreach ($elements as $element) {
+            $element->removeAttribute(static::ATTRIBUTE_PARAGRAPH_PARENT);
         }
     }
 

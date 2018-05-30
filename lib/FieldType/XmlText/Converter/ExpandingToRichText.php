@@ -55,7 +55,7 @@ class ExpandingToRichText extends Expanding
 
     protected function containsCustomTag(DOMElement $paragraph)
     {
-        //Safty pin; Custom tags are block elements and should be the only element inside the paragraph
+        //Safety pin; Custom tags should be the only element inside the paragraph
         // Also, paragraph might be empty...
         if ($paragraph->childNodes->length !== 1) {
             return false;
@@ -63,5 +63,6 @@ class ExpandingToRichText extends Expanding
         if ($paragraph->childNodes->item(0)->localName === 'custom') {
             return true;
         }
+        return false;
     }
 }

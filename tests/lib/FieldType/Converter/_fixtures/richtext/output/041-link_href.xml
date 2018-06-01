@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
+  <para>
+    <emphasis role="strong">a link to
+            <link xlink:href="http://ez.no/" xlink:show="new">eZ</link>
+        </emphasis>
+  </para>
+</section>

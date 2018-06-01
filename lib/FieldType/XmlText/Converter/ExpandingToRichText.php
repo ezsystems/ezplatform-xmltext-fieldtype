@@ -38,8 +38,6 @@ class ExpandingToRichText extends Expanding
      * Checks whether a paragraph can be considered as temporary and can then be
      * ignored later.
      *
-     * Note : I believe this one could always return false unless when isEmpty() when converting to richtext, but leaving as-is for now.
-     *
      * @param \DOMElement $paragraph
      * @return bool
      */
@@ -49,8 +47,22 @@ class ExpandingToRichText extends Expanding
             $paragraph->hasAttribute('xmlns:tmp')
             && (
                 $this->containsBlock($paragraph)
+                || $this->containsCustomTag($paragraph)
                 || $this->isEmpty($paragraph)
             )
             ;
+    }
+
+    protected function containsCustomTag(DOMElement $paragraph)
+    {
+        //Safety pin; Custom tags should be the only element inside the paragraph
+        // Also, paragraph might be empty...
+        if ($paragraph->childNodes->length !== 1) {
+            return false;
+        }
+        if ($paragraph->childNodes->item(0)->localName === 'custom') {
+            return true;
+        }
+        return false;
     }
 }

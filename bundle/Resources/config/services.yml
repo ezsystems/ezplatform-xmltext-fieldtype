@@ -11,6 +11,13 @@ services:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
         arguments:
             - "@ezpublish.persistence.connection"
+            - "@ezxmltext.richtext_converter"
             - "@?logger"
         tags:
             -  { name: console.command }
+
+    ezxmltext.richtext_converter:
+        class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText
+        arguments:
+            - "@ezpublish.api.repository"
+            - "@?logger"

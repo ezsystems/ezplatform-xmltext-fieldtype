@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para>foobar test : embed
+    </para>
+    <ezembed xlink:href="ezcontent://128" xml:id="duplicated_id_foobar0" view="embed">
+        <ezconfig>
+            <ezvalue key="size">medium</ezvalue>
+            <ezvalue key="offset">0</ezvalue>
+            <ezvalue key="limit">5</ezvalue>
+        </ezconfig>
+    </ezembed>
+    <para>qweqweqwe : embed inline
+    </para>
+    <para>
+        <ezembedinline xlink:href="ezcontent://129" xml:id="duplicated_id_foobar1" view="embed-inline">
+            <ezconfig>
+                <ezvalue key="size">medium</ezvalue>
+            </ezconfig>
+        </ezembedinline>ezembedezembed
+    </para>
+</section>

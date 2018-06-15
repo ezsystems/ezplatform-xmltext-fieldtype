@@ -14,7 +14,6 @@ use DOMXPath;
 use DOMNode;
 use Psr\Log\LoggerInterface;
 use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
-use eZ\Publish\Core\FieldType\RichText\Converter\Ezxml\ToRichTextPreNormalize;
 use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
 use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
@@ -39,39 +38,94 @@ class RichText implements Converter
     private $apiRepository;
 
     /**
+     * @var []
+     */
+    private $styleSheets;
+
+    /**
      * Holds the id of the current contentField being converted.
      *
      * @var null|int
      */
     private $currentContentFieldId;
 
+    /**
+     * RichText constructor.
+     * @param null $apiRepository
+     * @param LoggerInterface|null $logger
+     */
     public function __construct($apiRepository = null, LoggerInterface $logger = null)
     {
         $this->logger = $logger instanceof LoggerInterface ? $logger : new NullLogger();
         $this->imageContentTypes = [];
         $this->apiRepository = $apiRepository;
 
-        $this->converter = new Aggregate(
-            [
-                new ToRichTextPreNormalize(new Expanding(), new EmbedLinking()),
-                new Xslt(
-                    './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/stylesheets/ezxml/docbook/docbook.xsl',
-                    [
-                        [
-                            'path' => './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/stylesheets/ezxml/docbook/core.xsl',
-                            'priority' => 99,
-                        ],
-                    ]
-                ),
-            ]
-        );
+        $this->styleSheets = null;
+        $this->validator = null;
+        $this->converter = null;
+    }
 
-        $this->validator = new Validator(
+    /**
+     * @param array|null $customStylesheets
+     *    $customStylesheet = [
+     *      [
+     *        'path'      => (string) Path to .xsl. Required
+     *        'priority'  => (int) Priority. Required
+     *      ]
+     *    ]
+     */
+    public function setCustomStylesheets(array $customStylesheets = [])
+    {
+        $this->styleSheets = array_merge_recursive(
+            [
+                [
+                    'path' => __DIR__ . '/../Input/Resources/stylesheets/eZXml2Docbook_core.xsl',
+                    'priority' => 99,
+                ],
+            ],
+            $customStylesheets
+        );
+        $this->converter = null;
+    }
+
+    /**
+     * @param array $customValidators
+     */
+    public function setCustomValidators(array $customValidators = [])
+    {
+        $validators = array_merge(
             [
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
+            ],
+            $customValidators,
+            [
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
             ]
         );
+        $this->validator = new Validator($validators);
+    }
+
+    protected function getConverter()
+    {
+        if ($this->styleSheets === null) {
+            $this->setCustomStylesheets([]);
+        }
+        if ($this->validator === null) {
+            $this->setCustomValidators([]);
+        }
+        if ($this->converter === null) {
+            $this->converter = new Aggregate(
+                [
+                    new ToRichTextPreNormalize(new Expanding(), new EmbedLinking()),
+                    new Xslt(
+                        __DIR__ . '/../Input/Resources/stylesheets/eZXml2Docbook.xsl',
+                        $this->styleSheets
+                    ),
+                ]
+            );
+        }
+
+        return $this->converter;
     }
 
     /**
@@ -139,6 +193,10 @@ class RichText implements Converter
         } catch (NotFoundException $e) {
             $this->logger->warning("Unable to find content_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
 
+            return false;
+        }
+
+        if ($contentInfo === null) {
             return false;
         }
 
@@ -253,7 +311,7 @@ class RichText implements Converter
     {
         $this->removeComments($inputDocument);
 
-        $convertedDocument = $this->converter->convert($inputDocument);
+        $convertedDocument = $this->getConverter()->convert($inputDocument);
         if ($checkDuplicateIds) {
             $this->reportNonUniqueIds($convertedDocument, $contentFieldId);
         }

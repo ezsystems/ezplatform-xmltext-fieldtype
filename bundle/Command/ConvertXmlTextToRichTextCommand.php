@@ -64,7 +64,13 @@ EOT
                 'disable-duplicate-id-check',
                 null,
                 InputOption::VALUE_NONE,
-                'Disable the check for duplicate html ids in every attribute. This might increase execution time on large databases'
+                'Disable the check for duplicate html ids in every attribute. This might decrease execution time on large databases'
+            )
+            ->addOption(
+                'disable-id-value-check',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable the check for non-validating id/name values. This might decrease execution time on large databases'
             )
             ->addOption(
                 'test-content-object',
@@ -123,7 +129,7 @@ EOT
             $dryRun = true;
         }
 
-        $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), $output);
+        $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
     }
 
     protected function getContentTypeIds($contentTypeIdentifiers)
@@ -330,7 +336,7 @@ EOT
         }
     }
 
-    protected function convertFields($dryRun, $contentId, $checkDuplicateIds, OutputInterface $output)
+    protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
         $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', $contentId);
 
@@ -345,7 +351,7 @@ EOT
                 $inputValue = $row['data_text'];
             }
 
-            $converted = $this->converter->convert($this->createDocument($inputValue), $checkDuplicateIds, $row['id']);
+            $converted = $this->converter->convert($this->createDocument($inputValue), $checkDuplicateIds, $checkIdValues, $row['id']);
 
             $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
 

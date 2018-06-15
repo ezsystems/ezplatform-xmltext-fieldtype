@@ -137,7 +137,7 @@ class RichTextTest extends TestCase
         $richText = new RichText($apiRepositoryStub);
         $richText->setImageContentTypes([27]);
 
-        $result = $richText->convert($inputDocument, true);
+        $result = $richText->convert($inputDocument, true, true);
 
         $convertedDocument = $this->createDocument($result, false);
         $expectedDocument = $this->createDocument($outputFilePath);

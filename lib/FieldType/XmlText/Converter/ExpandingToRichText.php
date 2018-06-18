@@ -63,6 +63,7 @@ class ExpandingToRichText extends Expanding
         if ($paragraph->childNodes->item(0)->localName === 'custom') {
             return true;
         }
+
         return false;
     }
 }

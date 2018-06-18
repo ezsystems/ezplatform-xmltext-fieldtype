@@ -7,12 +7,16 @@
     <itemizedlist>
         <listitem>
             <para>
-                <link xlink:href="ezurl://2309" xlink:show="new" xml:id="duplicated_id_foobar0">link with id inv5</link>
+                <literallayout class="normal">
+                    <link xlink:href="ezurl://2309" xlink:show="new" xml:id="duplicated_id_foobar0">link with id inv5</link>
+                </literallayout>
             </para>
         </listitem>
         <listitem>
             <para>
-                <link xlink:href="ezurl://2309" xlink:show="new" xml:id="duplicated_id_foobar1">another link with id inv5</link>
+                <literallayout class="normal">
+                    <link xlink:href="ezurl://2309" xlink:show="new" xml:id="duplicated_id_foobar1">another link with id inv5</link>
+                </literallayout>
             </para>
         </listitem>
     </itemizedlist>

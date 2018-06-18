@@ -147,7 +147,12 @@ class RichTextTest extends TestCase
 
         $this->assertEquals(
             $expectedDocument,
-            $convertedDocument
+            $convertedDocument,
+            sprintf(
+                "Failed asserting that two DOM documents are equal.\nInput file: %s\nOutput file %s",
+                $inputFilePath,
+                $outputFilePath
+            )
         );
     }
 

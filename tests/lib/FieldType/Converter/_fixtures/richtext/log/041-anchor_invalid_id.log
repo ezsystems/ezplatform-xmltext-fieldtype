@@ -1,0 +1,6 @@
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : 1name --> rewrite_1name
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : -1name --> rewrite_-1name
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : #aname --> rewrite__aname
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : a@name --> rewrite_a_name
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : an£ame --> rewrite_an__ame
+Replaced non-validating id value in richtext for contentobject_attribute.id=[unknown], changed from : aname[ --> rewrite_aname_

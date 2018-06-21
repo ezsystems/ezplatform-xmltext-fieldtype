@@ -17,6 +17,7 @@ use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
+use Psr\Log\NullLogger;
 
 class RichTextTest extends TestCase
 {
@@ -54,8 +55,12 @@ class RichTextTest extends TestCase
         foreach (glob(__DIR__ . '/_fixtures/richtext/input/*.xml') as $inputFilePath) {
             $basename = basename($inputFilePath, '.xml');
             $outputFilePath = __DIR__ . "/_fixtures/richtext/output/{$basename}.xml";
+            $logFilePath = __DIR__ . "/_fixtures/richtext/log/{$basename}.log";
+            if (!file_exists($logFilePath)) {
+                $logFilePath = null;
+            }
 
-            $map[] = [$inputFilePath, $outputFilePath];
+            $map[] = [$inputFilePath, $outputFilePath, $logFilePath];
         }
 
         return $map;
@@ -123,21 +128,58 @@ class RichTextTest extends TestCase
         return $apiRepositoryStub;
     }
 
+    private function createLoggerStub($logFilePath)
+    {
+        $loggerStub = $this->createMock(NullLogger::class);
+
+        if ($logFilePath !== null) {
+            $log = file_get_contents($logFilePath);
+            $logLines = explode("\n", $log);
+            $logNo = 0;
+            foreach ($logLines as $expectedLogLine) {
+                if ($expectedLogLine === '') {
+                    continue;
+                }
+                if (strpos($expectedLogLine, '*') !== false) {
+                    $loggerStub->expects($this->at($logNo++))
+                        ->method('warning')
+                    ->with($this->callback(function ($logMessage) use ($expectedLogLine) {
+                        $expectedLogMessage = substr($expectedLogLine, 0, strpos($expectedLogLine, '*'));
+
+                        $this->assertEquals($expectedLogMessage, substr($logMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
+
+                        return true;
+                    }));
+                } else {
+                    $loggerStub->expects($this->at($logNo++))
+                        ->method('warning')
+                        ->with($expectedLogLine);
+                }
+            }
+        } else {
+            $loggerStub->expects($this->never())
+                ->method('warning');
+        }
+
+        return $loggerStub;
+    }
+
     /**
      * @param string $inputFilePath
      * @param string $outputFilePath
      *
      * @dataProvider providerForTestConvert
      */
-    public function testConvert($inputFilePath, $outputFilePath)
+    public function testConvert($inputFilePath, $outputFilePath, $logFilePath)
     {
         $apiRepositoryStub = $this->createApiRepositoryStub();
+        $loggerStub = $this->createLoggerStub($logFilePath);
 
         $inputDocument = $this->createDocument($inputFilePath);
-        $richText = new RichText($apiRepositoryStub);
+        $richText = new RichText($apiRepositoryStub, $loggerStub);
         $richText->setImageContentTypes([27]);
 
-        $result = $richText->convert($inputDocument, true);
+        $result = $richText->convert($inputDocument, true, true);
 
         $convertedDocument = $this->createDocument($result, false);
         $expectedDocument = $this->createDocument($outputFilePath);

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph align="justify">Here is an anchor
+        <anchor name="1name"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="n1ame"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="-1name"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="_name"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="aname"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="#aname"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="a@name"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="an£ame"/>
+    </paragraph>
+    <paragraph align="justify">Here is an anchor
+        <anchor name="aname["/>
+    </paragraph>
+</section>

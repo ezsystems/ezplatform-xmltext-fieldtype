@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite_1name"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="n1ame"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite_-1name"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="_name"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="aname"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite__aname"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite_a_name"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite_an__ame"/>
+    </para>
+    <para ezxhtml:textalign="justify">Here is an anchor
+        <anchor xml:id="rewrite_aname_"/>
+    </para>
+</section>

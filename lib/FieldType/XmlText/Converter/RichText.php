@@ -157,9 +157,44 @@ class RichText implements Converter
             $id = $node->attributes->getNamedItem('id')->nodeValue;
             // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
             $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
-            if ($this->logger !== null) {
-                $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
-            }
+            $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
+        }
+    }
+
+    protected function validateAttributeValues(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+        $whitelist1st = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+        $replaceStr1st = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+
+        $whitelist = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
+        $replaceStr = '';
+        /*
+         * We want to pick elements which has id value
+         *  #1 not starting with a..z or '_'
+         *  #2 not a..z, '0..9', '_' or '-' after 1st character
+         * So, no xpath v2 to our disposal...
+         * 1st line : we check the 1st char(substring) in id, converts it to 'a' if it in whitelist(translate), then check if it string now starts with 'a'(starts-with), then we invert result(not)
+         *   : So we replace first char with 'a' if it is whitelisted, then we select the element if id value does not start with 'a'
+         * 2nd line:  now we check remaining(omit 1st char) part of string (substring), removes any character that *is* whitelisted(translate), then check if there are any non-whitelisted characters left(string-lenght)
+         * 3rd line: Due to the not() in 1st line, we pick all elements not matching that 1st line. That also includes elements not having a xml:id at all..
+         *   : So, we want to make sure we only pick elements which has a xml:id attribute.
+         */
+        $nodes = $xpath->query("//*[
+            (
+                not(starts-with(translate(substring(@xml:id, 1, 1), '$whitelist1st', '$replaceStr1st'), 'a')) 
+                or string-length(translate(substring(@xml:id, 2), '$whitelist', '$replaceStr')) > 0
+            ) and string-length(@xml:id) > 0]");
+
+        if ($contentFieldId === null) {
+            $contentFieldId = '[unknown]';
+        }
+        foreach ($nodes as $node) {
+            $orgValue = $node->attributes->getNamedItem('id')->nodeValue;
+            $newValue = 'rewrite_' . $node->attributes->getNamedItem('id')->nodeValue;
+            $newValue = preg_replace("/[^$whitelist]/", '_', $newValue);
+            $node->attributes->getNamedItem('id')->nodeValue = $newValue;
+            $this->logger->warning("Replaced non-validating id value in richtext for contentobject_attribute.id=$contentFieldId, changed from : $orgValue --> $newValue");
         }
     }
 
@@ -317,10 +352,11 @@ class RichText implements Converter
      *
      * @param DOMDocument $inputDocument
      * @param bool $checkDuplicateIds
+     * @param bool $checkIdValues
      * @param null|int $contentFieldId
      * @return string
      */
-    public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $contentFieldId = null)
+    public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
         $this->removeComments($inputDocument);
 
@@ -328,6 +364,9 @@ class RichText implements Converter
         $convertedDocument = $this->getConverter()->convert($inputDocument);
         if ($checkDuplicateIds) {
             $this->reportNonUniqueIds($convertedDocument, $contentFieldId);
+        }
+        if ($checkIdValues) {
+            $this->validateAttributeValues($convertedDocument, $contentFieldId);
         }
 
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
@@ -339,7 +378,7 @@ class RichText implements Converter
 
         $result = $convertedDocumentNormalized->saveXML();
 
-        if (!empty($errors) && $this->logger !== null) {
+        if (!empty($errors)) {
             $this->logger->error(
                 "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentFieldId",
                 ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]

@@ -362,7 +362,15 @@ class RichText implements Converter
         $this->removeComments($inputDocument);
 
         $this->checkEmptyEmbedTags($inputDocument);
-        $convertedDocument = $this->getConverter()->convert($inputDocument);
+        try {
+            $convertedDocument = $this->getConverter()->convert($inputDocument);
+        } catch (\Exception $e) {
+            $this->logger->error(
+                "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
+                ['errors' => $e->getMessage()]
+            );
+            throw $e;
+        }
         if ($checkDuplicateIds) {
             $this->reportNonUniqueIds($convertedDocument, $contentFieldId);
         }

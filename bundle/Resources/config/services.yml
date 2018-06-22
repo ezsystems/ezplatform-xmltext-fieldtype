@@ -7,12 +7,18 @@ services:
         tags:
             - { name: ezpublish_rest.field_type_processor, alias: ezxmltext }
 
-    ezxmltext.command.convert_to_richtexst:
+    ezxmltext.command.convert_to_richtext:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
         arguments:
             - "@ezpublish.persistence.connection"
             - "@ezxmltext.richtext_converter"
             - "@?logger"
+        tags:
+            -  { name: console.command }
+
+    ezxmltext.command.convert_to_richtext_sub_process:
+        class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommandSubProcess
+        parent: ezxmltext.command.convert_to_richtext
         tags:
             -  { name: console.command }
 

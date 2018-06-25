@@ -176,7 +176,7 @@ EOT
         }
         $imageContentTypeIds = $this->getContentTypeIds($this->imageContentTypeIdentifiers);
         if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
-            throw new RuntimeException('Unable to lookup all content type identifiers, found : ' . implode(',', $imageContentTypeIds));
+            throw new RuntimeException('Unable to lookup all content type identifiers, not found : ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
     }
@@ -185,7 +185,7 @@ EOT
     {
         $query = $this->dbal->createQueryBuilder();
 
-        $query->select('c.id')
+        $query->select('c.identifier, c.id')
             ->from('ezcontentclass', 'c')
             ->where(
                 $query->expr()->in(
@@ -197,7 +197,7 @@ EOT
 
         $statement = $query->execute();
 
-        return $statement->fetchAll(PDO::FETCH_COLUMN);
+        return array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_COLUMN));
     }
 
     protected function loginAsAdmin()

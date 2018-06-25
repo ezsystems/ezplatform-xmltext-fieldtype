@@ -131,6 +131,7 @@ class RichTextTest extends TestCase
     private function createLoggerStub($logFilePath)
     {
         $loggerStub = $this->createMock(NullLogger::class);
+        $logMethodUsage = ['warning' => false, 'error' => false];
 
         if ($logFilePath !== null) {
             $log = file_get_contents($logFilePath);
@@ -140,25 +141,31 @@ class RichTextTest extends TestCase
                 if ($expectedLogLine === '') {
                     continue;
                 }
+                $logMethod = substr($expectedLogLine, 0, strpos($expectedLogLine, ':'));
+                $logMessage = substr($expectedLogLine, strpos($expectedLogLine, ':') + 1);
+                $logMethodUsage[$logMethod] = true;
                 if (strpos($expectedLogLine, '*') !== false) {
                     $loggerStub->expects($this->at($logNo++))
-                        ->method('warning')
-                    ->with($this->callback(function ($logMessage) use ($expectedLogLine) {
-                        $expectedLogMessage = substr($expectedLogLine, 0, strpos($expectedLogLine, '*'));
+                        ->method($logMethod)
+                    ->with($this->callback(function ($actualLogMessage) use ($logMessage) {
+                        $expectedLogMessage = substr($logMessage, 0, strpos($logMessage, '*'));
 
-                        $this->assertEquals($expectedLogMessage, substr($logMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
+                        $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
 
                         return true;
                     }));
                 } else {
                     $loggerStub->expects($this->at($logNo++))
-                        ->method('warning')
-                        ->with($expectedLogLine);
+                        ->method($logMethod)
+                        ->with($logMessage);
                 }
             }
-        } else {
-            $loggerStub->expects($this->never())
-                ->method('warning');
+        }
+        foreach ($logMethodUsage as $method => $used) {
+            if (!$used) {
+                $loggerStub->expects($this->never())
+                    ->method($method);
+            }
         }
 
         return $loggerStub;
@@ -181,6 +188,9 @@ class RichTextTest extends TestCase
 
         $result = $richText->convert($inputDocument, true, true);
 
+        if ($result === false && !file_exists($outputFilePath)) {
+            return;
+        }
         $convertedDocument = $this->createDocument($result, false);
         $expectedDocument = $this->createDocument($outputFilePath);
 

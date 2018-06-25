@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
 {
@@ -175,7 +176,17 @@ EOT
                 $inputValue = $row['data_text'];
             }
 
-            $xmlDoc = $this->createDocument($inputValue);
+            try {
+                $xmlDoc = $this->createDocument($inputValue);
+            } catch (RuntimeException $e) {
+                $this->logger->info(
+                    $e->getMessage(),
+                    [
+                        'original' => $inputValue,
+                    ]
+                );
+                continue;
+            }
             $count = $this->converter->tagEmbeddedImages($xmlDoc);
             if ($count > 0) {
                 ++$totalCount;
@@ -351,7 +362,17 @@ EOT
                 $inputValue = $row['data_text'];
             }
 
-            $converted = $this->converter->convert($this->createDocument($inputValue), $checkDuplicateIds, $checkIdValues, $row['id']);
+            try {
+                $xmlDoc = $this->createDocument($inputValue);
+            } catch (RuntimeException $e) {
+                $this->logger->info(
+                    $e->getMessage(),
+                    [
+                        'original' => $inputValue,
+                    ]
+                );
+            }
+            $converted = $this->converter->convert($xmlDoc, $checkDuplicateIds, $checkIdValues, $row['id']);
 
             $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
 
@@ -374,7 +395,15 @@ EOT
         $document->preserveWhiteSpace = false;
         $document->formatOutput = false;
 
-        $document->loadXml($xmlString);
+        // In dev mode, symfony may throw Symfony\Component\Debug\Exception\ContextErrorException
+        try {
+            $result = $document->loadXml($xmlString);
+            if ($result === false) {
+                throw new RuntimeException('Unable to parse ezxmltext. Invalid XML format');
+            }
+        } catch (ContextErrorException $e) {
+            throw new RuntimeException($e->getMessage(), $e->getCode());
+        }
 
         return $document;
     }

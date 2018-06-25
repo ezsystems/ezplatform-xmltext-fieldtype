@@ -18,6 +18,7 @@ use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
 use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
 {
@@ -371,18 +372,36 @@ class RichText implements Converter
 
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
         $convertedDocumentNormalized = new DOMDocument();
-        $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
-        $this->tagEmbeddedImages($convertedDocumentNormalized, $contentFieldId);
-
-        $errors = $this->validator->validate($convertedDocumentNormalized);
-
-        $result = $convertedDocumentNormalized->saveXML();
-
-        if (!empty($errors)) {
+        try {
+            // If env=dev, Symfony will throw ContextErrorException on line below if xml is invalid
+            $result = $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
+            if ($result === false) {
+                $this->logger->error(
+                    "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
+                    ['result' => $convertedDocument->saveXML(), 'errors' => 'Unable to parse converted richtext output. See warning in logs or use --env=dev in order to se more verbose output.', 'xmlString' => $inputDocument->saveXML()]
+                );
+            }
+        } catch (ContextErrorException $e) {
             $this->logger->error(
-                "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentFieldId",
-                ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]
+                "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
+                ['result' => $convertedDocument->saveXML(), 'errors' => $e->getMessage(), 'xmlString' => $inputDocument->saveXML()]
             );
+            $result = false;
+        }
+
+        if ($result) {
+            $this->tagEmbeddedImages($convertedDocumentNormalized, $contentFieldId);
+
+            $errors = $this->validator->validate($convertedDocumentNormalized);
+
+            $result = $convertedDocumentNormalized->saveXML();
+
+            if (!empty($errors)) {
+                $this->logger->error(
+                    "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentFieldId",
+                    ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]
+                );
+            }
         }
 
         return $result;

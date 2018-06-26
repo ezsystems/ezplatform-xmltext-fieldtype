@@ -148,9 +148,11 @@ EOT
             $this->convertFieldDefinitions($dryRun, $output);
         } else {
             $dryRun = true;
+            $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), null, null);
+            return;
         }
 
-        $this->processFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
+        $this->processFields($dryRun, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
     }
 
     protected function baseExecute(InputInterface $input, OutputInterface $output, &$dryRun)
@@ -523,13 +525,13 @@ EOT
         }
     }
 
-    protected function processFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
+    protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
-        $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', $contentId);
+        $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', null);
         $output->writeln("Found $count field rows to convert.");
 
         $offset = 0;
-        $fork = $this->maxConcurrency > 1 && $contentId === null;
+        $fork = $this->maxConcurrency > 1;
 
         while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count) {
             $limit = self::MAX_OJBECTS_PER_CHILD;
@@ -538,7 +540,7 @@ EOT
                 $process = $this->createChildProcess($dryRun, $checkDuplicateIds, $checkIdValues, $offset, $limit, $output);
                 $this->processes[$process->getPid()] = ['offset' => $offset, 'limit' => $limit, 'process' => $process];
             } else {
-                $this->convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit);
+                $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
             $offset += self::MAX_OJBECTS_PER_CHILD;
         }

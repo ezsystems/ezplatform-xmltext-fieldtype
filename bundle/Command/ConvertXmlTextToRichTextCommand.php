@@ -149,6 +149,7 @@ EOT
         } else {
             $dryRun = true;
             $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), null, null);
+
             return;
         }
 
@@ -216,52 +217,57 @@ EOT
 
         $output->writeln("Found $count field rows to convert.");
 
-        $statement = $this->getFieldRows('ezrichtext', $contentId);
-
+        $offset = 0;
         $totalCount = 0;
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            if (empty($row['data_text'])) {
-                $inputValue = Value::EMPTY_VALUE;
-            } else {
-                $inputValue = $row['data_text'];
-            }
+        do {
+            $limit = self::MAX_OJBECTS_PER_CHILD;
 
-            try {
-                $xmlDoc = $this->createDocument($inputValue);
-            } catch (RuntimeException $e) {
-                $this->logger->info(
-                    $e->getMessage(),
-                    [
-                        'original' => $inputValue,
-                    ]
-                );
-                continue;
-            }
-            $count = $this->converter->tagEmbeddedImages($xmlDoc);
-            if ($count > 0) {
-                ++$totalCount;
-            }
-            $converted = $xmlDoc->saveXML();
+            $statement = $this->getFieldRows('ezrichtext', $contentId, $offset, $limit);
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                if (empty($row['data_text'])) {
+                    $inputValue = Value::EMPTY_VALUE;
+                } else {
+                    $inputValue = $row['data_text'];
+                }
 
-            if ($count === 0) {
-                $this->logger->info(
-                    "No embedded image(s) in ezrichtext field #{$row['id']} needed to be updated",
-                    [
-                        'original' => $inputValue,
-                    ]
-                );
-            } else {
-                $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
+                try {
+                    $xmlDoc = $this->createDocument($inputValue);
+                } catch (RuntimeException $e) {
+                    $this->logger->info(
+                        $e->getMessage(),
+                        [
+                            'original' => $inputValue,
+                        ]
+                    );
+                    continue;
+                }
+                $updatedCount = $this->converter->tagEmbeddedImages($xmlDoc, $row['id']);
+                if ($updatedCount > 0) {
+                    ++$totalCount;
+                }
+                $converted = $xmlDoc->saveXML();
 
-                $this->logger->info(
-                    "Updated $count embded image(s) in ezrichtext field #{$row['id']}",
-                    [
-                        'original' => $inputValue,
-                        'converted' => $converted,
-                    ]
-                );
+                if ($updatedCount === 0) {
+                    $this->logger->info(
+                        "No embedded image(s) in ezrichtext field #{$row['id']} needed to be updated",
+                        [
+                            'original' => $inputValue,
+                        ]
+                    );
+                } else {
+                    $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
+
+                    $this->logger->info(
+                        "Updated $updatedCount embded image(s) in ezrichtext field #{$row['id']}",
+                        [
+                            'original' => $inputValue,
+                            'converted' => $converted,
+                        ]
+                    );
+                }
             }
-        }
+            $offset += self::MAX_OJBECTS_PER_CHILD;
+        } while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count);
 
         $output->writeln("Updated ezembed tags in $totalCount field(s)");
     }

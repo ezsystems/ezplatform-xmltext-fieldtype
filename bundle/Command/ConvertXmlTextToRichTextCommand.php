@@ -539,7 +539,7 @@ EOT
         $offset = 0;
         $fork = $this->maxConcurrency > 1;
 
-        while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count) {
+        do {
             $limit = self::MAX_OJBECTS_PER_CHILD;
             if ($fork) {
                 $this->waitForAvailableProcessSlot($output);
@@ -549,9 +549,9 @@ EOT
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
             $offset += self::MAX_OJBECTS_PER_CHILD;
-        }
+        } while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count);
 
-        while (count($this->processes) > 1) {
+        while (count($this->processes) > 0) {
             $this->waitForChild($output);
         }
         $output->writeln("Converted $count ezxmltext fields to richtext");

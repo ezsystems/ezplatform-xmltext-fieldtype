@@ -349,7 +349,43 @@ class RichText implements Converter
 
     /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
-     * being embedded in the $inputDocument.
+     * being linked to in the $document.
+
+     * @param DOMDocument $document
+     * @param $contentFieldId
+     */
+    protected function checkLinkTags(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all link elements except those handled directly by xslt
+        $xpathExpression = '//link[not(@url_id) and not(@node_id) and not(@object_id) and not(@anchor_name) and not(@href)]';
+
+        $links = $xpath->query($xpathExpression);
+
+        foreach ($links as $link) {
+            if ($link->hasAttribute('object_remote_id')) {
+                $remote_id = $link->getAttribute('object_remote_id');
+                try {
+                    $contentInfo = $this->apiRepository->getContentService()->loadContentInfoByRemoteId($remote_id);
+                    $link->setAttribute('object_id', $contentInfo->id);
+                } catch (NotFoundException $e) {
+                    // The link has to point to somewhere in order to be valid... Pointing to current page
+                    $link->setAttribute('href', '#');
+                    $this->logger->warning("Unable to find content object with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                }
+                continue;
+            }
+
+            // The link has to point to somewhere in order to be valid... Pointing to current page
+            $link->setAttribute('href', '#');
+            $this->logger->warning("Unknown linktype detected when converting link where contentobject_attribute.id=$contentFieldId.");
+        }
+    }
+
+    /**
+     * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
+     * being embedded and linked to in the $inputDocument.
      *
      * @param DOMDocument $inputDocument
      * @param bool $checkDuplicateIds
@@ -360,8 +396,9 @@ class RichText implements Converter
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
         $this->removeComments($inputDocument);
-
         $this->checkEmptyEmbedTags($inputDocument);
+        $this->checkLinkTags($inputDocument, $contentFieldId);
+
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);
         } catch (\Exception $e) {

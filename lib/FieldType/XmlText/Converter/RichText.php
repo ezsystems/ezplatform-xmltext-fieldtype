@@ -39,16 +39,14 @@ class RichText implements Converter
     private $apiRepository;
 
     /**
+     * @var Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var []
      */
     private $styleSheets;
-
-    /**
-     * Holds the id of the current contentField being converted.
-     *
-     * @var null|int
-     */
-    private $currentContentFieldId;
 
     /**
      * RichText constructor.
@@ -337,13 +335,14 @@ class RichText implements Converter
     /**
      * Check if $inputDocument has any embed|embed-inline tags without node_id or object_id.
      * @param DOMDocument $inputDocument
+     * @param $contentFieldId
      */
-    protected function checkEmptyEmbedTags(DOMDocument $inputDocument)
+    protected function checkEmptyEmbedTags(DOMDocument $inputDocument, $contentFieldId)
     {
         $xpath = new DOMXPath($inputDocument);
         $nodes = $xpath->query('//embed[not(@node_id|@object_id)] | //embed-inline[not(@node_id|@object_id)]');
         if ($nodes->length > 0) {
-            $this->logger->warning('Warning: ezxmltext for contentobject_attribute.id=' . $this->currentContentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
+            $this->logger->warning('Warning: ezxmltext for contentobject_attribute.id=' . $contentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
         }
     }
 
@@ -392,11 +391,12 @@ class RichText implements Converter
      * @param bool $checkIdValues
      * @param null|int $contentFieldId
      * @return string
+     * @throws \Exception
      */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
         $this->removeComments($inputDocument);
-        $this->checkEmptyEmbedTags($inputDocument);
+        $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
         $this->checkLinkTags($inputDocument, $contentFieldId);
 
         try {

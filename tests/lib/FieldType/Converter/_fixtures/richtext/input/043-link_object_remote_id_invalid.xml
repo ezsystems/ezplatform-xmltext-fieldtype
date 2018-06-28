@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>foobartext
+        <link object_remote_id="my_invalid_remote_id">link</link>
+    </paragraph>
+</section>

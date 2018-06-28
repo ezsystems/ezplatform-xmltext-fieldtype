@@ -270,11 +270,6 @@
           <xsl:value-of select="concat( '', @href )"/>
         </xsl:attribute>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:message terminate="yes">
-          Unhandled link type
-        </xsl:message>
-      </xsl:otherwise>
     </xsl:choose>
     <xsl:attribute name="xlink:show">
       <xsl:choose>

@@ -39,16 +39,14 @@ class RichText implements Converter
     private $apiRepository;
 
     /**
+     * @var Psr\Log\LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var []
      */
     private $styleSheets;
-
-    /**
-     * Holds the id of the current contentField being converted.
-     *
-     * @var null|int
-     */
-    private $currentContentFieldId;
 
     /**
      * RichText constructor.
@@ -337,31 +335,82 @@ class RichText implements Converter
     /**
      * Check if $inputDocument has any embed|embed-inline tags without node_id or object_id.
      * @param DOMDocument $inputDocument
+     * @param $contentFieldId
      */
-    protected function checkEmptyEmbedTags(DOMDocument $inputDocument)
+    protected function checkEmptyEmbedTags(DOMDocument $inputDocument, $contentFieldId)
     {
         $xpath = new DOMXPath($inputDocument);
         $nodes = $xpath->query('//embed[not(@node_id|@object_id)] | //embed-inline[not(@node_id|@object_id)]');
         if ($nodes->length > 0) {
-            $this->logger->warning('Warning: ezxmltext for contentobject_attribute.id=' . $this->currentContentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
+            $this->logger->warning('Warning: ezxmltext for contentobject_attribute.id=' . $contentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
         }
     }
 
     /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
-     * being embedded in the $inputDocument.
+     * being linked to in the $document.
+
+     * @param DOMDocument $document
+     * @param $contentFieldId
+     */
+    protected function checkLinkTags(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all link elements except those handled directly by xslt
+        $xpathExpression = '//link[not(@url_id) and not(@node_id) and not(@object_id) and not(@anchor_name) and not(@href)]';
+
+        $links = $xpath->query($xpathExpression);
+
+        foreach ($links as $link) {
+            if ($link->hasAttribute('object_remote_id')) {
+                $remote_id = $link->getAttribute('object_remote_id');
+                try {
+                    $contentInfo = $this->apiRepository->getContentService()->loadContentInfoByRemoteId($remote_id);
+                    $link->setAttribute('object_id', $contentInfo->id);
+                } catch (NotFoundException $e) {
+                    // The link has to point to somewhere in order to be valid... Pointing to current page
+                    $link->setAttribute('href', '#');
+                    $this->logger->warning("Unable to find content object with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                }
+                continue;
+            }
+
+            if ($link->hasAttribute('node_remote_id')) {
+                $remote_id = $link->getAttribute('node_remote_id');
+                try {
+                    $location = $this->apiRepository->getLocationService()->loadLocationByRemoteId($remote_id);
+                    $link->setAttribute('node_id', $location->id);
+                } catch (NotFoundException $e) {
+                    // The link has to point to somewhere in order to be valid... Pointing to current page
+                    $link->setAttribute('href', '#');
+                    $this->logger->warning("Unable to find node with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                }
+                continue;
+            }
+            // The link has to point to somewhere in order to be valid... Pointing to current page
+            $link->setAttribute('href', '#');
+            $this->logger->warning("Unknown linktype detected when converting link where contentobject_attribute.id=$contentFieldId.");
+        }
+    }
+
+    /**
+     * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
+     * being embedded and linked to in the $inputDocument.
      *
      * @param DOMDocument $inputDocument
      * @param bool $checkDuplicateIds
      * @param bool $checkIdValues
      * @param null|int $contentFieldId
      * @return string
+     * @throws \Exception
      */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
         $this->removeComments($inputDocument);
+        $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
+        $this->checkLinkTags($inputDocument, $contentFieldId);
 
-        $this->checkEmptyEmbedTags($inputDocument);
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);
         } catch (\Exception $e) {

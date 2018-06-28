@@ -18,6 +18,7 @@ use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
 use Psr\Log\NullLogger;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 
 class RichTextTest extends TestCase
 {
@@ -97,6 +98,42 @@ class RichTextTest extends TestCase
         }
     }
 
+    public function callbackLoadContentInfoByRemoteId($arg)
+    {
+        // We have to use callback because returnValueMap() is useless if one argument value is supposed
+        // to trow exception.
+        if ($arg === 'my_invalid_remote_id') {
+            throw new NotFoundException('foobar_message', 'foobar_identifier');
+        }
+        if ($arg === 'my_remote_id') {
+            $contentInfoRemoteIdStub = $this->createMock(ContentInfo::class);
+            $contentInfoRemoteIdStub
+                ->method('__get')
+                ->with($this->equalTo('id'))
+                ->willReturn(42);
+
+            return $contentInfoRemoteIdStub;
+        }
+    }
+
+    public function callbackLoadLocationByRemoteId($arg)
+    {
+        // We have to use callback because returnValueMap() is useless if one argument value is supposed
+        // to trow exception.
+        if ($arg === 'my_invalid_remote_id') {
+            throw new NotFoundException('foobar_message', 'foobar_identifier');
+        }
+        if ($arg === 'my_remote_id') {
+            $locationRemoteIdStub = $this->createMock(Location::class);
+            $locationRemoteIdStub
+                ->method('__get')
+                ->with($this->equalTo('id'))
+                ->willReturn(4242);
+
+            return $locationRemoteIdStub;
+        }
+    }
+
     private function createApiRepositoryStub()
     {
         $apiRepositoryStub = $this->createMock(Repository::class);
@@ -118,12 +155,17 @@ class RichTextTest extends TestCase
         $contentServiceStub->method('loadContentInfo')
             ->will($this->returnValueMap($map));
 
+        $contentServiceStub->method('loadContentInfoByRemoteId')
+            ->will($this->returnCallBack([$this, 'callbackLoadContentInfoByRemoteId']));
+
         // image content type has id=27, file content type has id=27
         $contentInfoImageStub->method('__get')->willReturn(27);
         $contentInfoFileStub->method('__get')->willReturn(25);
 
         $locationServiceStub->method('loadLocation')->willReturn($locationStub);
         $locationStub->method('getContentInfo')->willReturn($contentInfoImageStub);
+        $locationServiceStub->method('loadLocationByRemoteId')
+            ->will($this->returnCallBack([$this, 'callbackLoadLocationByRemoteId']));
 
         return $apiRepositoryStub;
     }

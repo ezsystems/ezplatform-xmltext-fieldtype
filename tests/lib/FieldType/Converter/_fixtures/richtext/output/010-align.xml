@@ -5,6 +5,7 @@
         xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
         xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
     <para ezxhtml:textalign="left">align left</para>
+    <para ezxhtml:textalign="left">align LEFT</para>
     <para ezxhtml:textalign="center">aligne center</para>
     <para ezxhtml:textalign="right">align right</para>
     <para ezxhtml:textalign="justify">align fullheader align fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheader</para>

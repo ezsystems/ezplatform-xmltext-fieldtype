@@ -4,6 +4,7 @@
         xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
         xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
     <paragraph align="left">align left</paragraph>
+    <paragraph align="LEFT">align LEFT</paragraph>
     <paragraph align="center">aligne center</paragraph>
     <paragraph align="right">align right</paragraph>
     <paragraph align="justify">align fullheader align fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheader</paragraph>

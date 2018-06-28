@@ -15,6 +15,9 @@
   <xsl:key name="ids" match="*[@xhtml:id]" use="@xhtml:id"/>
   <xsl:key name="ids" match="//embed[@ezlegacytmp-embed-link-id]" use="@ezlegacytmp-embed-link-id"/>
 
+  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'" />
+  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+
   <xsl:template match="custom">
     <xsl:element name="eztemplateinline" namespace="http://docbook.org/ns/docbook">
       <xsl:attribute name="name">
@@ -27,7 +30,7 @@
       </xsl:if>
       <xsl:if test="@custom:align">
         <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="@custom:align"/>
+          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="./text()">
@@ -59,7 +62,7 @@
       </xsl:if>
       <xsl:if test="@custom:align">
         <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="@custom:align"/>
+          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="./* | ./text()">
@@ -114,7 +117,7 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="@align"/>
+          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:variable name="lines" select="line"/>
@@ -320,7 +323,7 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="@align"/>
+          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates/>
@@ -433,7 +436,7 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="@align"/>
+          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@xhtml:width">
@@ -479,7 +482,7 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="@align"/>
+          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@xhtml:width">
@@ -489,7 +492,7 @@
       </xsl:if>
       <xsl:if test="@custom:valign">
         <xsl:attribute name="valign">
-          <xsl:value-of select="@custom:valign"/>
+          <xsl:value-of select="translate(@custom:valign, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@xhtml:colspan">
@@ -556,7 +559,7 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="@align"/>
+          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@*[starts-with( name( . ), 'ezlegacytmp-embed-link-' )]">

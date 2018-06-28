@@ -376,6 +376,18 @@ class RichText implements Converter
                 continue;
             }
 
+            if ($link->hasAttribute('node_remote_id')) {
+                $remote_id = $link->getAttribute('node_remote_id');
+                try {
+                    $location = $this->apiRepository->getLocationService()->loadLocationByRemoteId($remote_id);
+                    $link->setAttribute('node_id', $location->id);
+                } catch (NotFoundException $e) {
+                    // The link has to point to somewhere in order to be valid... Pointing to current page
+                    $link->setAttribute('href', '#');
+                    $this->logger->warning("Unable to find node with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                }
+                continue;
+            }
             // The link has to point to somewhere in order to be valid... Pointing to current page
             $link->setAttribute('href', '#');
             $this->logger->warning("Unknown linktype detected when converting link where contentobject_attribute.id=$contentFieldId.");

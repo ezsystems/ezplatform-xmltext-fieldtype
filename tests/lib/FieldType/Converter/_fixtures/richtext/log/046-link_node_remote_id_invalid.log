@@ -1,0 +1,1 @@
+warning:Unable to find node with remote_id=my_invalid_remote_id (so rewriting to href="#"), when converting link where contentobject_attribute.id=.

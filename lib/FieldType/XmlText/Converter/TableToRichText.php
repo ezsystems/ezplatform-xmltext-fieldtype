@@ -63,7 +63,7 @@ class TableToRichText implements Converter
         $xpath = new DOMXPath($document);
 
         // Get all empty table rows
-        $xpathExpression = '//table/tr[count(td) = 0]';
+        $xpathExpression = '//table/tr[count(*) = 0]';
 
         $emptyRows = $xpath->query($xpathExpression);
         foreach ($emptyRows as $row) {

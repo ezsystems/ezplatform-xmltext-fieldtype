@@ -347,13 +347,15 @@ class RichText implements Converter
     }
 
     /**
+     * We need to lookup object_id/node_id for links which refers to object_remote_id or node_object_id.
+     *
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being linked to in the $document.
 
      * @param DOMDocument $document
      * @param $contentFieldId
      */
-    protected function checkLinkTags(DOMDocument $document, $contentFieldId)
+    protected function fixLinksWithRemoteIds(DOMDocument $document, $contentFieldId)
     {
         $xpath = new DOMXPath($document);
 
@@ -395,6 +397,34 @@ class RichText implements Converter
     }
 
     /**
+     * ezxmltext may contain link elements below another link element. This method flattens such structure.
+     *
+     * @param DOMDocument $document
+     * @param $contentFieldId
+     */
+    protected function flattenLinksInLinks(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all link elements which are child of a link
+        $xpathExpression = '//link[parent::link]';
+
+        $links = $xpath->query($xpathExpression);
+
+        foreach ($links as $link) {
+            // Move link to parent
+            $targetElement = $link->parentNode->parentNode;
+            $parentLink = $link->parentNode;
+            $targetElement->insertBefore($link, $parentLink);
+
+            // We want parent link to be listed first.
+            $targetElement->insertBefore($parentLink, $link);
+
+            $this->logger->warning("Found nested links. Flatten links where contentobject_attribute.id=$contentFieldId");
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -409,7 +439,8 @@ class RichText implements Converter
     {
         $this->removeComments($inputDocument);
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
-        $this->checkLinkTags($inputDocument, $contentFieldId);
+        $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
+        $this->flattenLinksInLinks($inputDocument, $contentFieldId);
 
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);

@@ -5,7 +5,6 @@
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
-
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter;
@@ -28,7 +27,6 @@ use DOMXPath;
  *        <td/>
  *        <td/>
  *      </tr>
- *
  */
 class TableToRichText implements Converter
 {
@@ -42,10 +40,8 @@ class TableToRichText implements Converter
     protected function getNumberOfColumns(DOMElement $tableElement)
     {
         // Let's first check if we have already calculated number of columns for this table
-        if ($tableElement->hasAttribute(self::ATTRIBUTE_COLUMNS))
-        {
+        if ($tableElement->hasAttribute(self::ATTRIBUTE_COLUMNS)) {
             $numberOfColumns = $tableElement->getAttribute(self::ATTRIBUTE_COLUMNS);
-
         } else {
             $numberOfColumns = 1;
             foreach ($tableElement->childNodes as $tableRow) {
@@ -55,6 +51,7 @@ class TableToRichText implements Converter
             }
             $tableElement->setAttribute(self::ATTRIBUTE_COLUMNS, $numberOfColumns);
         }
+
         return $numberOfColumns;
     }
 
@@ -69,7 +66,7 @@ class TableToRichText implements Converter
         foreach ($emptyRows as $row) {
             $tableElement = $row->parentNode;
             $numberOfColumns = $this->getNumberOfColumns($tableElement);
-            for ($i=0; $i<$numberOfColumns; ++$i) {
+            for ($i = 0; $i < $numberOfColumns; ++$i) {
                 $row->appendChild($document->createElement('td'));
             }
         }

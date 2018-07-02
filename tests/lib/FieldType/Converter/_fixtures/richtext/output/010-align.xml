@@ -9,4 +9,13 @@
     <para ezxhtml:textalign="center">aligne center</para>
     <para ezxhtml:textalign="right">align right</para>
     <para ezxhtml:textalign="justify">align fullheader align fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheader</para>
+    <para>align webkit-auto</para>
+    <para ezxhtml:textalign="center">align webkit-center</para>
+    <para ezxhtml:textalign="left">align webkit-left</para>
+    <para ezxhtml:textalign="right">align webkit-right</para>
+    <para ezxhtml:textalign="center">align moz-center</para>
+    <para ezxhtml:textalign="left">align moz-left</para>
+    <para ezxhtml:textalign="right">align moz-right</para>
+    <para>align start</para>
+    <para>align end</para>
 </section>

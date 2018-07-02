@@ -116,9 +116,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="textalign">
+          <xsl:with-param name="align" select="@align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:variable name="lines" select="line"/>
       <xsl:choose>
@@ -322,9 +322,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="textalign">
+          <xsl:with-param name="align" select="@align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:apply-templates/>
     </xsl:element>
@@ -435,9 +435,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="textalign">
+          <xsl:with-param name="align" select="@align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
@@ -481,9 +481,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="textalign">
+          <xsl:with-param name="align" select="@align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
@@ -648,6 +648,46 @@
       </xsl:attribute>
       <xsl:value-of select="$attribute"/>
     </xsl:element>
+  </xsl:template>
+
+  <xsl:template name="textalign">
+    <xsl:param name="align"/>
+    <xsl:choose>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-moz-center'">
+        <xsl:attribute name="ezxhtml:textalign">center</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-moz-left'">
+        <xsl:attribute name="ezxhtml:textalign">left</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-moz-right'">
+        <xsl:attribute name="ezxhtml:textalign">right</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-webkit-auto'">
+        <!-- -webkit-auto not supported, remove alignment so it is inherited by parent-->
+        <!-- Once we support it, we may convert it to 'start'-->
+        <!--<xsl:attribute name="ezxhtml:textalign">start</xsl:attribute>-->
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-webkit-center'">
+        <xsl:attribute name="ezxhtml:textalign">center</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-webkit-left'">
+        <xsl:attribute name="ezxhtml:textalign">left</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = '-webkit-right'">
+        <xsl:attribute name="ezxhtml:textalign">right</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'end'">
+        <!-- end not supported ATM, removing-->
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'start'">
+        <!-- start not supported ATM, removing-->
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:attribute name="ezxhtml:textalign">
+          <xsl:value-of select="translate($align, $uppercase, $lowercase)"/>
+        </xsl:attribute>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>

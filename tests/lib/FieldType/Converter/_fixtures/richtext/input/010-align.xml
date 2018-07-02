@@ -8,4 +8,13 @@
     <paragraph align="center">aligne center</paragraph>
     <paragraph align="right">align right</paragraph>
     <paragraph align="justify">align fullheader align fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheaderalign fullheader</paragraph>
+    <paragraph align="-webkiT-auto">align webkit-auto</paragraph>
+    <paragraph align="-webkiT-center">align webkit-center</paragraph>
+    <paragraph align="-webkiT-left">align webkit-left</paragraph>
+    <paragraph align="-webkiT-right">align webkit-right</paragraph>
+    <paragraph align="-moZ-center">align moz-center</paragraph>
+    <paragraph align="-moZ-left">align moz-left</paragraph>
+    <paragraph align="-moZ-right">align moz-right</paragraph>
+    <paragraph align="start">align start</paragraph>
+    <paragraph align="end">align end</paragraph>
 </section>

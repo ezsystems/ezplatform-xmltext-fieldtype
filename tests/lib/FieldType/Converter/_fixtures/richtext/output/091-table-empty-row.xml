@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+  <informaltable class="list" width="90%">
+    <tbody>
+      <tr>
+        <td/>
+        <td/>
+        <td/>
+      </tr>
+      <tr>
+        <td ezxhtml:width="0">
+          <para>
+            <emphasis role="strong">Foobar1</emphasis>
+          </para>
+        </td>
+        <td ezxhtml:width="0">
+          <para>
+            <emphasis role="strong">Foobar2</emphasis>
+          </para>
+        </td>
+        <td ezxhtml:width="0">
+          <para>
+            <emphasis role="strong">Foobar3</emphasis>
+          </para>
+        </td>
+      </tr>
+    </tbody>
+  </informaltable>
+</section>
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>paragraph text and (
+        <link url_id="8">
+            <link url_id="42">some link text</link>
+        </link>), after link.
+    </paragraph>
+</section>

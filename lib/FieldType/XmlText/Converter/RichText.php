@@ -424,6 +424,28 @@ class RichText implements Converter
         }
     }
 
+    protected function moveEmbedsInHeaders(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all embed elements which are child of a header
+        $xpathExpression = '//embed[parent::header]';
+
+        $embeds = $xpath->query($xpathExpression);
+
+        foreach ($embeds as $embed) {
+            // Move embed before header
+            $targetElement = $embed->parentNode->parentNode;
+            $header = $embed->parentNode;
+            $targetElement->insertBefore($embed, $header);
+
+            // swap positions of embed and header
+            $targetElement->insertBefore($header, $embed);
+
+            $this->logger->warning("Found embed(s) inside header tag. Embed(s) where moved outside header where contentobject_attribute.id=$contentFieldId");
+        }
+    }
+
     /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
@@ -441,6 +463,7 @@ class RichText implements Converter
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
         $this->flattenLinksInLinks($inputDocument, $contentFieldId);
+        $this->moveEmbedsInHeaders($inputDocument, $contentFieldId);
 
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);

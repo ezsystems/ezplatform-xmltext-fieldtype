@@ -12,7 +12,7 @@ _Note: This Field Type supports editing via Platform UI v1, however only as raw 
 
 ## Migrating from XmlText to RichText
 
-**Warning: this part is a non-finalized work-in-progress. Always make a backup before using the migration tools.**
+**Warning: As of 1.6 this is now fully supported, but regardless of that always make a backup before using the migration tools.**
 
 This package provides tools to migration existing XmlText fields to RichText, the enriched text format eZ Platform uses.
 The tool comes as a Symfony command, `ezxmltext:convert-to-richtext`.
@@ -22,10 +22,10 @@ It will do two things:
 - convert `ezxmltext` field definitions to `ezrichtext` field definitions
 - convert `ezxmltext` fields (content) to `ezrichtext`
 
-We recommend that you execute it this way:
+We recommend that you do a test run first using something like:
 
 ```
-php app/console ezxmltext:convert-to-richtext -v
+php app/console ezxmltext:convert-to-richtext -v --concurrency=2 --dry-run
 ```
 
 The `-v` flag will output logs to the console, making it easy to track the conversion work that is being done.
@@ -37,3 +37,5 @@ This is an example of a successful conversion log entry for one field:
 
 It contains, in a JSON structure, the `original` (ezxmltext) value, and the `converted` (ezrichtext) value that has been
 written to the database.
+
+Once you are ready to convert, drop `-v` and `--dry-run`.

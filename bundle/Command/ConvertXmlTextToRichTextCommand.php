@@ -21,7 +21,7 @@ use Symfony\Component\Process\ProcessBuilder;
 
 class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
 {
-    const MAX_OJBECTS_PER_CHILD = 1000;
+    const MAX_OBJECTS_PER_CHILD = 1000;
     /**
      * @var \Doctrine\DBAL\Connection
      */
@@ -220,7 +220,7 @@ EOT
         $offset = 0;
         $totalCount = 0;
         do {
-            $limit = self::MAX_OJBECTS_PER_CHILD;
+            $limit = self::MAX_OBJECTS_PER_CHILD;
 
             $statement = $this->getFieldRows('ezrichtext', $contentId, $offset, $limit);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
@@ -266,8 +266,8 @@ EOT
                     );
                 }
             }
-            $offset += self::MAX_OJBECTS_PER_CHILD;
-        } while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count);
+            $offset += self::MAX_OBJECTS_PER_CHILD;
+        } while ($offset + self::MAX_OBJECTS_PER_CHILD <= $count);
 
         $output->writeln("Updated ezembed tags in $totalCount field(s)");
     }
@@ -540,7 +540,7 @@ EOT
         $fork = $this->maxConcurrency > 1;
 
         do {
-            $limit = self::MAX_OJBECTS_PER_CHILD;
+            $limit = self::MAX_OBJECTS_PER_CHILD;
             if ($fork) {
                 $this->waitForAvailableProcessSlot($output);
                 $process = $this->createChildProcess($dryRun, $checkDuplicateIds, $checkIdValues, $offset, $limit, $output);
@@ -548,8 +548,8 @@ EOT
             } else {
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
-            $offset += self::MAX_OJBECTS_PER_CHILD;
-        } while ($offset + self::MAX_OJBECTS_PER_CHILD <= $count);
+            $offset += self::MAX_OBJECTS_PER_CHILD;
+        } while ($offset + self::MAX_OBJECTS_PER_CHILD <= $count);
 
         while (count($this->processes) > 0) {
             $this->waitForChild($output);

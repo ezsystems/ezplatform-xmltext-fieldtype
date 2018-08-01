@@ -5,7 +5,7 @@
         xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
         xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
     <paragraph
-            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/" ez-temporary="1">
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
         <table class="list" width="90%" border="0" ez-colums="3">
             <tr/>
             <tr>

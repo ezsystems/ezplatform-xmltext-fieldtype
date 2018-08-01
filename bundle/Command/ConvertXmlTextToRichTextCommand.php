@@ -22,6 +22,8 @@ use Symfony\Component\Process\ProcessBuilder;
 class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
 {
     const MAX_OBJECTS_PER_CHILD = 1000;
+    const DEFAULT_REPOSITORY_USER = 'admin';
+
     /**
      * @var \Doctrine\DBAL\Connection
      */
@@ -56,6 +58,11 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      * @var string
      */
     private $phpPath;
+
+    /**
+     * @var string
+     */
+    protected $userLogin;
 
     public function __construct(Connection $dbal, RichTextConverter $converter, LoggerInterface $logger)
     {
@@ -122,6 +129,13 @@ EOT
                 "Use this option to ensure that embedded images in a database are tagget correctly so that the editor will detect them as such.\n
                  This option is needed if you have an existing ezplatform database which was converted with an earlier version of\n
                  'ezxmltext:convert-to-richtext' which did not convert embedded images correctly."
+            )
+            ->addOption(
+                'user',
+                'u',
+                InputOption::VALUE_OPTIONAL,
+                'eZ Platform username (with Role containing at least Content policies: read, versionread)',
+                self::DEFAULT_REPOSITORY_USER
             );
     }
 
@@ -158,7 +172,9 @@ EOT
 
     protected function baseExecute(InputInterface $input, OutputInterface $output, &$dryRun)
     {
-        $this->loginAsAdmin();
+        $this->userLogin = $input->getOption('user');
+        $this->login();
+
         $dryRun = false;
         if ($input->getOption('dry-run')) {
             $dryRun = true;
@@ -203,12 +219,12 @@ EOT
         return array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_COLUMN));
     }
 
-    protected function loginAsAdmin()
+    protected function login()
     {
         $userService = $this->getContainer()->get('ezpublish.api.service.user');
         $repository = $this->getContainer()->get('ezpublish.api.repository');
         $permissionResolver = $repository->getPermissionResolver();
-        $permissionResolver->setCurrentUserReference($userService->loadUserByLogin('admin'));
+        $permissionResolver->setCurrentUserReference($userService->loadUserByLogin($this->userLogin));
     }
 
     protected function fixEmbeddedImages($dryRun, $contentId, OutputInterface $output)
@@ -454,6 +470,7 @@ EOT
             "--offset=$offset",
             "--limit=$limit",
             '--image-content-types=' . implode(',', $this->imageContentTypeIdentifiers),
+            "--user=$this->userLogin",
         ];
         if ($dryRun) {
             $arguments[] = '--dry-run';

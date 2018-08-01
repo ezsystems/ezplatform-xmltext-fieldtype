@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>sometext</para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <emphasis role="strong">strong text</emphasis>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <emphasis>emphasized text</emphasis>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>underlined text</para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <link xlink:href="#anchor1" xlink:show="none">link text</link>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <emphasis role="underlined">underlinded text</emphasis>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <emphasis role="strikedthrough">striked</emphasis>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <subscript>subscript text</subscript>
+  </para>
+  <ezembed xlink:href="ezcontent://123" view="embed" ezxhtml:align="left">
+    <ezconfig>
+      <ezvalue key="size">small</ezvalue>
+    </ezconfig>
+  </ezembed>
+  <para>
+    <superscript>superscript text</superscript>
+  </para>
+</section>
+

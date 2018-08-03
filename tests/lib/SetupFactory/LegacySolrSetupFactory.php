@@ -33,5 +33,7 @@ class LegacySolrSetupFactory extends SolrLegacySetupFactory
         $loader->load('fieldtype_external_storages.yml');
         $loader->load('fieldtypes.yml');
         $loader->load('indexable_fieldtypes.yml');
+
+        parent::externalBuildContainer($containerBuilder);
     }
 }

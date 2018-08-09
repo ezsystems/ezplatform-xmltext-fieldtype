@@ -45,7 +45,7 @@ class ExpandingToRichText extends Expanding
     {
         return
             $paragraph->hasAttribute('xmlns:tmp')
-            && !$this->isChildOfSectionAndContainsText($paragraph)
+            && !$this->containsText($paragraph)
             && (
                 $this->containsBlock($paragraph)
                 || $this->containsCustomTag($paragraph)
@@ -68,11 +68,8 @@ class ExpandingToRichText extends Expanding
         return false;
     }
 
-    protected function isChildOfSectionAndContainsText(DOMElement $paragraph)
+    protected function containsText(DOMElement $paragraph)
     {
-        if ($paragraph->parentNode->localName !== 'section') {
-            return false;
-        }
         foreach ($paragraph->childNodes as $child) {
             if ($child instanceof \DOMText) {
                 return true;

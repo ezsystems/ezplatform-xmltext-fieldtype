@@ -200,7 +200,7 @@ class RichText implements Converter
     /**
      * @param $id
      * @param bool $isContentId Whatever provided $id is a content id or location id
-     * @param $contentFieldId
+     * @param null|int $contentFieldId
      * @return bool
      */
     protected function isImageContentType($id, $isContentId, $contentFieldId)
@@ -302,7 +302,7 @@ class RichText implements Converter
      * being embedded in the $richtextDocument.
      *
      * @param DOMDocument $richtextDocument
-     * @param $contentFieldId
+     * @param null|int $contentFieldId
      * @return int Number of ezembed tags which where changed
      */
     public function tagEmbeddedImages(DOMDocument $richtextDocument, $contentFieldId)
@@ -335,7 +335,7 @@ class RichText implements Converter
     /**
      * Check if $inputDocument has any embed|embed-inline tags without node_id or object_id.
      * @param DOMDocument $inputDocument
-     * @param $contentFieldId
+     * @param null|int $contentFieldId
      */
     protected function checkEmptyEmbedTags(DOMDocument $inputDocument, $contentFieldId)
     {
@@ -353,7 +353,7 @@ class RichText implements Converter
      * being linked to in the $document.
 
      * @param DOMDocument $document
-     * @param $contentFieldId
+     * @param null|int $contentFieldId
      */
     protected function fixLinksWithRemoteIds(DOMDocument $document, $contentFieldId)
     {
@@ -400,7 +400,7 @@ class RichText implements Converter
      * ezxmltext may contain link elements below another link element. This method flattens such structure.
      *
      * @param DOMDocument $document
-     * @param $contentFieldId
+     * @param null|int $contentFieldId
      */
     protected function flattenLinksInLinks(DOMDocument $document, $contentFieldId)
     {
@@ -447,6 +447,29 @@ class RichText implements Converter
     }
 
     /**
+     * No paragraph elements in ezxmltext should ever have the ez-temporary attribute before start converting.
+     * Nevertheless, some legacy databases still might have that....
+     * Those needs to be removed as we use ez-temporary for internal housekeeping.
+     *
+     * @param DOMDocument $document
+     * @param null|int $contentFieldId
+     */
+    protected function removeEzTemporaryAttributes(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        // Get all paragraphs which has a "ez-temporary" attribute.
+        $xpathExpression = '//paragraph[@ez-temporary]';
+
+        $elements = $xpath->query($xpathExpression);
+
+        foreach ($elements as $element) {
+            $element->removeAttribute('ez-temporary');
+            $this->logger->warning("Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=$contentFieldId");
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -459,6 +482,7 @@ class RichText implements Converter
      */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
+        $this->removeEzTemporaryAttributes($inputDocument, $contentFieldId);
         $this->removeComments($inputDocument);
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);

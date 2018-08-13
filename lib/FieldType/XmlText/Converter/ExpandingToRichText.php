@@ -45,6 +45,7 @@ class ExpandingToRichText extends Expanding
     {
         return
             $paragraph->hasAttribute('xmlns:tmp')
+            && !$this->containsText($paragraph)
             && (
                 $this->containsBlock($paragraph)
                 || $this->containsCustomTag($paragraph)
@@ -62,6 +63,34 @@ class ExpandingToRichText extends Expanding
         }
         if ($paragraph->childNodes->item(0)->localName === 'custom') {
             return true;
+        }
+
+        return false;
+    }
+
+    protected function containsText(DOMElement $paragraph)
+    {
+        foreach ($paragraph->childNodes as $child) {
+            if ($child instanceof \DOMText) {
+                return true;
+            } elseif ($child instanceof \DOMElement) {
+                switch ($child->localName) {
+                    case 'strong':
+                    case 'emphasize':
+                    case 'underline':
+                    case 'link':
+                        return true;
+                    case 'custom':
+                        switch ($child->getAttribute('name')) {
+                            case 'underline':
+                            case 'strike':
+                            case 'sub':
+                            case 'sup':
+                                return true;
+                        }
+                        break;
+                }
+            }
         }
 
         return false;

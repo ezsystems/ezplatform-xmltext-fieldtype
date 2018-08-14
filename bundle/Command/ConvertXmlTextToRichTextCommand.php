@@ -54,12 +54,6 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     protected $maxConcurrency;
 
-    /*
-     * Memory limit for child processes
-     * @var string
-     */
-    protected $memoryLimit;
-
     /**
      * @var string
      */
@@ -137,13 +131,6 @@ EOT
                  'ezxmltext:convert-to-richtext' which did not convert embedded images correctly."
             )
             ->addOption(
-                'memory-limit',
-                null,
-                InputOption::VALUE_REQUIRED,
-                "Specify the memory limit (in bytes) per child process. By default, memory_limit setting in php.ini is used.\n
-                 Shorthand byte values like 512M, 1G etc are supported."
-            )
-            ->addOption(
                 'user',
                 'u',
                 InputOption::VALUE_OPTIONAL,
@@ -170,8 +157,6 @@ EOT
 
             return;
         }
-
-        $this->memoryLimit = $input->getOption('memory-limit');
 
         if ($testContentId === null) {
             $this->convertFieldDefinitions($dryRun, $output);
@@ -488,8 +473,9 @@ EOT
             "--user=$this->userLogin",
         ];
 
-        if ($this->memoryLimit !== null) {
-            array_unshift($arguments, "memory_limit=$this->memoryLimit");
+        $memoryLimit = ini_get('memory_limit');
+        if ($memoryLimit !== null) {
+            array_unshift($arguments, "memory_limit=$memoryLimit");
             array_unshift($arguments, '-d');
         }
 

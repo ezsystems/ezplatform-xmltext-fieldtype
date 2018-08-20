@@ -382,7 +382,10 @@
       </xsl:if>
       <xsl:if test="@width">
         <xsl:attribute name="width">
-          <xsl:value-of select="@width"/>
+          <!-- Implementation of whitelist..
+           The inner translate() removes any character we actually accept, what remains is all unwanted characters in @width.
+           Those characters (and only those) are then removed by the outer translate()-->
+          <xsl:value-of select="translate(@width, translate(@width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:summary != ''">
@@ -441,7 +444,7 @@
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
-          <xsl:value-of select="@xhtml:width"/>
+          <xsl:value-of select="translate(@xhtml:width, translate(@xhtml:width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:valign">
@@ -487,7 +490,7 @@
       </xsl:if>
       <xsl:if test="@xhtml:width">
         <xsl:attribute name="ezxhtml:width">
-          <xsl:value-of select="@xhtml:width"/>
+          <xsl:value-of select="translate(@xhtml:width, translate(@xhtml:width, '0123456789%', ''), '')"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:valign">

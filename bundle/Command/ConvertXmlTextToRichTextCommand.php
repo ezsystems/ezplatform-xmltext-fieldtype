@@ -472,6 +472,13 @@ EOT
             '--image-content-types=' . implode(',', $this->imageContentTypeIdentifiers),
             "--user=$this->userLogin",
         ];
+
+        $memoryLimit = ini_get('memory_limit');
+        if ($memoryLimit !== null) {
+            array_unshift($arguments, "memory_limit=$memoryLimit");
+            array_unshift($arguments, '-d');
+        }
+
         if ($dryRun) {
             $arguments[] = '--dry-run';
         }

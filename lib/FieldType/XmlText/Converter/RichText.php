@@ -10,6 +10,7 @@ namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter;
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use DOMNode;
 use Psr\Log\LoggerInterface;
@@ -424,19 +425,29 @@ class RichText implements Converter
         }
     }
 
+    protected function findParent(DOMElement $element, $parentElementName)
+    {
+        $parent = $element;
+        do {
+            $parent = $parent->parentNode;
+        } while ($parent !== null && $parent->localName !== $parentElementName);
+
+        return $parent;
+    }
+
     protected function moveEmbedsInHeaders(DOMDocument $document, $contentFieldId)
     {
         $xpath = new DOMXPath($document);
 
         // Get all embed elements which are child of a header
-        $xpathExpression = '//embed[parent::header]';
+        $xpathExpression = '//header//embed';
 
         $embeds = $xpath->query($xpathExpression);
 
         foreach ($embeds as $embed) {
+            $header = $this->findParent($embed, 'header');
             // Move embed before header
-            $targetElement = $embed->parentNode->parentNode;
-            $header = $embed->parentNode;
+            $targetElement = $header->parentNode;
             $targetElement->insertBefore($embed, $header);
 
             // swap positions of embed and header

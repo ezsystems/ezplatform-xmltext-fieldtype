@@ -369,6 +369,10 @@
         <xsl:when test="@custom:caption != ''">
           <xsl:value-of select="'table'"/>
         </xsl:when>
+        <!-- Docbook do not support <informaltable> below <table>. Enforcing <table> in such case-->
+        <xsl:when test="ancestor::table[@custom:caption] != ''">
+          <xsl:value-of select="'table'"/>
+        </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="'informaltable'"/>
         </xsl:otherwise>

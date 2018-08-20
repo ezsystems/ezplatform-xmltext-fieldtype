@@ -562,7 +562,14 @@
       </xsl:if>
       <xsl:if test="@align">
         <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
+          <xsl:choose>
+            <xsl:when test="translate(@align, $uppercase, $lowercase) = 'justify'">
+              <xsl:value-of select="'center'"/>
+            </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
+          </xsl:otherwise>
+          </xsl:choose>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@*[starts-with( name( . ), 'ezlegacytmp-embed-link-' )]">

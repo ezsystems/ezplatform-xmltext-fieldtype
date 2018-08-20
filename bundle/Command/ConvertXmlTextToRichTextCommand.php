@@ -18,6 +18,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
+use Psr\Log\LogLevel;
 
 class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
 {
@@ -38,6 +39,16 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      * @var RichTextConverter
      */
     private $converter;
+
+    /**
+     * @var string
+     */
+    private $exportDir;
+
+    /**
+     * @var array
+     */
+    private $exportDirFilter;
 
     /**
      * @var array.
@@ -71,6 +82,7 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
         $this->dbal = $dbal;
         $this->logger = $logger;
         $this->converter = $converter;
+        $this->exportDir = '';
     }
 
     protected function configure()
@@ -111,6 +123,22 @@ EOT
                 'Disable the check for non-validating id/name values. This might decrease execution time on large databases'
             )
             ->addOption(
+                'export-dir',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Path to store ezxmltext which the conversion tool is not able to convert. You may use the ezxmltext:import-xml tool to fix such problems'
+            )
+            ->addOption(
+                'export-dir-filter',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                "To be used together with --export-dir option. Specify what kind of problems should be exported:\n
+                 notice: ezxmltext contains problems which the conversion tool was able to fix automatically and likly do not need manual intervention\n
+                 warning: the conversion tool was able to convert the ezxmltext to valid richtext, but data was maybe altered/removed/added in the process. Manual supervision recommended\n
+                 error: the ezxmltext text cannot be converted and manual changes are required.",
+                sprintf('%s,%s', LogLevel::WARNING, LogLevel::ERROR)
+            )
+            ->addOption(
                 'test-content-object',
                 null,
                 InputOption::VALUE_OPTIONAL,
@@ -143,7 +171,10 @@ EOT
     {
         $this->baseExecute($input, $output, $dryRun);
         if ($dryRun) {
-            $output->writeln("Running in dry-run mode. No changes will actually be written to database\n");
+            $output->writeln('Running in dry-run mode. No changes will actually be written to database');
+            if ($this->exportDir !== '') {
+                $output->writeln("Note: --export-dir option provided, files will be written to $this->exportDir even in dry-run mode\n");
+            }
         }
 
         $testContentId = $input->getOption('test-content-object');
@@ -188,6 +219,30 @@ EOT
             throw new RuntimeException('Multi concurrency is not supported together with the --fix-embedded-images-only option');
         }
 
+        if ($input->getOption('export-dir')) {
+            $this->exportDir = $input->getOption('export-dir');
+            if (!is_dir($this->exportDir)) {
+                mkdir($this->exportDir);
+            }
+            if (!is_writable($this->exportDir)) {
+                new RuntimeException("$this->exportDir is not writable");
+            }
+        }
+
+        if ($input->getOption('export-dir-filter')) {
+            $this->exportDirFilter = explode(',', $input->getOption('export-dir-filter'));
+            foreach ($this->exportDirFilter as $filter) {
+                switch ($filter) {
+                    case LogLevel::NOTICE:
+                    case LogLevel::WARNING:
+                    case LogLevel::ERROR:
+                        break;
+                    default:
+                        new RuntimeException("Unsupported export dir filter: $this->exportDirFilter");
+                }
+            }
+        }
+
         if ($input->getOption('image-content-types')) {
             $this->imageContentTypeIdentifiers = explode(',', $input->getOption('image-content-types'));
         } else {
@@ -195,7 +250,7 @@ EOT
         }
         $imageContentTypeIds = $this->getContentTypeIds($this->imageContentTypeIdentifiers);
         if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
-            throw new RuntimeException('Unable to lookup all content type identifiers, not found : ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
+            throw new RuntimeException('Unable to lookup all content type identifiers, not found: ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
     }
@@ -216,7 +271,13 @@ EOT
 
         $statement = $query->execute();
 
-        return array_map('reset', $statement->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_COLUMN));
+        $columns = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($columns as $column) {
+            $result[$column['identifier']] = $column['id'];
+        }
+
+        return $result;
     }
 
     protected function login()
@@ -471,6 +532,7 @@ EOT
             "--limit=$limit",
             '--image-content-types=' . implode(',', $this->imageContentTypeIdentifiers),
             "--user=$this->userLogin",
+            '--export-dir-filter=' . implode(',', $this->exportDirFilter),
         ];
 
         $memoryLimit = ini_get('memory_limit');
@@ -487,6 +549,9 @@ EOT
         }
         if (!$checkIdValues) {
             $arguments[] = '--disable-id-value-check';
+        }
+        if ($this->exportDir !== '') {
+            $arguments[] = "--export-dir=$this->exportDir";
         }
         if ($output->isVerbose()) {
             $arguments[] = '-v';
@@ -521,6 +586,39 @@ EOT
         return $this->phpPath;
     }
 
+    protected function dumpOnErrors($errors, $dataText, $contentobjectId, $contentobjectAttribute, $version, $languageCode)
+    {
+        if (($this->exportDir !== '') && (count($errors) > 0)) {
+            $filterMatch = false;
+            $filename = $this->exportDir . DIRECTORY_SEPARATOR . "ezxmltext_${contentobjectId}_${contentobjectAttribute}_${version}_${languageCode}";
+
+            // Write error log
+            foreach ($errors as $logLevel => $logErrors) {
+                if (!in_array($logLevel, $this->exportDirFilter)) {
+                    continue;
+                }
+                $fileFlag = $filterMatch ? FILE_APPEND : 0;
+                $filterMatch = true;
+                foreach ($logErrors as $logError) {
+                    $message = $logError['message'];
+                    file_put_contents("$filename.log", "$logLevel: $message\n", $fileFlag);
+                    if (array_key_exists('errors', $logError['context'])) {
+                        foreach ($logError['context']['errors'] as $contextError) {
+                            file_put_contents("$filename.log", "- context : $contextError\n", FILE_APPEND);
+                        }
+                    }
+                }
+            }
+
+            // write ezxmltext dump
+            if ($filterMatch) {
+                $xmlDoc = $this->createDocument($dataText);
+                $xmlDoc->formatOutput = true;
+                file_put_contents("$filename.xml", $xmlDoc->saveXML());
+            }
+        }
+    }
+
     protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit)
     {
         $statement = $this->getFieldRows('ezxmltext', $contentId, $offset, $limit);
@@ -542,6 +640,7 @@ EOT
                 );
             }
             $converted = $this->converter->convert($xmlDoc, $checkDuplicateIds, $checkIdValues, $row['id']);
+            $this->dumpOnErrors($this->converter->getErrors(), $row['data_text'], $row['contentobject_id'], $row['id'], $row['version'], $row['language_code']);
 
             $this->updateFieldRow($dryRun, $row['id'], $row['version'], $converted);
 

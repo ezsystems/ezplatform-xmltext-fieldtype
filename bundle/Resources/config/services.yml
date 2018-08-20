@@ -22,6 +22,14 @@ services:
         tags:
             -  { name: console.command }
 
+    ezxmltext.command.import_xml:
+        class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ImportXmlCommand
+        arguments:
+            - "@ezpublish.persistence.connection"
+            - "@ezxmltext.richtext_converter"
+        tags:
+            -  { name: console.command }
+
     ezxmltext.richtext_converter:
         class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText
         arguments:

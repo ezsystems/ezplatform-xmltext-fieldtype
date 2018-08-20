@@ -1,1 +1,1 @@
-warning:Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=
+notice:Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=

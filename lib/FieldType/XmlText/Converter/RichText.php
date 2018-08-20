@@ -19,6 +19,7 @@ use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
 use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
+use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
@@ -48,6 +49,11 @@ class RichText implements Converter
      * @var []
      */
     private $styleSheets;
+
+    /**
+     * @var []
+     */
+    private $errors;
 
     /**
      * RichText constructor.
@@ -157,7 +163,7 @@ class RichText implements Converter
             $id = $node->attributes->getNamedItem('id')->nodeValue;
             // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
             $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
-            $this->logger->warning("Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
+            $this->log(LogLevel::WARNING, "Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
         }
     }
 
@@ -194,7 +200,7 @@ class RichText implements Converter
             $newValue = 'rewrite_' . $node->attributes->getNamedItem('id')->nodeValue;
             $newValue = preg_replace("/[^$whitelist]/", '_', $newValue);
             $node->attributes->getNamedItem('id')->nodeValue = $newValue;
-            $this->logger->warning("Replaced non-validating id value in richtext for contentobject_attribute.id=$contentFieldId, changed from : $orgValue --> $newValue");
+            $this->log(LogLevel::WARNING, "Replaced non-validating id value in richtext for contentobject_attribute.id=$contentFieldId, changed from : $orgValue --> $newValue");
         }
     }
 
@@ -219,14 +225,14 @@ class RichText implements Converter
                 try {
                     $location = $locationService->loadLocation($id);
                 } catch (NotFoundException $e) {
-                    $this->logger->warning("Unable to find node_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
+                    $this->log(LogLevel::WARNING, "Unable to find node_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
 
                     return false;
                 }
                 $contentInfo = $location->getContentInfo();
             }
         } catch (NotFoundException $e) {
-            $this->logger->warning("Unable to find content_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
+            $this->log(LogLevel::WARNING, "Unable to find content_id=$id, referred to in embedded tag in contentobject_attribute.id=$contentFieldId.");
 
             return false;
         }
@@ -343,7 +349,7 @@ class RichText implements Converter
         $xpath = new DOMXPath($inputDocument);
         $nodes = $xpath->query('//embed[not(@node_id|@object_id)] | //embed-inline[not(@node_id|@object_id)]');
         if ($nodes->length > 0) {
-            $this->logger->warning('Warning: ezxmltext for contentobject_attribute.id=' . $contentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
+            $this->log(LogLevel::WARNING, 'ezxmltext for contentobject_attribute.id=' . $contentFieldId . 'contains embed or embed-inline tag(s) without node_id or object_id');
         }
     }
 
@@ -374,7 +380,7 @@ class RichText implements Converter
                 } catch (NotFoundException $e) {
                     // The link has to point to somewhere in order to be valid... Pointing to current page
                     $link->setAttribute('href', '#');
-                    $this->logger->warning("Unable to find content object with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                    $this->log(LogLevel::WARNING, "Unable to find content object with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
                 }
                 continue;
             }
@@ -387,13 +393,13 @@ class RichText implements Converter
                 } catch (NotFoundException $e) {
                     // The link has to point to somewhere in order to be valid... Pointing to current page
                     $link->setAttribute('href', '#');
-                    $this->logger->warning("Unable to find node with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
+                    $this->log(LogLevel::WARNING, "Unable to find node with remote_id=$remote_id (so rewriting to href=\"#\"), when converting link where contentobject_attribute.id=$contentFieldId.");
                 }
                 continue;
             }
             // The link has to point to somewhere in order to be valid... Pointing to current page
             $link->setAttribute('href', '#');
-            $this->logger->warning("Unknown linktype detected when converting link where contentobject_attribute.id=$contentFieldId.");
+            $this->log(LogLevel::WARNING, "Unknown linktype detected when converting link where contentobject_attribute.id=$contentFieldId.");
         }
     }
 
@@ -421,7 +427,7 @@ class RichText implements Converter
             // We want parent link to be listed first.
             $targetElement->insertBefore($parentLink, $link);
 
-            $this->logger->warning("Found nested links. Flatten links where contentobject_attribute.id=$contentFieldId");
+            $this->log(LogLevel::NOTICE, "Found nested links. Flatten links where contentobject_attribute.id=$contentFieldId");
         }
     }
 
@@ -453,7 +459,7 @@ class RichText implements Converter
             // swap positions of embed and header
             $targetElement->insertBefore($header, $embed);
 
-            $this->logger->warning("Found embed(s) inside header tag. Embed(s) where moved outside header where contentobject_attribute.id=$contentFieldId");
+            $this->log(LogLevel::NOTICE, "Found embed(s) inside header tag. Embed(s) where moved outside header where contentobject_attribute.id=$contentFieldId");
         }
     }
 
@@ -476,8 +482,32 @@ class RichText implements Converter
 
         foreach ($elements as $element) {
             $element->removeAttribute('ez-temporary');
-            $this->logger->warning("Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=$contentFieldId");
+            $this->log(LogLevel::NOTICE, "Found ez-temporary attribute in a ezxmltext paragraphs. Removing such attribute where contentobject_attribute.id=$contentFieldId");
         }
+    }
+
+    protected function log($logLevel, $message, $context = [])
+    {
+        $this->logger->log($logLevel, $message, $context);
+        $this->errors[$logLevel][] = ['message' => $message, 'context' => $context];
+        switch ($logLevel) {
+            case LogLevel::EMERGENCY:
+            case LogLevel::ALERT:
+            case LogLevel::CRITICAL:
+            case LogLevel::ERROR:
+            case LogLevel::WARNING:
+            case LogLevel::NOTICE:
+            case LogLevel::INFO:
+            case LogLevel::DEBUG:
+                break;
+            default:
+                throw new \Exception("Invalid log level: $logLevel");
+        }
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**
@@ -493,6 +523,7 @@ class RichText implements Converter
      */
     public function convert(DOMDocument $inputDocument, $checkDuplicateIds = false, $checkIdValues = false, $contentFieldId = null)
     {
+        $this->errors = [];
         $this->removeEzTemporaryAttributes($inputDocument, $contentFieldId);
         $this->removeComments($inputDocument);
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
@@ -503,7 +534,7 @@ class RichText implements Converter
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);
         } catch (\Exception $e) {
-            $this->logger->error(
+            $this->log(LogLevel::ERROR,
                 "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
                 ['errors' => $e->getMessage()]
             );
@@ -522,13 +553,13 @@ class RichText implements Converter
             // If env=dev, Symfony will throw ContextErrorException on line below if xml is invalid
             $result = $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
             if ($result === false) {
-                $this->logger->error(
+                $this->log(LogLevel::ERROR,
                     "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
                     ['result' => $convertedDocument->saveXML(), 'errors' => 'Unable to parse converted richtext output. See warning in logs or use --env=dev in order to se more verbose output.', 'xmlString' => $inputDocument->saveXML()]
                 );
             }
         } catch (ContextErrorException $e) {
-            $this->logger->error(
+            $this->log(LogLevel::ERROR,
                 "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
                 ['result' => $convertedDocument->saveXML(), 'errors' => $e->getMessage(), 'xmlString' => $inputDocument->saveXML()]
             );
@@ -543,7 +574,7 @@ class RichText implements Converter
             $result = $convertedDocumentNormalized->saveXML();
 
             if (!empty($errors)) {
-                $this->logger->error(
+                $this->log(LogLevel::ERROR,
                     "Validation errors when converting ezxmltext for contentobject_attribute.id=$contentFieldId",
                     ['result' => $result, 'errors' => $errors, 'xmlString' => $inputDocument->saveXML()]
                 );

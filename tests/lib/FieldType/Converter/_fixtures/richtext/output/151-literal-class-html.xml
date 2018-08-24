@@ -1,7 +1,7 @@
 <section xmlns="http://docbook.org/ns/docbook" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
   <para>some text with bold tag</para>
   <eztemplate name="rawhtml">
-    <ezcontent>This is some &lt;b&gt;bold&lt;/b&gt; text&lt;br/&gt;</ezcontent>
+    <ezcontent>this is some &lt;b&gt;html&lt;/b&gt; text</ezcontent>
   </eztemplate>
   <para>some text with utf8 characters</para>
   <eztemplate name="rawhtml">
@@ -11,5 +11,9 @@
   <para>some text with nbsp character entities</para>
   <eztemplate name="rawhtml">
     <ezcontent>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;indend using nbsp entities&lt;br/&gt;</ezcontent>
+  </eztemplate>
+  <para>some text with CNAME end sequence</para>
+  <eztemplate name="rawhtml">
+    <ezcontent>Literal with CNAME end sequence here : ]]&gt; and some more text here</ezcontent>
   </eztemplate>
 </section>

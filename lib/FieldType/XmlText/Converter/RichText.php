@@ -511,6 +511,25 @@ class RichText implements Converter
     }
 
     /**
+     * @param DOMDocument $document
+     * @param null|int $contentFieldId
+     */
+    protected function writeWarningOnNonSupportedLiterals(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        $xpathExpression = '//literal';
+
+        $elements = $xpath->query($xpathExpression);
+
+        foreach ($elements as $element) {
+            if ($element->getAttribute('class') !== 'html') {
+                $this->log(LogLevel::ERROR, "Only literal tag with class=\"html\" supported at the moment. Tag with different class removed where contentobject_attribute.id=$contentFieldId");
+            }
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -530,6 +549,7 @@ class RichText implements Converter
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
         $this->flattenLinksInLinks($inputDocument, $contentFieldId);
         $this->moveEmbedsInHeaders($inputDocument, $contentFieldId);
+        $this->writeWarningOnNonSupportedLiterals($inputDocument, $contentFieldId);
 
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);

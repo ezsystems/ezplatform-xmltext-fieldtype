@@ -10,6 +10,21 @@ This is the XmlText field type for eZ Platform. It was extracted from the eZ Pub
 _Note: This Field Type supports editing via Platform UI v1, however only as raw (simplified) xml. There has currently not been any attempts at getting Online Editor from legacy extension to work with within Platform UI, to do that among other things someone would need to port the custom html to xml handler from oe extension to this field type. So this Field Type is mainly meant for use for migrating to RichText, see below._
 
 
+## Installation
+
+NOTE: This package comes already bundled with [Legacy Bridge](https://github.com/ezsystems/LegacyBridge). However if you would rather like to 1. migrate your content directly to eZ Platform to take full advantage of it, or 2. otherwise don't want to use legacy but need this field type for some legacy content usage within pure eZ Platform setup, then run the following:
+
+```
+composer require --update-with-all-dependencies "ezsystems/ezplatform-xmltext-fieldtype"
+```
+
+And lastly enable the bundle by adding `new EzSystems\EzPlatformXmlTextFieldTypeBundle\EzSystemsEzPlatformXmlTextFieldTypeBundle(),` to `app/AppKernel.php` list of bundles.
+
+----
+
+_Once you have migrated your content you can remove the bundle from both `app/AppKernel.php` and `composer.json`._
+
+
 ## Migrating from XmlText to RichText
 
 **Warning: As of 1.6 this is now fully supported, but regardless of that always make a backup before using the migration tools.**

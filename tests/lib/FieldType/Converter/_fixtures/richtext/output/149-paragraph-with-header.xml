@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+  <para>foobar1
+        </para>
+  <title ezxhtml:level="2">Welcome1</title>
+  <title ezxhtml:level="2">Welcome2</title>
+  <para>
+        foobar2</para>
+  <informaltable>
+    <tbody>
+      <tr>
+        <td>
+          <title ezxhtml:level="2">Welcome3</title>
+        </td>
+      </tr>
+    </tbody>
+  </informaltable>
+</section>

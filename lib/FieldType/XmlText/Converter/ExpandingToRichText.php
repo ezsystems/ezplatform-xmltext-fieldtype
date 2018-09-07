@@ -32,6 +32,7 @@ class ExpandingToRichText extends Expanding
         ),
         'table' => array(),
         'literal' => array(),
+        'header' => array(),
     );
 
     /**

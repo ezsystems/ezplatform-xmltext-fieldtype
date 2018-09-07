@@ -1,1 +1,2 @@
-notice:Found embed(s) inside header tag. Embed(s) where moved outside header where contentobject_attribute.id=
+notice:Found non-supported children elements inside header tag. Those where moved outside header where contentobject_attribute.id=
+

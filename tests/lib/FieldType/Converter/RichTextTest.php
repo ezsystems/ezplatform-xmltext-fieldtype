@@ -173,7 +173,6 @@ class RichTextTest extends TestCase
     private function createLoggerStub($logFilePath)
     {
         $loggerStub = $this->createMock(NullLogger::class);
-        $logMethodUsage = ['warning' => false, 'error' => false];
 
         if ($logFilePath !== null) {
             $log = file_get_contents($logFilePath);
@@ -183,13 +182,12 @@ class RichTextTest extends TestCase
                 if ($expectedLogLine === '') {
                     continue;
                 }
-                $logMethod = substr($expectedLogLine, 0, strpos($expectedLogLine, ':'));
+                $logLevel = substr($expectedLogLine, 0, strpos($expectedLogLine, ':'));
                 $logMessage = substr($expectedLogLine, strpos($expectedLogLine, ':') + 1);
-                $logMethodUsage[$logMethod] = true;
                 if (strpos($expectedLogLine, '*') !== false) {
                     $loggerStub->expects($this->at($logNo++))
-                        ->method($logMethod)
-                    ->with($this->callback(function ($actualLogMessage) use ($logMessage) {
+                        ->method('log')
+                    ->with($logLevel, $this->callback(function ($actualLogMessage) use ($logMessage) {
                         $expectedLogMessage = substr($logMessage, 0, strpos($logMessage, '*'));
 
                         $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
@@ -198,15 +196,9 @@ class RichTextTest extends TestCase
                     }));
                 } else {
                     $loggerStub->expects($this->at($logNo++))
-                        ->method($logMethod)
-                        ->with($logMessage);
+                        ->method('log')
+                        ->with($logLevel, $logMessage);
                 }
-            }
-        }
-        foreach ($logMethodUsage as $method => $used) {
-            if (!$used) {
-                $loggerStub->expects($this->never())
-                    ->method($method);
             }
         }
 

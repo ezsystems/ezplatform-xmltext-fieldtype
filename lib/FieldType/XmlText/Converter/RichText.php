@@ -441,25 +441,32 @@ class RichText implements Converter
         return $parent;
     }
 
-    protected function moveEmbedsInHeaders(DOMDocument $document, $contentFieldId)
+    /**
+     * In some versions of legacy, it seems possible to have unexpected elements as children of <header>.
+     * This function move such ellements after the <header>.
+     *
+     * @param DOMDocument $document
+     * @param $contentFieldId
+     */
+    protected function moveSubElementsOfHeaders(DOMDocument $document, $contentFieldId)
     {
         $xpath = new DOMXPath($document);
 
-        // Get all embed elements which are child of a header
-        $xpathExpression = '//header//embed';
+        // Get all embed|custom elements which are child of a header
+        $xpathExpression = '//header//embed|//header/custom';
 
         $embeds = $xpath->query($xpathExpression);
 
         foreach ($embeds as $embed) {
             $header = $this->findParent($embed, 'header');
-            // Move embed before header
+            // Move child before header
             $targetElement = $header->parentNode;
             $targetElement->insertBefore($embed, $header);
 
-            // swap positions of embed and header
+            // swap positions of child and header
             $targetElement->insertBefore($header, $embed);
 
-            $this->log(LogLevel::NOTICE, "Found embed(s) inside header tag. Embed(s) where moved outside header where contentobject_attribute.id=$contentFieldId");
+            $this->log(LogLevel::NOTICE, "Found non-supported children elements inside header tag. Those where moved outside header where contentobject_attribute.id=$contentFieldId");
         }
     }
 
@@ -529,7 +536,7 @@ class RichText implements Converter
         $this->checkEmptyEmbedTags($inputDocument, $contentFieldId);
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
         $this->flattenLinksInLinks($inputDocument, $contentFieldId);
-        $this->moveEmbedsInHeaders($inputDocument, $contentFieldId);
+        $this->moveSubElementsOfHeaders($inputDocument, $contentFieldId);
 
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);

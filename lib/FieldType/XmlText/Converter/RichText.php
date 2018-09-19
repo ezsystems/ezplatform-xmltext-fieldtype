@@ -489,7 +489,6 @@ class RichText implements Converter
     protected function log($logLevel, $message, $context = [])
     {
         $this->logger->log($logLevel, $message, $context);
-        $this->errors[$logLevel][] = ['message' => $message, 'context' => $context];
         switch ($logLevel) {
             case LogLevel::EMERGENCY:
             case LogLevel::ALERT:
@@ -503,6 +502,7 @@ class RichText implements Converter
             default:
                 throw new \Exception("Invalid log level: $logLevel");
         }
+        $this->errors[$logLevel][] = ['message' => $message, 'context' => $context];
     }
 
     public function getErrors()
@@ -556,7 +556,7 @@ class RichText implements Converter
         } catch (\Exception $e) {
             $this->log(LogLevel::ERROR,
                 "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
-                ['errors' => $e->getMessage()]
+                ['errors' => [$e->getMessage()]]
             );
             throw $e;
         }
@@ -575,13 +575,13 @@ class RichText implements Converter
             if ($result === false) {
                 $this->log(LogLevel::ERROR,
                     "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
-                    ['result' => $convertedDocument->saveXML(), 'errors' => 'Unable to parse converted richtext output. See warning in logs or use --env=dev in order to se more verbose output.', 'xmlString' => $inputDocument->saveXML()]
+                    ['result' => $convertedDocument->saveXML(), 'errors' => ['Unable to parse converted richtext output. See warning in logs or use --env=dev in order to se more verbose output.'], 'xmlString' => $inputDocument->saveXML()]
                 );
             }
         } catch (ContextErrorException $e) {
             $this->log(LogLevel::ERROR,
                 "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
-                ['result' => $convertedDocument->saveXML(), 'errors' => $e->getMessage(), 'xmlString' => $inputDocument->saveXML()]
+                ['result' => $convertedDocument->saveXML(), 'errors' => [$e->getMessage()], 'xmlString' => $inputDocument->saveXML()]
             );
             $result = false;
         }

@@ -50,6 +50,30 @@
     </xsl:element>
   </xsl:template>
 
+  <xsl:template match="literal">
+    <xsl:choose>
+      <xsl:when test="@class = 'html'">
+        <xsl:element name="eztemplate">
+          <xsl:attribute name="name">
+            <xsl:value-of select="'rawhtml'"/>
+          </xsl:attribute>
+          <xsl:element name="ezcontent">
+            <xsl:value-of select="./text()"/>
+          </xsl:element>
+          <xsl:if test="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' )]">
+            <xsl:element name="ezconfig">
+              <xsl:for-each select="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' )]">
+                <xsl:call-template name="addHashValue">
+                  <xsl:with-param name="attribute" select="current()"/>
+                </xsl:call-template>
+              </xsl:for-each>
+            </xsl:element>
+          </xsl:if>
+        </xsl:element>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="paragraph[@ez-temporary]/custom">
     <xsl:element name="eztemplate" namespace="http://docbook.org/ns/docbook">
       <xsl:attribute name="name">

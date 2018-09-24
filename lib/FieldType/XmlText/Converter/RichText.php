@@ -530,6 +530,38 @@ class RichText implements Converter
     }
 
     /**
+     * @param DOMDocument $document
+     * @param null|int $contentFieldId
+     */
+    protected function writeWarningOnNonSupportedCustomTags(DOMDocument $document, $contentFieldId)
+    {
+        $xpath = new DOMXPath($document);
+
+        $xpathExpression = '//custom';
+
+        $elements = $xpath->query($xpathExpression);
+
+        foreach ($elements as $element) {
+            $customTagName = $element->getAttribute('name');
+            $parent = $element->parentNode;
+            $blockCustomTag = ($parent->localName === 'paragraph' && $parent->hasAttribute('ez-temporary')) || $parent->localName === 'section';
+
+            // These legacy custom tags are not custom tags in richtext
+            if (in_array($customTagName, ['quote', 'underline', 'strike', 'sub', 'sup'])) {
+                continue;
+            }
+
+            if (!$blockCustomTag) {
+                $this->log(LogLevel::WARNING, "Inline custom tag '$customTagName' not supported by editor at the moment. You'll not be able to edit content correctly in editor where contentobject_attribute.id=$contentFieldId");
+            }
+
+            if ($parent->localName === 'section') {
+                $this->log(LogLevel::WARNING, "Custom tag '$customTagName' converted to block custom tag. It might have been inline custom tag in legacy DB where contentobject_attribute.id=$contentFieldId");
+            }
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -560,6 +592,7 @@ class RichText implements Converter
             );
             throw $e;
         }
+        $this->writeWarningOnNonSupportedCustomTags($inputDocument, $contentFieldId);
         if ($checkDuplicateIds) {
             $this->reportNonUniqueIds($convertedDocument, $contentFieldId);
         }

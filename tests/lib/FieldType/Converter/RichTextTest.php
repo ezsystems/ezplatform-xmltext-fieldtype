@@ -23,6 +23,11 @@ use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 class RichTextTest extends TestCase
 {
     /**
+     * @var \EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter\MethodCallCountConstraint
+     */
+    protected $methodCallCountConstraint = null;
+
+    /**
      * @param string $xml
      * @param bool $isPath
      *
@@ -173,6 +178,7 @@ class RichTextTest extends TestCase
     private function createLoggerStub($logFilePath)
     {
         $loggerStub = $this->createMock(NullLogger::class);
+        $callLogCount = 0;
 
         if ($logFilePath !== null) {
             $log = file_get_contents($logFilePath);
@@ -199,8 +205,11 @@ class RichTextTest extends TestCase
                         ->method('log')
                         ->with($logLevel, $logMessage);
                 }
+                ++$callLogCount;
             }
         }
+        $this->methodCallCountConstraint = new MethodCallCountConstraint($callLogCount);
+        $loggerStub->expects($this->methodCallCountConstraint)->method('log');
 
         return $loggerStub;
     }
@@ -221,6 +230,7 @@ class RichTextTest extends TestCase
         $richText->setImageContentTypes([27]);
 
         $result = $richText->convert($inputDocument, true, true);
+        $this->methodCallCountConstraint->verify();
 
         if ($result === false && !file_exists($outputFilePath)) {
             return;

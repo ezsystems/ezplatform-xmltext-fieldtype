@@ -368,13 +368,13 @@ EOT
         $output->writeln("Found $count field definiton to convert.");
 
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentclass_attribute', 'a')
-            ->set('a.data_type_string', ':newdatatypestring')
+        $updateQuery->update('ezcontentclass_attribute')
+            ->set('data_type_string', ':newdatatypestring')
             // was tagPreset in ezxmltext, unused in RichText
-            ->set('a.data_text2', ':datatext2')
+            ->set('data_text2', ':datatext2')
             ->where(
                 $updateQuery->expr()->eq(
-                    'a.data_type_string',
+                    'data_type_string',
                     ':olddatatypestring'
                 )
             )
@@ -462,18 +462,18 @@ EOT
     protected function updateFieldRow($dryRun, $id, $version, $datatext)
     {
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute', 'a')
-            ->set('a.data_type_string', ':datatypestring')
-            ->set('a.data_text', ':datatext')
+        $updateQuery->update('ezcontentobject_attribute')
+            ->set('data_type_string', ':datatypestring')
+            ->set('data_text', ':datatext')
             ->where(
                 $updateQuery->expr()->eq(
-                    'a.id',
+                    'id',
                     ':id'
                 )
             )
             ->andWhere(
                 $updateQuery->expr()->eq(
-                    'a.version',
+                    'version',
                     ':version'
                 )
             )

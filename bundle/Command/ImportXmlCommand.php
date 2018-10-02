@@ -261,23 +261,23 @@ EOT
     protected function updateContentObjectAttribute($xml, $objectId, $attributeId, $version, $language)
     {
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute', 'a')
-            ->set('a.data_text', ':newxml')
+        $updateQuery->update('ezcontentobject_attribute')
+            ->set('data_text', ':newxml')
             ->where(
                 $updateQuery->expr()->eq(
-                    'a.data_type_string',
+                    'data_type_string',
                     ':datatypestring'
                 )
             )
             ->andWhere(
                 $updateQuery->expr()->eq(
-                    'a.contentobject_id',
+                    'contentobject_id',
                     ':objectid'
                 )
             )
             ->andWhere(
                 $updateQuery->expr()->eq(
-                    'a.id',
+                    'id',
                     ':attributeid'
                 )
             )

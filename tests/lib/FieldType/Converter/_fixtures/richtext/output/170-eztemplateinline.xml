@@ -1,0 +1,9 @@
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
+  <title ezxhtml:level="2">Advisers:
+        <eztemplateinline name="linebreak"/>Foobar Corp.</title>
+</section>
+

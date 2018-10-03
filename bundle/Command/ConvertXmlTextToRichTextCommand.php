@@ -81,15 +81,15 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     protected $kernelCacheDir;
 
-    public function __construct(Connection $dbal, RichTextConverter $converter, LoggerInterface $logger, $kernelCacheDir)
+    public function __construct(Connection $dbal, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
     {
         parent::__construct();
 
         $this->dbal = $dbal;
-        $this->logger = $logger;
         $this->converter = $converter;
-        $this->exportDir = '';
         $this->kernelCacheDir = $kernelCacheDir;
+        $this->logger = $logger;
+        $this->exportDir = '';
     }
 
     protected function configure()
@@ -280,12 +280,17 @@ EOT
     {
         $customTagLog = $this->converter->getCustomTagLog();
         if (count($customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) > 0) {
-            file_put_contents($this->getCustomTagLogFileName(), RichTextConverter::INLINE_CUSTOM_TAG . ':' . implode(',',
-                    $customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) . "\n", FILE_APPEND);
+            file_put_contents(
+                $this->getCustomTagLogFileName(),
+                RichTextConverter::INLINE_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) . PHP_EOL,
+                FILE_APPEND
+            );
         }
         if (count($customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) > 0) {
-            file_put_contents($this->getCustomTagLogFileName(), RichTextConverter::BLOCK_CUSTOM_TAG . ':' . implode(',',
-                    $customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) . "\n", FILE_APPEND);
+            file_put_contents($this->getCustomTagLogFileName(),
+                RichTextConverter::BLOCK_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) . PHP_EOL,
+                FILE_APPEND
+            );
         }
     }
 
@@ -300,7 +305,7 @@ EOT
     protected function reportCustomTags(InputInterface $input, OutputInterface $output)
     {
         $customTagsFile = file_get_contents($this->getCustomTagLogFileName());
-        $separator = "\n";
+        $separator = PHP_EOL;
         $line = strtok($customTagsFile, $separator);
         $inlines = [];
         $blocks = [];

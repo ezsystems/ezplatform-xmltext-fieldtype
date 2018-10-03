@@ -12,8 +12,8 @@ services:
         arguments:
             - "@ezpublish.persistence.connection"
             - "@ezxmltext.richtext_converter"
-            - "@?logger"
             - "%kernel.cache_dir%"
+            - "@?logger"
         tags:
             -  { name: console.command }
 

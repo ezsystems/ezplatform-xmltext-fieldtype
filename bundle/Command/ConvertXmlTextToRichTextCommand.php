@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
-use Doctrine\DBAL\Connection;
+use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
@@ -27,9 +27,9 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
     const DEFAULT_REPOSITORY_USER = 'admin';
 
     /**
-     * @var \Doctrine\DBAL\Connection
+     * @var \eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway
      */
-    private $dbal;
+    private $gateway;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -81,11 +81,11 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     protected $kernelCacheDir;
 
-    public function __construct(Connection $dbal, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
+    public function __construct(Gateway $gateway, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
     {
         parent::__construct();
 
-        $this->dbal = $dbal;
+        $this->gateway = $gateway;
         $this->converter = $converter;
         $this->kernelCacheDir = $kernelCacheDir;
         $this->logger = $logger;
@@ -258,7 +258,7 @@ EOT
         } else {
             $this->imageContentTypeIdentifiers = ['image'];
         }
-        $imageContentTypeIds = $this->getContentTypeIds($this->imageContentTypeIdentifiers);
+        $imageContentTypeIds = $this->gateway->getContentTypeIds($this->imageContentTypeIdentifiers);
         if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
             throw new RuntimeException('Unable to lookup all content type identifiers, not found: ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
@@ -378,7 +378,7 @@ EOT
 
     protected function fixEmbeddedImages($dryRun, $contentId, OutputInterface $output)
     {
-        $count = $this->getRowCountOfContentObjectAttributes('ezrichtext', $contentId);
+        $count = $this->gateway->getRowCountOfContentObjectAttributes('ezrichtext', $contentId);
 
         $output->writeln("Found $count field rows to convert.");
 
@@ -387,7 +387,7 @@ EOT
         do {
             $limit = self::MAX_OBJECTS_PER_CHILD;
 
-            $statement = $this->getFieldRows('ezrichtext', $contentId, $offset, $limit);
+            $statement = $this->gateway->getFieldRows('ezrichtext', $contentId, $offset, $limit);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 if (empty($row['data_text'])) {
                     $inputValue = Value::EMPTY_VALUE;
@@ -437,141 +437,21 @@ EOT
         $output->writeln("Updated ezembed tags in $totalCount field(s)");
     }
 
-    protected function convertFieldDefinitions($dryRun, OutputInterface $output)
+    protected function convertFieldDefinitions($dryRun, $output)
     {
-        $query = $this->dbal->createQueryBuilder();
-        $query->select('count(a.id)')
-            ->from('ezcontentclass_attribute', 'a')
-            ->where(
-                $query->expr()->eq(
-                    'a.data_type_string',
-                    ':datatypestring'
-                )
-            )
-            ->setParameter(':datatypestring', 'ezxmltext');
-
-        $statement = $query->execute();
-        $count = (int) $statement->fetchColumn();
-
+        $count = $this->gateway->countContentTypeFieldsByFieldType('ezxmltext');
         $output->writeln("Found $count field definiton to convert.");
 
-        $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentclass_attribute')
-            ->set('data_type_string', ':newdatatypestring')
-            // was tagPreset in ezxmltext, unused in RichText
-            ->set('data_text2', ':datatext2')
-            ->where(
-                $updateQuery->expr()->eq(
-                    'data_type_string',
-                    ':olddatatypestring'
-                )
-            )
-            ->setParameters([
-                ':newdatatypestring' => 'ezrichtext',
-                ':datatext2' => null,
-                ':olddatatypestring' => 'ezxmltext',
-            ]);
-
+        $updateQuery = $this->gateway->getContentTypeFieldTypeUpdateQuery('ezxmltext', 'ezrichtext');
         if (!$dryRun) {
             $updateQuery->execute();
         }
-
         $output->writeln("Converted $count ezxmltext field definitions to ezrichtext");
-    }
-
-    protected function getRowCountOfContentObjectAttributes($datatypeString, $contentId)
-    {
-        $query = $this->dbal->createQueryBuilder();
-        $query->select('count(a.id)')
-            ->from('ezcontentobject_attribute', 'a')
-            ->where(
-                $query->expr()->eq(
-                    'a.data_type_string',
-                    ':datatypestring'
-                )
-            )
-            ->setParameter(':datatypestring', $datatypeString);
-
-        if ($contentId !== null) {
-            $query->andWhere(
-                $query->expr()->eq(
-                    'a.contentobject_id',
-                    ':contentid'
-                )
-            )
-                ->setParameter(':contentid', $contentId);
-        }
-
-        $statement = $query->execute();
-
-        return (int) $statement->fetchColumn();
-    }
-
-    /**
-     * Get the specified field rows.
-     * Note that if $contentId !== null, then $offset and $limit will be ignored.
-     *
-     * @param $datatypeString
-     * @param $contentId
-     * @param $offset
-     * @param $limit
-     * @return \Doctrine\DBAL\Driver\Statement|int
-     */
-    protected function getFieldRows($datatypeString, $contentId, $offset, $limit)
-    {
-        $query = $this->dbal->createQueryBuilder();
-        $query->select('a.*')
-            ->from('ezcontentobject_attribute', 'a')
-            ->where(
-                $query->expr()->eq(
-                    'a.data_type_string',
-                    ':datatypestring'
-                )
-            )
-            ->orderBy('a.id')
-            ->setParameter(':datatypestring', $datatypeString);
-
-        if ($contentId === null) {
-            $query->setFirstResult($offset)
-                ->setMaxResults($limit);
-        } else {
-            $query->andWhere(
-                $query->expr()->eq(
-                    'a.contentobject_id',
-                    ':contentid'
-                )
-            )
-                ->setParameter(':contentid', $contentId);
-        }
-
-        return $query->execute();
     }
 
     protected function updateFieldRow($dryRun, $id, $version, $datatext)
     {
-        $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute')
-            ->set('data_type_string', ':datatypestring')
-            ->set('data_text', ':datatext')
-            ->where(
-                $updateQuery->expr()->eq(
-                    'id',
-                    ':id'
-                )
-            )
-            ->andWhere(
-                $updateQuery->expr()->eq(
-                    'version',
-                    ':version'
-                )
-            )
-            ->setParameters([
-                ':datatypestring' => 'ezrichtext',
-                ':datatext' => $datatext,
-                ':id' => $id,
-                ':version' => $version,
-            ]);
-
+        $updateQuery = $this->gateway->getUpdateFieldRowQuery($id, $version, $datatext);
         if (!$dryRun) {
             $updateQuery->execute();
         }
@@ -709,7 +589,7 @@ EOT
 
     protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit)
     {
-        $statement = $this->getFieldRows('ezxmltext', $contentId, $offset, $limit);
+        $statement = $this->gateway->getFieldRows('ezxmltext', $contentId, $offset, $limit);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             if (empty($row['data_text'])) {
                 $inputValue = Value::EMPTY_VALUE;
@@ -745,7 +625,7 @@ EOT
 
     protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
-        $count = $this->getRowCountOfContentObjectAttributes('ezxmltext', null);
+        $count = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
         $output->writeln("Found $count field rows to convert.");
 
         $offset = 0;

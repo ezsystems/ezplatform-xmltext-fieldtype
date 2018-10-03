@@ -24,7 +24,7 @@ use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
 {
-    const INLINE_CUSTOM_TAG = 'line';
+    const INLINE_CUSTOM_TAG = 'inline';
     const BLOCK_CUSTOM_TAG = 'block';
     /**
      * @var \eZ\Publish\Core\FieldType\RichText\Converter

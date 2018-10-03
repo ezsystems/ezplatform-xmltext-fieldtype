@@ -13,6 +13,7 @@ services:
             - "@ezpublish.persistence.connection"
             - "@ezxmltext.richtext_converter"
             - "@?logger"
+            - "%kernel.cache_dir%"
         tags:
             -  { name: console.command }
 

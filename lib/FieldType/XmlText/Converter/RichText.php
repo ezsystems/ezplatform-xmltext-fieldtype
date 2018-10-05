@@ -24,6 +24,8 @@ use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
 {
+    const INLINE_CUSTOM_TAG = 'inline';
+    const BLOCK_CUSTOM_TAG = 'block';
     /**
      * @var \eZ\Publish\Core\FieldType\RichText\Converter
      */
@@ -56,6 +58,11 @@ class RichText implements Converter
     private $errors;
 
     /**
+     * @var []
+     */
+    private $customTagsLog;
+
+    /**
      * RichText constructor.
      * @param null $apiRepository
      * @param LoggerInterface|null $logger
@@ -69,6 +76,21 @@ class RichText implements Converter
         $this->styleSheets = null;
         $this->validator = null;
         $this->converter = null;
+        $this->customTagsLog = [self::INLINE_CUSTOM_TAG => [], self::BLOCK_CUSTOM_TAG => []];
+    }
+
+    /**
+     * @param string $customTagType
+     * @param string $customTagName
+     */
+    protected function logCustomTag($customTagType, $customTagName)
+    {
+        $this->customTagsLog[$customTagType][] = $customTagName;
+    }
+
+    public function getCustomTagLog()
+    {
+        return $this->customTagsLog;
     }
 
     /**
@@ -553,10 +575,12 @@ class RichText implements Converter
 
             if (!$blockCustomTag) {
                 $this->log(LogLevel::WARNING, "Inline custom tag '$customTagName' not supported by editor at the moment. You'll not be able to edit content correctly in editor where contentobject_attribute.id=$contentFieldId");
-            }
-
-            if ($parent->localName === 'section') {
+                $this->logCustomTag(self::INLINE_CUSTOM_TAG, $customTagName);
+            } elseif ($parent->localName === 'section') {
                 $this->log(LogLevel::WARNING, "Custom tag '$customTagName' converted to block custom tag. It might have been inline custom tag in legacy DB where contentobject_attribute.id=$contentFieldId");
+                $this->logCustomTag(self::BLOCK_CUSTOM_TAG, $customTagName);
+            } else {
+                $this->logCustomTag(self::BLOCK_CUSTOM_TAG, $customTagName);
             }
         }
     }

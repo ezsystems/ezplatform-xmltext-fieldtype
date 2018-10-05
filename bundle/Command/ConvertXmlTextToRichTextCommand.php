@@ -12,6 +12,7 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use Doctrine\DBAL\Connection;
@@ -75,13 +76,19 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     protected $userLogin;
 
-    public function __construct(Connection $dbal, RichTextConverter $converter, LoggerInterface $logger)
+    /**
+     * @var string
+     */
+    protected $kernelCacheDir;
+
+    public function __construct(Connection $dbal, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
     {
         parent::__construct();
 
         $this->dbal = $dbal;
-        $this->logger = $logger;
         $this->converter = $converter;
+        $this->kernelCacheDir = $kernelCacheDir;
+        $this->logger = $logger;
         $this->exportDir = '';
     }
 
@@ -170,6 +177,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->baseExecute($input, $output, $dryRun);
+        $this->createCustomTagLog();
         if ($dryRun) {
             $output->writeln('Running in dry-run mode. No changes will actually be written to database');
             if ($this->exportDir !== '') {
@@ -199,6 +207,8 @@ EOT
         }
 
         $this->processFields($dryRun, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
+        $this->reportCustomTags($input, $output);
+        $this->removeCustomTagLog();
     }
 
     protected function baseExecute(InputInterface $input, OutputInterface $output, &$dryRun)
@@ -253,6 +263,84 @@ EOT
             throw new RuntimeException('Unable to lookup all content type identifiers, not found: ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
+    }
+
+    protected function getCustomTagLogFileName()
+    {
+        return $this->kernelCacheDir . DIRECTORY_SEPARATOR . 'customtags.log';
+    }
+
+    protected function createCustomTagLog()
+    {
+        $this->removeCustomTagLog();
+        touch($this->getCustomTagLogFileName());
+    }
+
+    protected function writeCustomTagLog()
+    {
+        $customTagLog = $this->converter->getCustomTagLog();
+        if (count($customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) > 0) {
+            file_put_contents(
+                $this->getCustomTagLogFileName(),
+                RichTextConverter::INLINE_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) . PHP_EOL,
+                FILE_APPEND
+            );
+        }
+        if (count($customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) > 0) {
+            file_put_contents($this->getCustomTagLogFileName(),
+                RichTextConverter::BLOCK_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) . PHP_EOL,
+                FILE_APPEND
+            );
+        }
+    }
+
+    protected function removeCustomTagLog()
+    {
+        $filename = $this->getCustomTagLogFileName();
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+    }
+
+    protected function reportCustomTags(InputInterface $input, OutputInterface $output)
+    {
+        $customTagsFile = file_get_contents($this->getCustomTagLogFileName());
+        $separator = PHP_EOL;
+        $line = strtok($customTagsFile, $separator);
+        $inlines = [];
+        $blocks = [];
+
+        while ($line !== false) {
+            // line will have format 'inline:customtag1,customtag2'
+            $lineSplit = explode(':', $line);
+            switch ($lineSplit[0]) {
+                case RichTextConverter::INLINE_CUSTOM_TAG:
+                    $inlines = array_merge($inlines, explode(',', $lineSplit[1]));
+                    break;
+                case RichTextConverter::BLOCK_CUSTOM_TAG:
+                    $blocks = array_merge($blocks, explode(',', $lineSplit[1]));
+                    break;
+            }
+
+            $line = strtok($separator);
+        }
+        $inlines = array_unique($inlines, SORT_LOCALE_STRING);
+        $blocks = array_unique($blocks, SORT_LOCALE_STRING);
+
+        $io = new SymfonyStyle($input, $output);
+        $io->title('Custom tags overview');
+        $io->text('Below are the list of custom tags found during conversion of ezxmltext fields');
+        $io->section('Inline custom tags');
+        $io->listing($inlines);
+        if (count($inlines) === 0) {
+            $io->text('No inline custom tags converted');
+        }
+
+        $io->section('Block custom tags');
+        $io->listing($blocks);
+        if (count($blocks) === 0) {
+            $io->text('No block custom tags converted');
+        }
     }
 
     protected function getContentTypeIds($contentTypeIdentifiers)
@@ -652,6 +740,7 @@ EOT
                 ]
             );
         }
+        $this->writeCustomTagLog();
     }
 
     protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)

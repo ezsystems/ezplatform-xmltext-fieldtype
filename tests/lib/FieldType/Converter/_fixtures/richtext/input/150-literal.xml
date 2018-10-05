@@ -3,7 +3,10 @@
         xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
         xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
         xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
-    <paragraph>next one</paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <literal>Literal with CNAME end sequence here : ]]&gt; and some more text here</literal>
+    </paragraph>
     <paragraph
             xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
         <literal>ordinary literal</literal>
@@ -20,7 +23,7 @@
             xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
         <literal class="php">function foobar()
 {
-    thisIsSomePHPCode();
+    thisIsSomePHPCode('string with special characters &amp; &lt; &gt; â');
     return 0;
 }</literal>
     </paragraph>

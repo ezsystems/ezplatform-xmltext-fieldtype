@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "ezsystems/ezpublish-kernel": "^6.11@dev || ^7.0@dev",
+        "ezsystems/ezpublish-kernel": "^6.13.6@dev || ^7.2.5@dev",
         "ezsystems/repository-forms": "^1.9 || ^2.0"
     },
     "require-dev": {

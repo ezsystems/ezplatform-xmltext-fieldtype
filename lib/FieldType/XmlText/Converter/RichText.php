@@ -536,25 +536,6 @@ class RichText implements Converter
      * @param DOMDocument $document
      * @param null|int $contentFieldId
      */
-    protected function writeWarningOnNonSupportedLiterals(DOMDocument $document, $contentFieldId)
-    {
-        $xpath = new DOMXPath($document);
-
-        $xpathExpression = '//literal';
-
-        $elements = $xpath->query($xpathExpression);
-
-        foreach ($elements as $element) {
-            if ($element->getAttribute('class') !== 'html') {
-                $this->log(LogLevel::ERROR, "Only literal tag with class=\"html\" supported at the moment. Tag with different class removed where contentobject_attribute.id=$contentFieldId");
-            }
-        }
-    }
-
-    /**
-     * @param DOMDocument $document
-     * @param null|int $contentFieldId
-     */
     protected function writeWarningOnNonSupportedCustomTags(DOMDocument $document, $contentFieldId)
     {
         $xpath = new DOMXPath($document);
@@ -586,6 +567,25 @@ class RichText implements Converter
     }
 
     /**
+     * CDATA's content cannot contain the sequence ']]>' as that will terminate the CDATA section.
+     * So, if the end sequence ']]>' appears in the string, we split the text into multiple CDATA sections.
+     *
+     * @param DOMDocument $document
+     */
+    protected function encodeLiteral(DOMDocument $document)
+    {
+        $xpath = new DOMXPath($document);
+
+        $xpathExpression = '//literal[not(@class="html")]';
+
+        $elements = $xpath->query($xpathExpression);
+
+        foreach ($elements as $element) {
+            $element->textContent = str_replace(']]>', ']]]]><![CDATA[>', $element->textContent);
+        }
+    }
+
+    /**
      * Before calling this function, make sure you are logged in as admin, or at least have access to all the objects
      * being embedded and linked to in the $inputDocument.
      *
@@ -605,7 +605,7 @@ class RichText implements Converter
         $this->fixLinksWithRemoteIds($inputDocument, $contentFieldId);
         $this->flattenLinksInLinks($inputDocument, $contentFieldId);
         $this->moveEmbedsInHeaders($inputDocument, $contentFieldId);
-        $this->writeWarningOnNonSupportedLiterals($inputDocument, $contentFieldId);
+        $this->encodeLiteral($inputDocument);
 
         try {
             $convertedDocument = $this->getConverter()->convert($inputDocument);

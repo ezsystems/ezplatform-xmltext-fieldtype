@@ -6,7 +6,7 @@
     <paragraph>some text with bold tag</paragraph>
     <paragraph
             xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
-        <literal class="html">This is some &lt;b&gt;bold&lt;/b&gt; text&lt;br/&gt;</literal>
+        <literal class="html">this is some &lt;b&gt;html&lt;/b&gt; text</literal>
     </paragraph>
     <paragraph>some text with utf8 characters</paragraph>
     <paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
@@ -16,5 +16,10 @@
     <paragraph>some text with nbsp character entities</paragraph>
     <paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
         <literal class="html">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;indend using nbsp entities&lt;br/&gt;</literal>
+    </paragraph>
+    <paragraph>some text with CNAME end sequence</paragraph>
+    <paragraph
+            xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+        <literal class="html">Literal with CNAME end sequence here : ]]&gt; and some more text here</literal>
     </paragraph>
 </section>

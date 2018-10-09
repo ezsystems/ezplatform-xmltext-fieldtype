@@ -266,13 +266,13 @@ class ContentModelGateway
             )
             ->andWhere(
                 $updateQuery->expr()->eq(
-                    'a.version',
+                    'version',
                     ':version'
                 )
             )
             ->andWhere(
                 $updateQuery->expr()->eq(
-                    'a.language_code',
+                    'language_code',
                     ':language'
                 )
             )

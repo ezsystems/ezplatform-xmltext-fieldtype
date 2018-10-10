@@ -24,3 +24,6 @@ if [ "$DB" = "mysql" ] ; then
     mysql -e "CREATE DATABASE IF NOT EXISTS testdb DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;" -uroot
 fi
 if [ "$DB" = "postgresql" ] ; then psql -c "CREATE DATABASE testdb;" -U postgres ; psql -c "CREATE EXTENSION pgcrypto;" -U postgres testdb ; fi
+
+if [ "$COMPOSER_REQUIRE" != "" ] ; then composer require --no-update $COMPOSER_REQUIRE ; fi
+#travis_retry composer update --no-progress --no-interaction $COMPSER_ARGS

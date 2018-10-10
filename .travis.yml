@@ -30,6 +30,8 @@ matrix:
           env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb"
         - php: 7.1
           env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="mysql" DATABASE="mysql://root@localhost/testdb"
+        - php: 7.0
+          env: TEST_CONFIG="phpunit.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^6.13.6@dev"
 
 # test only master (+ Pull requests)
 branches:

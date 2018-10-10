@@ -1,5 +1,17 @@
 language: php
 
+services:
+  - mysql
+  - postgresql
+
+# Mysql isn't installed on trusty (only client is), so we need to specifically install it
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
 matrix:
     include:
         - php: 5.6
@@ -14,11 +26,20 @@ matrix:
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CORES="collection1" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
         - php: 7.1
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.0" CORES_SETUP="shared" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
+        - php: 7.1
+          env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb"
+        - php: 7.1
+          env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="mysql" DATABASE="mysql://root@localhost/testdb"
 
 # test only master (+ Pull requests)
 branches:
     only:
         - master
+
+
+# setup requirements for running db tests
+before_install:
+  - if [ "$TEST_CONFIG" != "" ] ; then ./bin/.travis/prepare_unittest.sh ; fi
 
 before_script:
     # Disable memory_limit for composer
@@ -30,7 +51,7 @@ before_script:
 
 script:
     - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
-    - if [ "$CHECK_CS" == "true" ]; then phpenv config-rm xdebug.ini && ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
+    - if [ "$CHECK_CS" == "true" ]; then ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
 
 notifications:
     email: false

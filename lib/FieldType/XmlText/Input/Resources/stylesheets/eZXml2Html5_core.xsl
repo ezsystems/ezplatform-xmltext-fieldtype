@@ -200,7 +200,33 @@
             <xsl:if test="@id">
                 <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
             </xsl:if>
+            <xsl:choose>
+                <xsl:when test="@url">
+                    <a>
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="@url"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="target">
+                            <xsl:choose>
+                                <xsl:when test="@ezlegacytmp-embed-link-target">
+                                    <xsl:value-of select="@ezlegacytmp-embed-link-target"/>
+                                </xsl:when>
+                                <xsl:otherwise>_self</xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:attribute>
+                        <xsl:if test="@xhtml:ezlegacytmp-embed-link-title">
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="@xhtml:ezlegacytmp-embed-link-title"/>
+                            </xsl:attribute>
+                        </xsl:if>
+                        <xsl:copy-of select="@class"/>
             <xsl:value-of select="text()" disable-output-escaping="yes"/>
+                    </a>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="text()" disable-output-escaping="yes"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </div>
     </xsl:template>
 

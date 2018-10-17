@@ -106,7 +106,7 @@ class SearchField implements Indexable
     public function getIndexDefinition()
     {
         return array(
-            'value' => new Search\FieldType\StringField(),
+            'value' => new Search\FieldType\TextField(),
         );
     }
 

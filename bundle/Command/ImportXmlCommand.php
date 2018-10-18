@@ -97,7 +97,7 @@ EOT
     {
         $dryRun = false;
         if ($input->getOption('dry-run')) {
-            $output->writeln("Running in dry-run mode. No changes will actually be written to database\n");
+            $output->writeln('Running in dry-run mode. No changes will actually be written to database' . PHP_EOL);
             $dryRun = true;
         }
 

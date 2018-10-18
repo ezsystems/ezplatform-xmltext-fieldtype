@@ -149,10 +149,10 @@ EOT
                 'export-dir-filter',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                "To be used together with --export-dir option. Specify what kind of problems should be exported:\n
-                 notice: ezxmltext contains problems which the conversion tool was able to fix automatically and likly do not need manual intervention\n
-                 warning: the conversion tool was able to convert the ezxmltext to valid richtext, but data was maybe altered/removed/added in the process. Manual supervision recommended\n
-                 error: the ezxmltext text cannot be converted and manual changes are required.",
+                'To be used together with --export-dir option. Specify what kind of problems should be exported:' . PHP_EOL .
+                 'notice: ezxmltext contains problems which the conversion tool was able to fix automatically and likly do not need manual intervention' . PHP_EOL .
+                 'warning: the conversion tool was able to convert the ezxmltext to valid richtext, but data was maybe altered/removed/added in the process. Manual supervision recommended' . PHP_EOL .
+                 'error: the ezxmltext text cannot be converted and manual changes are required.',
                 sprintf('%s,%s', LogLevel::WARNING, LogLevel::ERROR)
             )
             ->addOption(
@@ -171,9 +171,9 @@ EOT
                 'fix-embedded-images-only',
                 null,
                 InputOption::VALUE_NONE,
-                "Use this option to ensure that embedded images in a database are tagget correctly so that the editor will detect them as such.\n
-                 This option is needed if you have an existing ezplatform database which was converted with an earlier version of\n
-                 'ezxmltext:convert-to-richtext' which did not convert embedded images correctly."
+                'Use this option to ensure that embedded images in a database are tagget correctly so that the editor will detect them as such.' . PHP_EOL .
+                 'This option is needed if you have an existing ezplatform database which was converted with an earlier version of' . PHP_EOL .
+                 '\'ezxmltext:convert-to-richtext\' which did not convert embedded images correctly.'
             )
             ->addOption(
                 'no-progress',
@@ -197,7 +197,7 @@ EOT
         if ($dryRun) {
             $output->writeln('Running in dry-run mode. No changes will actually be written to database');
             if ($this->exportDir !== '') {
-                $output->writeln("Note: --export-dir option provided, files will be written to $this->exportDir even in dry-run mode\n");
+                $output->writeln("Note: --export-dir option provided, files will be written to $this->exportDir even in dry-run mode" . PHP_EOL);
             }
         }
 
@@ -209,7 +209,7 @@ EOT
         }
 
         if ($input->getOption('fix-embedded-images-only')) {
-            $output->writeln("Fixing embedded images only. No other changes are done to the database\n");
+            $output->writeln('Fixing embedded images only. No other changes are done to the database' . PHP_EOL);
             $this->fixEmbeddedImages($dryRun, $testContentId, $output);
 
             return;

@@ -1,0 +1,27 @@
+<?xml version = '1.0' encoding = 'utf-8'?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="./tests/bootstrap.php"
+         processIsolation="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         colors="true">
+    <php>
+        <env name="setupFactory" value="EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacyEmptyDBSetupFactory" />
+        <env name="backendVersion" value="5" />
+        <env name="fixtureDir" value="Legacy" />
+    </php>
+    <testsuites>
+        <testsuite name="Content Model Gateway">
+            <directory suffix="Test.php">./tests/lib/FieldType/Persistence/Legacy/</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>./bundle</directory>
+            <directory>./lib</directory>
+            <directory>./vendor</directory>
+        </whitelist>
+    </filter>
+</phpunit>

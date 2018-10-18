@@ -11,6 +11,7 @@
             <directory suffix="Test.php">./tests/lib/</directory>
             <exclude>./tests/lib/XmlTextAPIIntegrationTest.php</exclude>
             <exclude>./tests/lib/XmlTextSPIIntegrationTest.php</exclude>
+            <exclude>./tests/lib/FieldType/Persistence/Legacy</exclude>
         </testsuite>
         <testsuite name="XmlText field type eZ Platform Repository SPI integration test suite">
             <file>./tests/lib/XmlTextSPIIntegrationTest.php</file>

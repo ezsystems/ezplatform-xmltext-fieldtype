@@ -22,6 +22,9 @@ use DOMNode;
  */
 class SearchField implements Indexable
 {
+    // solr.StrField max length have a hard limit of slightly less than 32K.
+    const VALUE_LIMIT = 31744;
+
     /**
      * Get index data for field for search backend.
      *
@@ -39,7 +42,7 @@ class SearchField implements Indexable
             new Search\Field(
                 'value',
                 $this->extractShortText($document),
-                new Search\FieldType\TextField()
+                new Search\FieldType\StringField()
             ),
             new Search\Field(
                 'fulltext',
@@ -82,20 +85,14 @@ class SearchField implements Indexable
     {
         $result = null;
         if ($section = $document->documentElement->firstChild) {
-            $textDom = $section->firstChild;
-
-            if ($textDom && $textDom->hasChildNodes()) {
-                $result = $textDom->firstChild->textContent;
-            } elseif ($textDom) {
-                $result = $textDom->textContent;
-            }
+            $result = $section->textContent;
         }
 
         if ($result === null) {
             $result = $document->documentElement->textContent;
         }
 
-        return trim($result);
+        return mb_substr(strtok(trim($result), "\r\n"), 0, self::VALUE_LIMIT);
     }
 
     /**
@@ -106,7 +103,7 @@ class SearchField implements Indexable
     public function getIndexDefinition()
     {
         return array(
-            'value' => new Search\FieldType\TextField(),
+            'value' => new Search\FieldType\StringField(),
         );
     }
 

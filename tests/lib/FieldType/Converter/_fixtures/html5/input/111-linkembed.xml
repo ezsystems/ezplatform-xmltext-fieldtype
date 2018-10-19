@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <!-- Note, this is not plain ezxmltext. This is output after Converter\EzLinkToHtml5 and Converter\EmbedToHtml5 has processed it-->
+    <paragraph>kake </paragraph>
+    <embed view="embed" size="medium" object_id="126" custom:offset="0" custom:limit="5" ezlegacytmp-embed-link-title="custom title" ezlegacytmp-embed-link-id="customID" ezlegacytmp-embed-link-url="http://ez.no" url="http://ez.no">
+        <![CDATA[
+
+        <!-- START ezpublish-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (EzPublishCoreBundle:default:content/embed_image.html.twig) -->
+        <figure class="ezimage-field">
+            <img src="http://localhost/var/ezdemo_site/storage/images/_aliases/medium/media/images/ez/775-1-eng-GB/ez.gif" alt="my alt text" height="67 " width="200 " />
+        </figure>
+        <!-- STOP ezpublish-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (EzPublishCoreBundle:default:content/embed_image.html.twig) -->
+]]>
+    </embed>
+</section>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section xmlns="http://ez.no/namespaces/ezpublish5/xhtml5">
+  <p>kake </p>
+  <div>
+    <a href="http://ez.no" target="_self">
+      <figure class="ezimage-field">
+        <img alt="my alt text" height="67 " src="http://localhost/var/ezdemo_site/storage/images/_aliases/medium/media/images/ez/775-1-eng-GB/ez.gif" width="200 "/>
+      </figure>
+    </a>
+  </div>
+</section>

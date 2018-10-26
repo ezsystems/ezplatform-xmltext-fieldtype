@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Helper\ProgressBar;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
@@ -61,6 +62,15 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
      */
     protected $processes = [];
 
+    /**
+     * @var bool
+     */
+    protected $hasProgressBar;
+
+    /**
+     * @var \Symfony\Component\Console\Helper\ProgressBar
+     */
+    protected $progressBar;
     /**
      * @var int
      */
@@ -139,10 +149,10 @@ EOT
                 'export-dir-filter',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                "To be used together with --export-dir option. Specify what kind of problems should be exported:\n
-                 notice: ezxmltext contains problems which the conversion tool was able to fix automatically and likly do not need manual intervention\n
-                 warning: the conversion tool was able to convert the ezxmltext to valid richtext, but data was maybe altered/removed/added in the process. Manual supervision recommended\n
-                 error: the ezxmltext text cannot be converted and manual changes are required.",
+                'To be used together with --export-dir option. Specify what kind of problems should be exported:' . PHP_EOL .
+                 'notice: ezxmltext contains problems which the conversion tool was able to fix automatically and likly do not need manual intervention' . PHP_EOL .
+                 'warning: the conversion tool was able to convert the ezxmltext to valid richtext, but data was maybe altered/removed/added in the process. Manual supervision recommended' . PHP_EOL .
+                 'error: the ezxmltext text cannot be converted and manual changes are required.',
                 sprintf('%s,%s', LogLevel::WARNING, LogLevel::ERROR)
             )
             ->addOption(
@@ -161,9 +171,15 @@ EOT
                 'fix-embedded-images-only',
                 null,
                 InputOption::VALUE_NONE,
-                "Use this option to ensure that embedded images in a database are tagget correctly so that the editor will detect them as such.\n
-                 This option is needed if you have an existing ezplatform database which was converted with an earlier version of\n
-                 'ezxmltext:convert-to-richtext' which did not convert embedded images correctly."
+                'Use this option to ensure that embedded images in a database are tagget correctly so that the editor will detect them as such.' . PHP_EOL .
+                 'This option is needed if you have an existing ezplatform database which was converted with an earlier version of' . PHP_EOL .
+                 '\'ezxmltext:convert-to-richtext\' which did not convert embedded images correctly.'
+            )
+            ->addOption(
+                'no-progress',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable the progress bar.'
             )
             ->addOption(
                 'user',
@@ -181,9 +197,11 @@ EOT
         if ($dryRun) {
             $output->writeln('Running in dry-run mode. No changes will actually be written to database');
             if ($this->exportDir !== '') {
-                $output->writeln("Note: --export-dir option provided, files will be written to $this->exportDir even in dry-run mode\n");
+                $output->writeln("Note: --export-dir option provided, files will be written to $this->exportDir even in dry-run mode" . PHP_EOL);
             }
         }
+
+        $this->hasProgressBar = !$input->getOption('no-progress');
 
         $testContentId = $input->getOption('test-content-object');
         if ($testContentId !== null && $this->maxConcurrency !== 1) {
@@ -191,7 +209,7 @@ EOT
         }
 
         if ($input->getOption('fix-embedded-images-only')) {
-            $output->writeln("Fixing embedded images only. No other changes are done to the database\n");
+            $output->writeln('Fixing embedded images only. No other changes are done to the database' . PHP_EOL);
             $this->fixEmbeddedImages($dryRun, $testContentId, $output);
 
             return;
@@ -381,6 +399,7 @@ EOT
         $count = $this->gateway->getRowCountOfContentObjectAttributes('ezrichtext', $contentId);
 
         $output->writeln("Found $count field rows to convert.");
+        $this->progressBarStart($output, $count);
 
         $offset = 0;
         $totalCount = 0;
@@ -431,10 +450,12 @@ EOT
                     );
                 }
             }
+            $this->progressBarAdvance($offset);
             $offset += self::MAX_OBJECTS_PER_CHILD;
         } while ($offset + self::MAX_OBJECTS_PER_CHILD <= $count);
+        $this->progressBarFinish();
 
-        $output->writeln("Updated ezembed tags in $totalCount field(s)");
+        $output->writeln(PHP_EOL . 'Updated ezembed tags in $totalCount field(s)');
     }
 
     protected function convertFieldDefinitions($dryRun, $output)
@@ -459,9 +480,14 @@ EOT
 
     protected function waitForAvailableProcessSlot(OutputInterface $output)
     {
-        if (count($this->processes) >= $this->maxConcurrency) {
+        if (!$this->processSlotAvailable()) {
             $this->waitForChild($output);
         }
+    }
+
+    protected function processSlotAvailable()
+    {
+        return count($this->processes) < $this->maxConcurrency;
     }
 
     protected function waitForChild(OutputInterface $output)
@@ -623,30 +649,64 @@ EOT
         $this->writeCustomTagLog();
     }
 
+    protected function progressBarStart(OutputInterface $output, $count)
+    {
+        if ($this->hasProgressBar) {
+            $this->progressBar = new ProgressBar($output, $count);
+            $this->progressBar->start();
+        }
+    }
+
+    protected function progressBarAdvance($step)
+    {
+        if ($this->hasProgressBar) {
+            $this->progressBar->advance($step);
+        }
+    }
+
+    protected function progressBarFinish()
+    {
+        if ($this->hasProgressBar) {
+            $this->progressBar->finish();
+        }
+    }
+
     protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
         $count = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
         $output->writeln("Found $count field rows to convert.");
 
+        if ($count < self::MAX_OBJECTS_PER_CHILD * $this->maxConcurrency && $this->maxConcurrency > 1) {
+            $objectsPerChild = (int) ceil($count / $this->maxConcurrency);
+        } else {
+            $objectsPerChild = self::MAX_OBJECTS_PER_CHILD;
+        }
         $offset = 0;
         $fork = $this->maxConcurrency > 1;
+        $this->progressBarStart($output, $count);
 
         do {
-            $limit = self::MAX_OBJECTS_PER_CHILD;
+            $limit = $objectsPerChild;
             if ($fork) {
+                $processSlotAvailable = $this->processSlotAvailable();
                 $this->waitForAvailableProcessSlot($output);
+                if (!$processSlotAvailable) {
+                    $this->progressBarAdvance($objectsPerChild);
+                }
                 $process = $this->createChildProcess($dryRun, $checkDuplicateIds, $checkIdValues, $offset, $limit, $output);
                 $this->processes[$process->getPid()] = ['offset' => $offset, 'limit' => $limit, 'process' => $process];
             } else {
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
-            $offset += self::MAX_OBJECTS_PER_CHILD;
-        } while ($offset + self::MAX_OBJECTS_PER_CHILD <= $count);
+            $offset += $objectsPerChild;
+        } while ($offset + $objectsPerChild <= $count);
 
         while (count($this->processes) > 0) {
             $this->waitForChild($output);
+            $this->progressBarAdvance($objectsPerChild);
         }
-        $output->writeln("Converted $count ezxmltext fields to richtext");
+        $this->progressBarFinish();
+        $output->writeln(PHP_EOL . 'Converted $count ezxmltext fields to richtext');
     }
 
     protected function createDocument($xmlString)

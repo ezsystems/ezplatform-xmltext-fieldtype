@@ -7,10 +7,15 @@ services:
         tags:
             - { name: ezpublish_rest.field_type_processor, alias: ezxmltext }
 
+    ezxmltext.persistence.legacy.content_model_gateway:
+        class: eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway
+        arguments:
+            - "@ezpublish.persistence.connection"
+
     ezxmltext.command.convert_to_richtext:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
         arguments:
-            - "@ezpublish.persistence.connection"
+            - "@ezxmltext.persistence.legacy.content_model_gateway"
             - "@ezxmltext.richtext_converter"
             - "%kernel.cache_dir%"
             - "@?logger"
@@ -26,7 +31,7 @@ services:
     ezxmltext.command.import_xml:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ImportXmlCommand
         arguments:
-            - "@ezpublish.persistence.connection"
+            - "@ezxmltext.persistence.legacy.content_model_gateway"
             - "@ezxmltext.richtext_converter"
         tags:
             -  { name: console.command }

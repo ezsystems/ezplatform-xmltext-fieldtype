@@ -5,7 +5,6 @@
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
 use DOMDocument;
-use PDO;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -13,8 +12,8 @@ use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\DBAL\Connection;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
+use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 
 class ImportXmlCommand extends ContainerAwareCommand
 {
@@ -24,9 +23,9 @@ class ImportXmlCommand extends ContainerAwareCommand
     private $converter;
 
     /**
-     * @var \Doctrine\DBAL\Connection
+     * @var \eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway
      */
-    private $dbal;
+    private $gateway;
 
     /**
      * @var string
@@ -43,11 +42,11 @@ class ImportXmlCommand extends ContainerAwareCommand
      */
     private $output;
 
-    public function __construct(Connection $dbal, RichTextConverter $converter)
+    public function __construct(Gateway $gateway, RichTextConverter $converter)
     {
         parent::__construct();
+        $this->gateway = $gateway;
         $this->converter = $converter;
-        $this->dbal = $dbal;
         $this->exportDir = null;
     }
 
@@ -113,38 +112,13 @@ EOT
         } else {
             $this->imageContentTypeIdentifiers = ['image'];
         }
-        $imageContentTypeIds = $this->getContentTypeIds($this->imageContentTypeIdentifiers);
+        $imageContentTypeIds = $this->gateway->getContentTypeIds($this->imageContentTypeIdentifiers);
         if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
             throw new RuntimeException('Unable to lookup all content type identifiers, not found : ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
 
         $this->importDumps($dryRun, $contentObjectId);
-    }
-
-    protected function getContentTypeIds($contentTypeIdentifiers)
-    {
-        $query = $this->dbal->createQueryBuilder();
-
-        $query->select('c.identifier, c.id')
-            ->from('ezcontentclass', 'c')
-            ->where(
-                $query->expr()->in(
-                    'c.identifier',
-                    ':contentTypeIdentifiers'
-                )
-            )
-            ->setParameter(':contentTypeIdentifiers', $contentTypeIdentifiers, Connection::PARAM_STR_ARRAY);
-
-        $statement = $query->execute();
-
-        $columns = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $result = [];
-        foreach ($columns as $column) {
-            $result[$column['identifier']] = $column['id'];
-        }
-
-        return $result;
     }
 
     protected function importDumps($dryRun, $contentObjectId = null)
@@ -211,97 +185,6 @@ EOT
         return $result;
     }
 
-    protected function contentObjectAttributeExists($objectId, $attributeId, $version, $language)
-    {
-        $query = $this->dbal->createQueryBuilder();
-        $query->select('count(a.id)')
-            ->from('ezcontentobject_attribute', 'a')
-            ->where(
-                $query->expr()->eq(
-                    'a.data_type_string',
-                    ':datatypestring'
-                )
-            )
-            ->andWhere(
-                $query->expr()->eq(
-                    'a.contentobject_id',
-                    ':objectid'
-                )
-            )
-            ->andWhere(
-                $query->expr()->eq(
-                    'a.id',
-                    ':attributeid'
-                )
-            )
-            ->andWhere(
-                $query->expr()->eq(
-                    'a.version',
-                    ':version'
-                )
-            )
-            ->andWhere(
-                $query->expr()->eq(
-                    'a.language_code',
-                    ':language'
-                )
-            )
-            ->setParameter(':datatypestring', 'ezxmltext')
-            ->setParameter(':objectid', $objectId)
-            ->setParameter(':attributeid', $attributeId)
-            ->setParameter(':version', $version)
-            ->setParameter(':language', $language);
-
-        $statement = $query->execute();
-        $count = (int)$statement->fetchColumn();
-
-        return $count === 1;
-    }
-
-    protected function updateContentObjectAttribute($xml, $objectId, $attributeId, $version, $language)
-    {
-        $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute')
-            ->set('data_text', ':newxml')
-            ->where(
-                $updateQuery->expr()->eq(
-                    'data_type_string',
-                    ':datatypestring'
-                )
-            )
-            ->andWhere(
-                $updateQuery->expr()->eq(
-                    'contentobject_id',
-                    ':objectid'
-                )
-            )
-            ->andWhere(
-                $updateQuery->expr()->eq(
-                    'id',
-                    ':attributeid'
-                )
-            )
-            ->andWhere(
-                $updateQuery->expr()->eq(
-                    'a.version',
-                    ':version'
-                )
-            )
-            ->andWhere(
-                $updateQuery->expr()->eq(
-                    'a.language_code',
-                    ':language'
-                )
-            )
-            ->setParameter(':newxml', $xml)
-            ->setParameter(':datatypestring', 'ezxmltext')
-            ->setParameter(':objectid', $objectId)
-            ->setParameter(':attributeid', $attributeId)
-            ->setParameter(':version', $version)
-            ->setParameter(':language', $language);
-        $updateQuery->execute();
-    }
-
     protected function createDocument($xmlString)
     {
         $document = new DOMDocument();
@@ -334,9 +217,9 @@ EOT
             return;
         }
 
-        if ($this->contentObjectAttributeExists($objectId, $attributeId, $version, $language)) {
+        if ($this->gateway->contentObjectAttributeExists($objectId, $attributeId, $version, $language)) {
             if (!$dryRun) {
-                $this->updateContentObjectAttribute($xmlDoc->saveXML(), $objectId, $attributeId, $version, $language);
+                $this->gateway->updateContentObjectAttribute($xmlDoc->saveXML(), $objectId, $attributeId, $version, $language);
             }
         } else {
             $this->output->writeln("Warning: The file $filename doesn't match any contentobject attribute stored in the database, skipping");

@@ -123,11 +123,14 @@ class EzLinkToHtml5 implements Converter
             }
 
             if ($this->elementHasAttribute($element, 'anchor_name')) {
-                $element->setAttribute(
-                    'url',
-                    $element->getAttribute('url') . '#' .
-                    $this->getElementAttribute($element, 'anchor_name')
-                );
+                $anchor = '#' . $this->getElementAttribute($element, 'anchor_name');
+                if (strpos($element->getAttribute('url'), $anchor) === false) {
+                    $element->setAttribute(
+                        'url',
+                        $element->getAttribute('url') . '#' .
+                        $this->getElementAttribute($element, 'anchor_name')
+                    );
+                }
             }
         }
     }

@@ -615,8 +615,11 @@ EOT
 
     protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit)
     {
-        $statement = $this->gateway->getFieldRows('ezxmltext', $contentId, $offset, $limit);
+        $statement = $this->gateway->getFieldRows(['ezxmltext', 'ezrichtext'], $contentId, $offset, $limit);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['data_type_string'] === 'ezrichtext') {
+                continue;
+            }
             if (empty($row['data_text'])) {
                 $inputValue = Value::EMPTY_VALUE;
             } else {
@@ -674,8 +677,12 @@ EOT
 
     protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
-        $count = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
-        $output->writeln("Found $count field rows to convert.");
+        $output->write('Finding total number of ezxmltext attributes to convert...');
+        $ezxmltextCount = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
+        $output->writeln(" Found $ezxmltextCount");
+        $output->write('Finding total number of ezxmltext and ezrichtext attributes...');
+        $count = $this->gateway->getRowCountOfContentObjectAttributes(['ezxmltext', 'ezrichtext'], null);
+        $output->writeln(" Found $count");
 
         if ($count < self::MAX_OBJECTS_PER_CHILD * $this->maxConcurrency && $this->maxConcurrency > 1) {
             $objectsPerChild = (int) ceil($count / $this->maxConcurrency);

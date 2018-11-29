@@ -105,27 +105,13 @@ class ContentModelGateway
 
         $query = $this->dbal->createQueryBuilder();
         $query->select('count(a.id)')
-            ->from('ezcontentobject_attribute', 'a');
-        $index = 0;
-        foreach ($datatypes as $datatypeName) {
-            if ($index === 0) {
-                $query->where(
-                    $query->expr()->eq(
-                        'a.data_type_string',
-                        ':datatypestring' . $index
-                    )
-                );
-            } else {
-                $query->orWhere(
-                    $query->expr()->eq(
-                        'a.data_type_string',
-                        ':datatypestring' . $index
-                    )
-                );
-            }
-            $query->setParameter(':datatypestring' . $index, $datatypeName);
-            ++$index;
-        }
+            ->from('ezcontentobject_attribute', 'a')
+            ->where(
+                $query->expr()->in(
+                    'a.data_type_string',
+                    $query->createNamedParameter($datatypes, Connection::PARAM_STR_ARRAY)
+                )
+            );
 
         if ($contentId !== null) {
             $query->andWhere(
@@ -134,7 +120,7 @@ class ContentModelGateway
                     ':contentid'
                 )
             )
-                ->setParameter(':contentid', $contentId);
+            ->setParameter(':contentid', $contentId);
         }
 
         $statement = $query->execute();
@@ -160,28 +146,14 @@ class ContentModelGateway
 
         $query = $this->dbal->createQueryBuilder();
         $query->select('a.*')
-            ->from('ezcontentobject_attribute', 'a');
-        $index = 0;
-        foreach ($datatypes as $datatypeName) {
-            if ($index === 0) {
-                $query->where(
-                    $query->expr()->eq(
-                        'a.data_type_string',
-                        ':datatypestring' . $index
-                    )
-                );
-            } else {
-                $query->orWhere(
-                    $query->expr()->eq(
-                        'a.data_type_string',
-                        ':datatypestring' . $index
-                    )
-                );
-            }
-            $query->setParameter(':datatypestring' . $index, $datatypeName);
-            ++$index;
-        }
-        $query->orderBy('a.id');
+            ->from('ezcontentobject_attribute', 'a')
+            ->where(
+                $query->expr()->in(
+                    'a.data_type_string',
+                    $query->createNamedParameter($datatypes, Connection::PARAM_STR_ARRAY)
+                )
+            )
+            ->orderBy('a.id');
 
         if ($contentId === null) {
             $query->setFirstResult($offset)
@@ -193,7 +165,7 @@ class ContentModelGateway
                     ':contentid'
                 )
             )
-                ->setParameter(':contentid', $contentId);
+            ->setParameter(':contentid', $contentId);
         }
 
         return $query->execute();

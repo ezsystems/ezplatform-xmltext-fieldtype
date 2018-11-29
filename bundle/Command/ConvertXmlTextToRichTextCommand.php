@@ -653,6 +653,7 @@ EOT
     {
         if ($this->hasProgressBar) {
             $this->progressBar = new ProgressBar($output, $count);
+            $this->progressBar->setFormat('very_verbose');
             $this->progressBar->start();
         }
     }
@@ -706,7 +707,7 @@ EOT
             $this->progressBarAdvance($objectsPerChild);
         }
         $this->progressBarFinish();
-        $output->writeln(PHP_EOL . 'Converted $count ezxmltext fields to richtext');
+        $output->writeln(PHP_EOL . "Converted $count ezxmltext fields to richtext");
     }
 
     protected function createDocument($xmlString)

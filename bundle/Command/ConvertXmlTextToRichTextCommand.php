@@ -511,7 +511,9 @@ EOT
                 $output->write($process->getIncrementalOutput());
                 $output->write($process->getIncrementalErrorOutput());
             }
-            sleep(1);
+            if (!$childEnded) {
+                sleep(1);
+            }
         }
 
         return;
@@ -707,7 +709,7 @@ EOT
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
             $offset += $objectsPerChild;
-        } while ($offset + $objectsPerChild <= $count);
+        } while ($offset <= $count);
 
         while (count($this->processes) > 0) {
             $this->waitForChild($output);

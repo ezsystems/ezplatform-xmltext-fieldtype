@@ -511,7 +511,9 @@ EOT
                 $output->write($process->getIncrementalOutput());
                 $output->write($process->getIncrementalErrorOutput());
             }
-            sleep(1);
+            if (!$childEnded) {
+                sleep(1);
+            }
         }
 
         return;
@@ -615,8 +617,11 @@ EOT
 
     protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit)
     {
-        $statement = $this->gateway->getFieldRows('ezxmltext', $contentId, $offset, $limit);
+        $statement = $this->gateway->getFieldRows(['ezxmltext', 'ezrichtext'], $contentId, $offset, $limit);
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            if ($row['data_type_string'] === 'ezrichtext') {
+                continue;
+            }
             if (empty($row['data_text'])) {
                 $inputValue = Value::EMPTY_VALUE;
             } else {
@@ -653,6 +658,7 @@ EOT
     {
         if ($this->hasProgressBar) {
             $this->progressBar = new ProgressBar($output, $count);
+            $this->progressBar->setFormat('very_verbose');
             $this->progressBar->start();
         }
     }
@@ -673,8 +679,12 @@ EOT
 
     protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
     {
-        $count = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
-        $output->writeln("Found $count field rows to convert.");
+        $output->write('Finding total number of ezxmltext attributes to convert...');
+        $ezxmltextCount = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
+        $output->writeln(" Found $ezxmltextCount");
+        $output->write('Finding total number of ezxmltext and ezrichtext attributes...');
+        $count = $this->gateway->getRowCountOfContentObjectAttributes(['ezxmltext', 'ezrichtext'], null);
+        $output->writeln(" Found $count");
 
         if ($count < self::MAX_OBJECTS_PER_CHILD * $this->maxConcurrency && $this->maxConcurrency > 1) {
             $objectsPerChild = (int) ceil($count / $this->maxConcurrency);
@@ -699,14 +709,14 @@ EOT
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
             $offset += $objectsPerChild;
-        } while ($offset + $objectsPerChild <= $count);
+        } while ($offset <= $count);
 
         while (count($this->processes) > 0) {
             $this->waitForChild($output);
             $this->progressBarAdvance($objectsPerChild);
         }
         $this->progressBarFinish();
-        $output->writeln(PHP_EOL . 'Converted $count ezxmltext fields to richtext');
+        $output->writeln(PHP_EOL . "Converted $count ezxmltext fields to richtext");
     }
 
     protected function createDocument($xmlString)

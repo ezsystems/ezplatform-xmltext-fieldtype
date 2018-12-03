@@ -92,18 +92,26 @@ class ContentModelGateway
         return $updateQuery;
     }
 
-    public function getRowCountOfContentObjectAttributes($datatypeString, $contentId)
+    /**
+     * @param string|array $datatypes One datatype may be provided as string. Multiple datatypes areaccepted as array
+     * @param int $contentId
+     * @return int
+     */
+    public function getRowCountOfContentObjectAttributes($datatypes, $contentId)
     {
+        if (!is_array($datatypes)) {
+            $datatypes = [$datatypes];
+        }
+
         $query = $this->dbal->createQueryBuilder();
         $query->select('count(a.id)')
             ->from('ezcontentobject_attribute', 'a')
             ->where(
-                $query->expr()->eq(
+                $query->expr()->in(
                     'a.data_type_string',
-                    ':datatypestring'
+                    $query->createNamedParameter($datatypes, Connection::PARAM_STR_ARRAY)
                 )
-            )
-            ->setParameter(':datatypestring', $datatypeString);
+            );
 
         if ($contentId !== null) {
             $query->andWhere(
@@ -112,7 +120,7 @@ class ContentModelGateway
                     ':contentid'
                 )
             )
-                ->setParameter(':contentid', $contentId);
+            ->setParameter(':contentid', $contentId);
         }
 
         $statement = $query->execute();
@@ -124,25 +132,28 @@ class ContentModelGateway
      * Get the specified field rows.
      * Note that if $contentId !== null, then $offset and $limit will be ignored.
      *
-     * @param string $datatypeString
+     * @param string|array $datatypes One datatype may be provided as string. Multiple datatypes are accepted as array
      * @param int $contentId
      * @param int $offset
      * @param int $limit
      * @return \Doctrine\DBAL\Driver\Statement|int
      */
-    public function getFieldRows($datatypeString, $contentId, $offset, $limit)
+    public function getFieldRows($datatypes, $contentId, $offset, $limit)
     {
+        if (!is_array($datatypes)) {
+            $datatypes = [$datatypes];
+        }
+
         $query = $this->dbal->createQueryBuilder();
         $query->select('a.*')
             ->from('ezcontentobject_attribute', 'a')
             ->where(
-                $query->expr()->eq(
+                $query->expr()->in(
                     'a.data_type_string',
-                    ':datatypestring'
+                    $query->createNamedParameter($datatypes, Connection::PARAM_STR_ARRAY)
                 )
             )
-            ->orderBy('a.id')
-            ->setParameter(':datatypestring', $datatypeString);
+            ->orderBy('a.id');
 
         if ($contentId === null) {
             $query->setFirstResult($offset)
@@ -154,7 +165,7 @@ class ContentModelGateway
                     ':contentid'
                 )
             )
-                ->setParameter(':contentid', $contentId);
+            ->setParameter(':contentid', $contentId);
         }
 
         return $query->execute();

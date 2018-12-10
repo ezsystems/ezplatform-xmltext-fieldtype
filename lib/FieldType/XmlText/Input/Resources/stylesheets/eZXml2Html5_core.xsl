@@ -259,4 +259,15 @@
         </xsl:copy>
     </xsl:template>
 
+    <xsl:template match="paragraph[not(text())][custom][count(custom)=count(*)]">
+        <xsl:apply-templates select="custom"/>
+    </xsl:template>
+
+    <xsl:template match="@custom|node()">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="@custom|node()" />
+        </xsl:copy>
+    </xsl:template>
+
 </xsl:stylesheet>

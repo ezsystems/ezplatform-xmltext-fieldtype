@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<section
+        xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
+        xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
+        xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
+    <paragraph>Lorem ipsum.</paragraph>
+    <paragraph>
+        <custom name="test1">One</custom>
+        <custom name="test2" attr="test2a">Two</custom>
+        <custom name="test3"/>
+    </paragraph>
+    <paragraph>Lorem ipsum</paragraph>
+</section>

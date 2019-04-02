@@ -29,38 +29,38 @@ class RichText implements Converter
     /**
      * @var \eZ\Publish\Core\FieldType\RichText\Converter
      */
-    private $converter;
+    protected $converter;
 
     /**
      * @var int[]
      */
-    private $imageContentTypes;
+    protected $imageContentTypes;
     /**
      * @var \eZ\Publish\Core\FieldType\RichText\Validator
      */
-    private $validator;
+    protected $validator;
 
-    private $apiRepository;
+    protected $apiRepository;
 
     /**
      * @var Psr\Log\LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     /**
      * @var []
      */
-    private $styleSheets;
+    protected $styleSheets;
 
     /**
      * @var []
      */
-    private $errors;
+    protected $errors;
 
     /**
      * @var []
      */
-    private $customTagsLog;
+    protected $customTagsLog;
 
     /**
      * RichText constructor.
@@ -271,7 +271,7 @@ class RichText implements Converter
      * @param $value
      * @return bool returns true if node was changed
      */
-    private function addXhtmlClassValue(DOMNode $node, $value)
+    protected function addXhtmlClassValue(DOMNode $node, $value)
     {
         $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
         if ($classAttributes == null) {
@@ -297,7 +297,7 @@ class RichText implements Converter
      * @param $value
      * @return bool returns true if node was changed
      */
-    private function removeXhtmlClassValue(DOMNode $node, $value)
+    protected function removeXhtmlClassValue(DOMNode $node, $value)
     {
         $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
         if ($classAttributes == null) {

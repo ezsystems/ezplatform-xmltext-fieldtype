@@ -39,5 +39,6 @@ services:
     ezxmltext.richtext_converter:
         class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText
         arguments:
+            - "@ezrichtext.validator.docbook"
             - "@ezpublish.api.repository"
             - "@?logger"

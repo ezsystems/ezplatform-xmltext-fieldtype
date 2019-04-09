@@ -149,6 +149,18 @@
   <xsl:template match="line">
   </xsl:template>
 
+  <xsl:template name="custom-attributes">
+    <xsl:if test="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">
+      <xsl:element name="ez-custom-attributes" namespace="http://docbook.org/ns/docbook">
+        <xsl:for-each select="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">
+          <xsl:call-template name="addHashValue">
+            <xsl:with-param name="attribute" select="current()"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:element>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="paragraph">
     <xsl:element name="para" namespace="http://docbook.org/ns/docbook">
       <xsl:if test="@class">
@@ -161,6 +173,7 @@
           <xsl:with-param name="align" select="@align"/>
         </xsl:call-template>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:variable name="lines" select="line"/>
       <xsl:choose>
         <xsl:when test="count( $lines ) &gt; 0">
@@ -196,6 +209,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -208,6 +222,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -278,6 +293,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -367,6 +383,7 @@
           <xsl:with-param name="align" select="@align"/>
         </xsl:call-template>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -378,6 +395,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -389,6 +407,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -400,6 +419,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -451,6 +471,7 @@
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:if test="$tableElement = 'table'">
         <xsl:element name="caption" namespace="http://docbook.org/ns/docbook">
           <xsl:value-of select="@custom:caption"/>
@@ -471,6 +492,7 @@
           <xsl:value-of select="@class"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -517,6 +539,7 @@
           <xsl:value-of select="@custom:scope"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -553,6 +576,7 @@
           <xsl:value-of select="@xhtml:rowspan"/>
         </xsl:attribute>
       </xsl:if>
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>

@@ -555,7 +555,6 @@ class RichText implements Converter
             }
 
             if (!$blockCustomTag) {
-                $this->log(LogLevel::WARNING, "Inline custom tag '$customTagName' not supported by editor at the moment. You'll not be able to edit content correctly in editor where contentobject_attribute.id=$contentFieldId");
                 $this->logCustomTag(self::INLINE_CUSTOM_TAG, $customTagName);
             } elseif ($parent->localName === 'section') {
                 $this->log(LogLevel::WARNING, "Custom tag '$customTagName' converted to block custom tag. It might have been inline custom tag in legacy DB where contentobject_attribute.id=$contentFieldId");

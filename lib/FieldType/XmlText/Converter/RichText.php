@@ -16,11 +16,12 @@ use DOMNode;
 use Psr\Log\LoggerInterface;
 use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
 use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
-use EzSystems\EzPlatformRichText\eZ\RichText\ValidatorInterface;
+use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
+use eZ\Publish\Core\SignalSlot\Repository;
 
 class RichText implements Converter
 {
@@ -36,7 +37,7 @@ class RichText implements Converter
      */
     private $imageContentTypes;
     /**
-     * @var ValidatorInterface
+     * @var Validator
      */
     private $validator;
 
@@ -64,14 +65,14 @@ class RichText implements Converter
 
     /**
      * RichText constructor.
-     * @param null $validator
      * @param null $apiRepository
      * @param LoggerInterface|null $logger
+     * @param Validator $validator
      */
     public function __construct(
-        ValidatorInterface $validator = null,
-        $apiRepository = null,
-        LoggerInterface $logger = null
+        Repository $apiRepository = null,
+        LoggerInterface $logger = null,
+        Validator $validator = null
     ) {
         $this->validator = $validator;
 

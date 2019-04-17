@@ -115,6 +115,7 @@
               <xsl:value-of select="@custom:language"/>
             </xsl:attribute>
           </xsl:if>
+          <xsl:call-template name="custom-attributes" />
           <xsl:text disable-output-escaping="yes">&lt;![CDATA[</xsl:text>
           <xsl:value-of disable-output-escaping="yes" select="./text()"/>
           <xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
@@ -198,6 +199,7 @@
 
   <xsl:template match="custom[@name='quote']">
     <xsl:element name="blockquote" namespace="http://docbook.org/ns/docbook">
+      <xsl:call-template name="custom-attributes" />
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
@@ -232,22 +234,26 @@
       <xsl:when test="@name='underline'">
         <xsl:element name="emphasis" namespace="http://docbook.org/ns/docbook">
           <xsl:attribute name="role">underlined</xsl:attribute>
+          <xsl:call-template name="custom-attributes" />
           <xsl:apply-templates/>
         </xsl:element>
       </xsl:when>
       <xsl:when test="@name='strike'">
         <xsl:element name="emphasis" namespace="http://docbook.org/ns/docbook">
           <xsl:attribute name="role">strikedthrough</xsl:attribute>
+          <xsl:call-template name="custom-attributes" />
           <xsl:apply-templates/>
         </xsl:element>
       </xsl:when>
       <xsl:when test="@name='sub'">
         <xsl:element name="subscript" namespace="http://docbook.org/ns/docbook">
+          <xsl:call-template name="custom-attributes" />
           <xsl:apply-templates/>
         </xsl:element>
       </xsl:when>
       <xsl:when test="@name='sup'">
         <xsl:element name="superscript" namespace="http://docbook.org/ns/docbook">
+          <xsl:call-template name="custom-attributes" />
           <xsl:apply-templates/>
         </xsl:element>
       </xsl:when>

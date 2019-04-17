@@ -254,11 +254,12 @@ class RichTextTest extends TestCase
         );
     }
 
-    public function getValidator() {
+    public function getValidator()
+    {
         return new Validator(
             array(
                 './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
-                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl'
+                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
             )
         );
     }

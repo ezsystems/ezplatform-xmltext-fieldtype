@@ -151,7 +151,7 @@
 
   <xsl:template name="custom-attributes">
     <xsl:if test="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">
-      <xsl:element name="ez-custom-attributes" namespace="http://docbook.org/ns/docbook">
+      <xsl:element name="ezattribute" namespace="http://docbook.org/ns/docbook">
         <xsl:for-each select="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">
           <xsl:call-template name="addHashValue">
             <xsl:with-param name="attribute" select="current()"/>

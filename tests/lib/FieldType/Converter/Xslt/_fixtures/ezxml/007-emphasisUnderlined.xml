@@ -6,4 +6,5 @@
     <header>This is a heading.</header>
   </section>
   <paragraph>This is a paragraph with <custom name="underline">underlined</custom> text.</paragraph>
+  <paragraph>This is a paragraph with <custom name="underline" custom:name-1="value 1" custom:name-2="value 2">underlined (custom attributes)</custom> text.</paragraph>
 </section>

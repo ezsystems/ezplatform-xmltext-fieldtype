@@ -9,4 +9,11 @@
       </li>
     </ul>
   </paragraph>
+  <paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">
+    <ul custom:name-1="list 1" custom:name-2="list 2">
+      <li custom:name-1="list item 1" custom:name-2="list item 2">
+        <paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">This is a list item.</paragraph>
+      </li>
+    </ul>
+  </paragraph>
 </section>

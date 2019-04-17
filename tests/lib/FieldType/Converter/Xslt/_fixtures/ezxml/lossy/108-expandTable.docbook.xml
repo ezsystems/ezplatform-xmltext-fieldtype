@@ -8,6 +8,9 @@
   <title ezxhtml:level="2">Heading 2</title>
   <title ezxhtml:level="3">Heading 3</title>
   <informaltable border="1" class="class1" style="border-width:1px;" title="summary1" width="100%">
+    <ezattribute>
+      <ezvalue key="summary">summary1</ezvalue>
+    </ezattribute>
     <tbody>
       <tr>
         <td>
@@ -16,6 +19,9 @@
           <title ezxhtml:level="3">Heading 3</title>
           <title ezxhtml:level="3">Heading 3</title>
           <informaltable border="1" class="class2" style="border-width:1px;" title="summary2" width="100%">
+            <ezattribute>
+              <ezvalue key="summary">summary2</ezvalue>
+            </ezattribute>
             <tbody>
               <tr>
                 <td>

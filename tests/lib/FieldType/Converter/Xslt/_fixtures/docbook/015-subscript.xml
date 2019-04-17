@@ -5,4 +5,5 @@
          xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
          version="5.0-variant ezpublish-1.0">
   <para>Thirsty? Have some H<subscript>2</subscript>O.</para>
+  <para>Thirsty? Have some H<subscript><ezattribute><ezvalue key="name-1">value 1</ezvalue><ezvalue key="name-2">value 2</ezvalue></ezattribute>2 (custom attribute)</subscript>O.</para>
 </section>

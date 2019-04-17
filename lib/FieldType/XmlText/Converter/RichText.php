@@ -65,7 +65,7 @@ class RichText implements Converter
 
     /**
      * RichText constructor.
-     * @param null $apiRepository
+     * @param Repository $apiRepository
      * @param LoggerInterface|null $logger
      * @param Validator $validator
      */

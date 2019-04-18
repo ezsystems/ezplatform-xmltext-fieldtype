@@ -75,6 +75,7 @@ class EzxmlToDocbookTest extends BaseTest
             $validator = new Validator($validatorSchemas);
             $converter = new RichText($apiRepositoryStub, null, $validator);
             $converter->setCustomStylesheets($customStylesheets);
+
             return $converter;
         }
 

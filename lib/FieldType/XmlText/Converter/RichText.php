@@ -37,16 +37,16 @@ class RichText implements Converter
      */
     private $imageContentTypes;
     /**
-     * @var eZ\Publish\Core\FieldType\RichText\Validator
+     * @var \eZ\Publish\Core\FieldType\RichText\Validator
      */
     private $validator;
     /**
-     * @var eZ\Publish\API\Repository\Repository
+     * @var \eZ\Publish\API\Repository\Repository
      */
     private $apiRepository;
 
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 

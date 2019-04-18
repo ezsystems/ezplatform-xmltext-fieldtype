@@ -21,7 +21,7 @@ use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
-use eZ\Publish\Core\SignalSlot\Repository;
+use eZ\Publish\API\Repository\Repository;
 
 class RichText implements Converter
 {
@@ -37,10 +37,12 @@ class RichText implements Converter
      */
     private $imageContentTypes;
     /**
-     * @var Validator
+     * @var eZ\Publish\Core\FieldType\RichText\Validator
      */
     private $validator;
-
+    /**
+     * @var eZ\Publish\API\Repository\Repository
+     */
     private $apiRepository;
 
     /**

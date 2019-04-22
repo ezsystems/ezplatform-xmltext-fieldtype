@@ -1,37 +1,52 @@
+dist: trusty
+
 language: php
 
 services:
-  - mysql
-  - postgresql
+    - mysql
+    - postgresql
 
 # Mysql isn't installed on trusty (only client is), so we need to specifically install it
 addons:
-  apt:
-    packages:
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
+    apt:
+        packages:
+            - mysql-server-5.6
+            - mysql-client-core-5.6
+            - mysql-client-5.6
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
 
 matrix:
     include:
-        - php: 5.6
-          env: TEST_CONFIG="phpunit.xml"
-        - php: 7.0
-          env: TEST_CONFIG="phpunit.xml"
-        - php: 7.2
-          env: TEST_CONFIG="phpunit.xml" CHECK_CS=true
-        - php: 7.0
-          env: TEST_CONFIG="phpunit-integration-legacy.xml"
-        - php: 5.6
-          env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CORES="collection1" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
-        - php: 7.1
-          env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.0" CORES_SETUP="shared" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
-        - php: 7.1
-          env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb"
-        - php: 7.1
-          env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="mysql" DATABASE="mysql://root@localhost/testdb"
-        - php: 7.0
-          env: TEST_CONFIG="phpunit.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^6.13.6@dev"
+        -   name: '[PHP 7.1] Unit tests with ezpublish-kernel:^7.5.1@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^7.5.1@dev"
+        -   name: '[PHP 7.1] Legacy SQLite database integration tests with ezpublish-kernel:^7.5.1@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit-integration-legacy.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^7.5.1@dev"
+        -   name: '[PHP 7.1] Solr 6.6.0 integration tests with ezpublish-kernel:^7.5.1@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.0" CORES_SETUP="shared" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^7.5.1@dev"
+        -   name: '[PHP 7.1] Empty PostgreSQL Legacy database integration tests with ezpublish-kernel:^7.5.1@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^7.5.1@dev"
+        -   name: '[PHP 7.1] Empty MySQL Legacy database integration tests with ezpublish-kernel:^7.5.1@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit-integration-legacy-empty-db.xml" DB="mysql" DATABASE="mysql://root@localhost/testdb" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^7.5.1@dev"
+        -   name: '[PHP 7.1] Unit tests with ezpublish-kernel:^6.13.6@dev'
+            php: '7.1'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit.xml" COMPOSER_REQUIRE="ezsystems/ezpublish-kernel:^6.13.6@dev"
+        -   name: '[PHP 5.6] Unit tests'
+            php: '5.6'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit.xml"
+        -   name: '[PHP 5.6] Solr 4.10.4 integration tests'
+            php: '5.6'
+            env: SCRIPT="php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c phpunit-integration-legacy-solr.xml" SOLR_VERSION="4.10.4" CORES_SETUP="single" SOLR_CORES="collection1" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
+        -   name: '[PHP 7.3] Code Style Validation'
+            php: '7.2'
+            env: SCRIPT="./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating"
 
 # test only master (+ Pull requests)
 branches:
@@ -41,19 +56,20 @@ branches:
 
 # setup requirements for running db tests
 before_install:
-  - if [ "$TEST_CONFIG" != "" ] ; then ./bin/.travis/prepare_unittest.sh ; fi
+    - ./bin/.travis/prepare_unittest.sh
 
 before_script:
     # Disable memory_limit for composer
     - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - mkdir -p ~/.composer
-    - cp bin/.travis/composer-auth.json ~/.composer/auth.json
     - composer install --no-progress --no-interaction --prefer-dist
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 
 script:
-    - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
-    - if [ "$CHECK_CS" == "true" ]; then ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
+    - echo "${SCRIPT}" && ${SCRIPT}
 
 notifications:
     email: false
+
+# reduce depth (history) of git checkout
+git:
+    depth: 30

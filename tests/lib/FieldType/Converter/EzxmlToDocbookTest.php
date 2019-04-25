@@ -8,6 +8,7 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
+use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
 use eZ\Publish\Core\SignalSlot\Repository;
 use eZ\Publish\API\Repository\ContentService;
@@ -56,25 +57,31 @@ class EzxmlToDocbookTest extends BaseTest
      */
     protected function getConverter($inputFile)
     {
+        $validatorSchemas = [
+            './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
+            './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
+        ];
+        $apiRepositoryStub = $this->createApiRepositoryStub();
+
         if (basename($inputFile) === '017-customYoutube.xml') {
-            $apiRepositoryStub = $this->createApiRepositoryStub();
-            $customStylesheets =
+            $customStylesheets = [
                 [
-                    [
-                        'path' => __DIR__ . '/Xslt/_fixtures/ezxml/custom_stylesheets/youtube_docbook.xsl',
-                        'priority' => 100,
-                    ],
-                ];
-            $customValidators = [__DIR__ . '/../../../../tests/lib/FieldType/Converter/Xslt/_fixtures/docbook/custom_schemas/youtube.rng'];
-            $converter = new RichText($apiRepositoryStub);
+                    'path' => __DIR__ . '/Xslt/_fixtures/ezxml/custom_stylesheets/youtube_docbook.xsl',
+                    'priority' => 100,
+                ],
+            ];
+            $validatorSchemas[] = __DIR__ . '/../../../../tests/lib/FieldType/Converter/Xslt/_fixtures/docbook/custom_schemas/youtube.rng';
+
+            $validator = new Validator($validatorSchemas);
+            $converter = new RichText($apiRepositoryStub, null, $validator);
             $converter->setCustomStylesheets($customStylesheets);
-            $converter->setCustomValidators($customValidators);
 
             return $converter;
         }
+
         if ($this->converter === null) {
-            $apiRepositoryStub = $this->createApiRepositoryStub();
-            $this->converter = new RichText($apiRepositoryStub);
+            $validator = new Validator($validatorSchemas);
+            $this->converter = new RichText($apiRepositoryStub, null, $validator);
         }
 
         return $this->converter;

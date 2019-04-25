@@ -19,6 +19,7 @@ use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
 use Psr\Log\NullLogger;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\RichText\Validator;
 
 class RichTextTest extends TestCase
 {
@@ -224,9 +225,10 @@ class RichTextTest extends TestCase
     {
         $apiRepositoryStub = $this->createApiRepositoryStub();
         $loggerStub = $this->createLoggerStub($logFilePath);
+        $validator = $this->getValidator();
 
         $inputDocument = $this->createDocument($inputFilePath);
-        $richText = new RichText($apiRepositoryStub, $loggerStub);
+        $richText = new RichText($apiRepositoryStub, $loggerStub, $validator);
         $richText->setImageContentTypes([27]);
 
         $result = $richText->convert($inputDocument, true, true);
@@ -252,6 +254,16 @@ class RichTextTest extends TestCase
         );
     }
 
+    public function getValidator()
+    {
+        return new Validator(
+            array(
+                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
+                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
+            )
+        );
+    }
+
     /**
      * @param string $inputFilePath
      * @param string $outputFilePath
@@ -261,9 +273,10 @@ class RichTextTest extends TestCase
     public function testTagEmbeddedImages($inputFilePath, $outputFilePath)
     {
         $apiRepositoryStub = $this->createApiRepositoryStub();
+        $validator = $this->getValidator();
 
         $inputDocument = $this->createDocument($inputFilePath);
-        $richText = new RichText($apiRepositoryStub);
+        $richText = new RichText($apiRepositoryStub, null, $validator);
         $richText->setImageContentTypes(array(27));
 
         $richText->tagEmbeddedImages($inputDocument, null);

@@ -41,3 +41,4 @@ services:
         arguments:
             - "@ezpublish.api.repository"
             - "@?logger"
+            - "@ezpublish.fieldType.ezrichtext.validator.docbook"

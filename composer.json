@@ -1,7 +1,7 @@
 {
     "name": "ezsystems/ezplatform-xmltext-fieldtype",
     "description": "XmlText field type implementation for eZ Platform",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "type": "ezplatform-bundle",
     "authors": [
         {

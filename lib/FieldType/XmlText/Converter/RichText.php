@@ -21,6 +21,7 @@ use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
+use eZ\Publish\API\Repository\Repository;
 
 class RichText implements Converter
 {
@@ -39,11 +40,13 @@ class RichText implements Converter
      * @var \eZ\Publish\Core\FieldType\RichText\Validator
      */
     private $validator;
-
+    /**
+     * @var \eZ\Publish\API\Repository\Repository
+     */
     private $apiRepository;
 
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     private $logger;
 
@@ -64,17 +67,22 @@ class RichText implements Converter
 
     /**
      * RichText constructor.
-     * @param null $apiRepository
+     * @param Repository $apiRepository
      * @param LoggerInterface|null $logger
+     * @param Validator $validator
      */
-    public function __construct($apiRepository = null, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        Repository $apiRepository = null,
+        LoggerInterface $logger = null,
+        Validator $validator = null
+    ) {
+        $this->validator = $validator;
+
         $this->logger = $logger instanceof LoggerInterface ? $logger : new NullLogger();
         $this->imageContentTypes = [];
         $this->apiRepository = $apiRepository;
 
         $this->styleSheets = null;
-        $this->validator = null;
         $this->converter = null;
         $this->customTagsLog = [self::INLINE_CUSTOM_TAG => [], self::BLOCK_CUSTOM_TAG => []];
     }
@@ -116,30 +124,10 @@ class RichText implements Converter
         $this->converter = null;
     }
 
-    /**
-     * @param array $customValidators
-     */
-    public function setCustomValidators(array $customValidators = [])
-    {
-        $validators = array_merge(
-            [
-                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
-            ],
-            $customValidators,
-            [
-                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
-            ]
-        );
-        $this->validator = new Validator($validators);
-    }
-
     protected function getConverter()
     {
         if ($this->styleSheets === null) {
             $this->setCustomStylesheets([]);
-        }
-        if ($this->validator === null) {
-            $this->setCustomValidators([]);
         }
         if ($this->converter === null) {
             $this->converter = new Aggregate(

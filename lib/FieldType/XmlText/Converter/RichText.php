@@ -16,12 +16,12 @@ use DOMNode;
 use Psr\Log\LoggerInterface;
 use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
 use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
-use eZ\Publish\Core\FieldType\RichText\Validator;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
 use Psr\Log\LogLevel;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use eZ\Publish\API\Repository\Repository;
+use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 
 class RichText implements Converter
 {

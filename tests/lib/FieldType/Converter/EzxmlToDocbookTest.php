@@ -8,7 +8,7 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use eZ\Publish\Core\FieldType\RichText\Validator;
+use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
 use eZ\Publish\Core\SignalSlot\Repository;
 use eZ\Publish\API\Repository\ContentService;
@@ -58,8 +58,8 @@ class EzxmlToDocbookTest extends BaseTest
     protected function getConverter($inputFile)
     {
         $validatorSchemas = [
-            './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
-            './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
+            './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/ezpublish.rng',
+            './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
         ];
         $apiRepositoryStub = $this->createApiRepositoryStub();
 

@@ -26,14 +26,14 @@ class ExpandingToRichText extends Expanding
      *
      * @var array
      */
-    protected $containmentMap = array(
-        'embed' => array(
+    protected $containmentMap = [
+        'embed' => [
             'link' => true,
-        ),
-        'table' => array(),
-        'literal' => array(),
-        'header' => array(),
-    );
+        ],
+        'table' => [],
+        'literal' => [],
+        'header' => [],
+    ];
 
     /**
      * Checks whether a paragraph can be considered as temporary and can then be

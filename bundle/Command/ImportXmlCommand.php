@@ -118,7 +118,7 @@ EOT
             $this->imageContentTypeIdentifiers = ['image'];
         }
         $imageContentTypeIds = $this->gateway->getContentTypeIds($this->imageContentTypeIdentifiers);
-        if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
+        if (\count($imageContentTypeIds) !== \count($this->imageContentTypeIdentifiers)) {
             throw new RuntimeException('Unable to lookup all content type identifiers, not found : ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
@@ -132,7 +132,7 @@ EOT
             if ($dirItem->isFile() && $dirItem->getExtension() === 'xml') {
                 $fileNameArray = explode('_', $dirItem->getBasename('.xml'));
                 if (
-                    count($fileNameArray) !== 5 ||
+                    \count($fileNameArray) !== 5 ||
                     $fileNameArray[0] !== 'ezxmltext' ||
                     !is_numeric($fileNameArray[1]) ||
                     !is_numeric($fileNameArray[2]) ||
@@ -146,7 +146,7 @@ EOT
                 $attributeId = $fileNameArray[2];
                 $version = $fileNameArray[3];
                 $language = $fileNameArray[4];
-                $filename = $this->exportDir . DIRECTORY_SEPARATOR . $dirItem->getFilename();
+                $filename = $this->exportDir . \DIRECTORY_SEPARATOR . $dirItem->getFilename();
 
                 if ($this->contentObjectId !== null && $this->contentObjectId !== $objectId) {
                     continue;
@@ -169,7 +169,7 @@ EOT
         $result = false;
 
         if (!empty($errors)) {
-            if (array_key_exists(LogLevel::ERROR, $errors)) {
+            if (\array_key_exists(LogLevel::ERROR, $errors)) {
                 $this->output->writeln("Error: Validation errors when trying to convert ezxmltext in file $filename to richtext, skipping :");
             } else {
                 $this->output->writeln("Warning: Issues found when trying to convert ezxmltext in file $filename to richtext:");
@@ -178,7 +178,7 @@ EOT
             foreach ($errors as $logLevel => $logErrors) {
                 foreach ($logErrors as $logError) {
                     $this->output->writeln("- $logLevel: " . $logError['message']);
-                    if (array_key_exists('errors', $logError['context'])) {
+                    if (\array_key_exists('errors', $logError['context'])) {
                         foreach ($logError['context']['errors'] as $contextError) {
                             $this->output->writeln('  - context: ' . $contextError);
                         }

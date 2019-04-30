@@ -96,24 +96,24 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
      */
     public function getFieldDefinitionData()
     {
-        return array(
+        return [
             // The ezxmltext field type does not have any special field definition
             // properties
-            array('fieldType', 'ezxmltext'),
-            array(
+            ['fieldType', 'ezxmltext'],
+            [
                 'fieldTypeConstraints',
                 new FieldTypeConstraints(
-                    array(
+                    [
                         'fieldSettings' => new FieldSettings(
-                            array(
+                            [
                                 'numRows' => 0,
                                 'tagPreset' => null,
-                            )
+                            ]
                         ),
-                    )
+                    ]
                 ),
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -126,11 +126,11 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
         $xml = '<?xml version="1.0" encoding="utf-8"?><section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>Paragraph content…</paragraph></section>';
 
         return new FieldValue(
-            array(
+            [
                 'data' => $xml,
                 'externalData' => null,
                 'sortKey' => null,
-            )
+            ]
         );
     }
 
@@ -146,11 +146,11 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
         $xml = '<?xml version="1.0" encoding="utf-8"?><section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>Some different content…</paragraph></section>';
 
         return new FieldValue(
-            array(
+            [
                 'data' => $xml,
                 'externalData' => null,
                 'sortKey' => null,
-            )
+            ]
         );
     }
 }

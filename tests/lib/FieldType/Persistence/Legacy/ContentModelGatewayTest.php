@@ -388,11 +388,11 @@ class ContentModelGatewayTest extends BaseTest
         $statement = $gatewayService->getFieldRows($datatypeString, $contentId, $offset, $limit);
         $index = 0;
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $this->assertLessThan(count($expectedRows), $index, 'Too many rows returned by getFieldRows');
+            $this->assertLessThan(\count($expectedRows), $index, 'Too many rows returned by getFieldRows');
             $this->assertEquals($expectedRows[$index], $row, 'Result from getFieldRows() did not return expected result');
             ++$index;
         }
-        $this->assertEquals(count($expectedRows), $index, 'Too few rows returned by getFieldRows');
+        $this->assertEquals(\count($expectedRows), $index, 'Too few rows returned by getFieldRows');
     }
 
     protected function getFieldRows($contentId)

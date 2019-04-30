@@ -27,33 +27,33 @@ class EzXmlTest extends TestCase
 
     public function providerForTestConvertCorrect()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>&lt;test&gt;</paragraph></section>
 ',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph><link href="" url="" url_id="1" object_remote_id="" object_id="1" node_id="1">test</link></paragraph></section>
 ',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header><line>Multi</line><line>line</line></header></section>
 ',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header><custom name="underline">Underline</custom></header></section>
 ',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header><line><strong>Multi</strong></line><line><custom name="underline">line</custom></line></header></section>
 ',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -74,12 +74,12 @@ class EzXmlTest extends TestCase
 
     public function providerForTestConvertIncorrect()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?><section><wrongTag/></section>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'wrongTag': This element is not expected. Expected is one of ( section, paragraph, header ).",
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?><section><paragraph wrongAttribute="foo">Some content</paragraph>
 <paragraph>
 <table><tr></tr></table>
@@ -90,19 +90,19 @@ class EzXmlTest extends TestCase
 Element 'tr': Missing child element(s). Expected is one of ( th, td ).
 Element 'link', attribute 'node_id': 'abc' is not a valid value of the atomic type 'xs:integer'.
 Element 'link': This element is not expected. Expected is one of ( custom, strong, emphasize, embed, embed-inline ).",
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?><section><header>With a literal<literal>literal</literal></header></section>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'literal': This element is not expected. Expected is one of ( custom, strong, emphasize, link, anchor, line ).",
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?><section><header>With a embed <embed /></header></section>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'embed': This element is not expected. Expected is one of ( custom, strong, emphasize, link, anchor, line ).",
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?><section><header>With a embed <embed-inline /></header></section>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'embed-inline': This element is not expected. Expected is one of ( custom, strong, emphasize, link, anchor, line ).",
-            ),
-        );
+            ],
+        ];
     }
 }

@@ -42,7 +42,7 @@ class EzXml extends Input
         libxml_clear_errors();
         $doc->loadXML($xmlString);
         if (!$doc->schemaValidate($schemaPath)) {
-            $messages = array();
+            $messages = [];
 
             foreach (libxml_get_errors() as $error) {
                 $messages[] = trim($error->message);

@@ -20,12 +20,12 @@ class XmlTextProcessorTest extends TestCase
     {
         return [
             [
-                array('tagPreset' => 'TAG_PRESET_DEFAULT'),
-                array('tagPreset' => Type::TAG_PRESET_DEFAULT),
+                ['tagPreset' => 'TAG_PRESET_DEFAULT'],
+                ['tagPreset' => Type::TAG_PRESET_DEFAULT],
             ],
             [
-                array('tagPreset' => 'TAG_PRESET_SIMPLE_FORMATTING'),
-                array('tagPreset' => Type::TAG_PRESET_SIMPLE_FORMATTING),
+                ['tagPreset' => 'TAG_PRESET_SIMPLE_FORMATTING'],
+                ['tagPreset' => Type::TAG_PRESET_SIMPLE_FORMATTING],
             ],
         ];
     }

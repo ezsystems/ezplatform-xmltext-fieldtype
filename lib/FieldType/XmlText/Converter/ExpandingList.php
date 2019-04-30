@@ -42,10 +42,10 @@ use DOMNode;
  */
 class ExpandingList extends ExpandingToRichText
 {
-    protected $containmentMap = array(
-        'ul' => array(),
-        'ol' => array(),
-    );
+    protected $containmentMap = [
+        'ul' => [],
+        'ol' => [],
+    ];
 
     protected function isTemporary(DOMElement $paragraph)
     {

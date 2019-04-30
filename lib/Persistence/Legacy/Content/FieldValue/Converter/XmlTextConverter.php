@@ -80,10 +80,10 @@ class XmlTextConverter implements Converter
     public function toFieldDefinition(StorageFieldDefinition $storageDefinition, FieldDefinition $fieldDefinition)
     {
         $fieldDefinition->fieldTypeConstraints->fieldSettings = new FieldSettings(
-            array(
+            [
                 'numRows' => $storageDefinition->dataInt1,
                 'tagPreset' => $storageDefinition->dataText2 ? (int)$storageDefinition->dataText2 : Type::TAG_PRESET_DEFAULT,
-            )
+            ]
         );
 
         $defaultValue = null;

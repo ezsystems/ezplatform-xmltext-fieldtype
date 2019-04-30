@@ -109,7 +109,7 @@ class InternalLinkValidator
      *
      * @param string $scheme
      * @param string $target
-     * @param null|string $anchorName
+     * @param string|null $anchorName
      * @return string
      */
     protected function getInvalidLinkError($scheme, $target, $anchorName = null)

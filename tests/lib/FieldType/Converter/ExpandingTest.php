@@ -26,13 +26,13 @@ class ExpandingTest extends TestCase
      */
     public function providerForTestConvert()
     {
-        $map = array();
+        $map = [];
 
         foreach (glob(__DIR__ . '/_fixtures/expanding/input/*.xml') as $inputFilePath) {
             $basename = basename($inputFilePath, '.xml');
             $outputFilePath = __DIR__ . "/_fixtures/expanding/output/{$basename}.xml";
 
-            $map[] = array($inputFilePath, $outputFilePath);
+            $map[] = [$inputFilePath, $outputFilePath];
         }
 
         return $map;

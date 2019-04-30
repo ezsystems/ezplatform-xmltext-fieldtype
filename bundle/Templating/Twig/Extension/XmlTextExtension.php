@@ -33,13 +33,13 @@ class XmlTextExtension extends Twig_Extension
 
     public function getFilters()
     {
-        return array(
+        return [
             new Twig_SimpleFilter(
                 'xmltext_to_html5',
-                array($this, 'xmlTextToHtml5'),
-                array('is_safe' => array('html'))
+                [$this, 'xmlTextToHtml5'],
+                ['is_safe' => ['html']]
             ),
-        );
+        ];
     }
 
     /**

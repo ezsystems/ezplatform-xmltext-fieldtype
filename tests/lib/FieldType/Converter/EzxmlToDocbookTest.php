@@ -106,9 +106,9 @@ class EzxmlToDocbookTest extends BaseTest
      */
     public function getFixtureSubdirectories()
     {
-        return array(
+        return [
             'input' => 'ezxml',
             'output' => 'docbook',
-        );
+        ];
     }
 }

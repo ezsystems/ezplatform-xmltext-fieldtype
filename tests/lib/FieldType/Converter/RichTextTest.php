@@ -197,7 +197,7 @@ class RichTextTest extends TestCase
                     ->with($logLevel, $this->callback(function ($actualLogMessage) use ($logMessage) {
                         $expectedLogMessage = substr($logMessage, 0, strpos($logMessage, '*'));
 
-                        $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
+                        $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, \strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
 
                         return true;
                     }));
@@ -257,10 +257,10 @@ class RichTextTest extends TestCase
     public function getValidator()
     {
         return new Validator(
-            array(
+            [
                 './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/ezpublish.rng',
                 './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
-            )
+            ]
         );
     }
 
@@ -277,7 +277,7 @@ class RichTextTest extends TestCase
 
         $inputDocument = $this->createDocument($inputFilePath);
         $richText = new RichText($apiRepositoryStub, null, $validator);
-        $richText->setImageContentTypes(array(27));
+        $richText->setImageContentTypes([27]);
 
         $richText->tagEmbeddedImages($inputDocument, null);
 

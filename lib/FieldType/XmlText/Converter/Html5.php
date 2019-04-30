@@ -33,7 +33,7 @@ class Html5 implements Converter
      *
      * @var array
      */
-    protected $customStylesheets = array();
+    protected $customStylesheets = [];
 
     /**
      * @var \XSLTProcessor
@@ -56,7 +56,7 @@ class Html5 implements Converter
      *
      * @throws \eZ\Publish\Core\Base\Exceptions\InvalidArgumentType
      */
-    public function __construct($stylesheet, array $customStylesheets = array(), array $preConverters = array())
+    public function __construct($stylesheet, array $customStylesheets = [], array $preConverters = [])
     {
         $this->stylesheet = $stylesheet;
         $this->setCustomStylesheets($customStylesheets);
@@ -88,7 +88,7 @@ class Html5 implements Converter
         }
         foreach ($customStylesheets as $stylesheet) {
             if (!isset($this->customStylesheets[$stylesheet['priority']])) {
-                $this->customStylesheets[$stylesheet['priority']] = array();
+                $this->customStylesheets[$stylesheet['priority']] = [];
             }
 
             $this->customStylesheets[$stylesheet['priority']][] = $stylesheet['path'];
@@ -161,7 +161,7 @@ class Html5 implements Converter
      */
     private function getSortedCustomStylesheets()
     {
-        $sortedStylesheets = array();
+        $sortedStylesheets = [];
         ksort($this->customStylesheets);
         foreach ($this->customStylesheets as $stylesheets) {
             $sortedStylesheets = array_merge($sortedStylesheets, $stylesheets);

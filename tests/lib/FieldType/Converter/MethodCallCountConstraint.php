@@ -8,9 +8,9 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use PHPUnit_Framework_MockObject_Invocation;
-use PHPUnit_Framework_MockObject_Matcher_InvokedRecorder;
-use PHPUnit_Framework_ExpectationFailedException;
+use PHPUnit\Framework\MockObject\Invocation;
+use PHPUnit\Framework\MockObject\Matcher\InvokedRecorder;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class MethodCallCountConstraint.
@@ -24,7 +24,7 @@ use PHPUnit_Framework_ExpectationFailedException;
  *
  * Based on workaround proposed on https://github.com/sebastianbergmann/phpunit-mock-objects/issues/65
  */
-class MethodCallCountConstraint extends PHPUnit_Framework_MockObject_Matcher_InvokedRecorder
+class MethodCallCountConstraint extends InvokedRecorder
 {
     /**
      * @var int
@@ -44,7 +44,7 @@ class MethodCallCountConstraint extends PHPUnit_Framework_MockObject_Matcher_Inv
      * @return mixed|void
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    public function invoked(PHPUnit_Framework_MockObject_Invocation $invocation)
+    public function invoked(Invocation $invocation)
     {
         parent::invoked($invocation);
 
@@ -53,7 +53,7 @@ class MethodCallCountConstraint extends PHPUnit_Framework_MockObject_Matcher_Inv
         if ($count > $this->expectedCount) {
             $message = 'Call to ' . $invocation->toString() . ' unexpected';
 
-            throw new PHPUnit_Framework_ExpectationFailedException($message);
+            throw new ExpectationFailedException($message);
         }
     }
 

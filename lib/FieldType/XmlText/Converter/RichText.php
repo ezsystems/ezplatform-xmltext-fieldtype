@@ -172,7 +172,7 @@ class RichText implements Converter
         foreach ($nodes as $node) {
             $id = $node->attributes->getNamedItem('id')->nodeValue;
             // id has format "duplicated_id_foo_bar_idm45226413447104" where "foo_bar" is the duplicated id
-            $duplicatedId = substr($id, strlen('duplicated_id_'), strrpos($id, '_') - strlen('duplicated_id_'));
+            $duplicatedId = substr($id, \strlen('duplicated_id_'), strrpos($id, '_') - \strlen('duplicated_id_'));
             $this->log(LogLevel::WARNING, "Duplicated id in original ezxmltext for contentobject_attribute.id=$contentFieldId, automatically generated new id : $duplicatedId --> $id");
         }
     }
@@ -217,7 +217,7 @@ class RichText implements Converter
     /**
      * @param $id
      * @param bool $isContentId Whatever provided $id is a content id or location id
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      * @return bool
      */
     protected function isImageContentType($id, $isContentId, $contentFieldId)
@@ -251,7 +251,7 @@ class RichText implements Converter
             return false;
         }
 
-        return in_array($contentInfo->contentTypeId, $this->imageContentTypes);
+        return \in_array($contentInfo->contentTypeId, $this->imageContentTypes);
     }
 
     /**
@@ -302,7 +302,7 @@ class RichText implements Converter
         }
 
         if ($classNameFound) {
-            if (count($attributes) === 0) {
+            if (\count($attributes) === 0) {
                 $node->removeAttribute('ezxhtml:class');
             } else {
                 $classAttributes->value = implode(' ', $attributes);
@@ -319,7 +319,7 @@ class RichText implements Converter
      * being embedded in the $richtextDocument.
      *
      * @param DOMDocument $richtextDocument
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      * @return int Number of ezembed tags which where changed
      */
     public function tagEmbeddedImages(DOMDocument $richtextDocument, $contentFieldId)
@@ -352,7 +352,7 @@ class RichText implements Converter
     /**
      * Check if $inputDocument has any embed|embed-inline tags without node_id or object_id.
      * @param DOMDocument $inputDocument
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      */
     protected function checkEmptyEmbedTags(DOMDocument $inputDocument, $contentFieldId)
     {
@@ -370,7 +370,7 @@ class RichText implements Converter
      * being linked to in the $document.
 
      * @param DOMDocument $document
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      */
     protected function fixLinksWithRemoteIds(DOMDocument $document, $contentFieldId)
     {
@@ -417,7 +417,7 @@ class RichText implements Converter
      * ezxmltext may contain link elements below another link element. This method flattens such structure.
      *
      * @param DOMDocument $document
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      */
     protected function flattenLinksInLinks(DOMDocument $document, $contentFieldId)
     {
@@ -479,7 +479,7 @@ class RichText implements Converter
      * Those needs to be removed as we use ez-temporary for internal housekeeping.
      *
      * @param DOMDocument $document
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      */
     protected function removeEzTemporaryAttributes(DOMDocument $document, $contentFieldId)
     {
@@ -522,7 +522,7 @@ class RichText implements Converter
 
     /**
      * @param DOMDocument $document
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      */
     protected function writeWarningOnNonSupportedCustomTags(DOMDocument $document, $contentFieldId)
     {
@@ -538,7 +538,7 @@ class RichText implements Converter
             $blockCustomTag = ($parent->localName === 'paragraph' && $parent->hasAttribute('ez-temporary')) || $parent->localName === 'section';
 
             // These legacy custom tags are not custom tags in richtext
-            if (in_array($customTagName, ['quote', 'underline', 'strike', 'sub', 'sup'])) {
+            if (\in_array($customTagName, ['quote', 'underline', 'strike', 'sub', 'sup'])) {
                 continue;
             }
 
@@ -579,7 +579,7 @@ class RichText implements Converter
      * @param DOMDocument $inputDocument
      * @param bool $checkDuplicateIds
      * @param bool $checkIdValues
-     * @param null|int $contentFieldId
+     * @param int|null $contentFieldId
      * @return string
      * @throws \Exception
      */

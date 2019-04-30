@@ -29,7 +29,7 @@ class XmlTextConverterPass implements CompilerPassInterface
         $html5ConverterDef = $container->getDefinition('ezpublish.fieldType.ezxmltext.converter.html5');
         $taggedServiceIds = $container->findTaggedServiceIds('ezpublish.ezxml.converter');
 
-        $converterIdsByPriority = array();
+        $converterIdsByPriority = [];
         foreach ($taggedServiceIds as $id => $tags) {
             foreach ($tags as $tag) {
                 $priority = isset($tag['priority']) ? (int)$tag['priority'] : 0;
@@ -40,7 +40,7 @@ class XmlTextConverterPass implements CompilerPassInterface
         $converterIdsByPriority = $this->sortConverterIds($converterIdsByPriority);
 
         foreach ($converterIdsByPriority as $referenceId) {
-            $html5ConverterDef->addMethodCall('addPreConverter', array(new Reference($referenceId)));
+            $html5ConverterDef->addMethodCall('addPreConverter', [new Reference($referenceId)]);
         }
     }
 
@@ -56,6 +56,6 @@ class XmlTextConverterPass implements CompilerPassInterface
     {
         krsort($converterIdsByPriority, SORT_NUMERIC);
 
-        return call_user_func_array('array_merge', $converterIdsByPriority);
+        return \call_user_func_array('array_merge', $converterIdsByPriority);
     }
 }

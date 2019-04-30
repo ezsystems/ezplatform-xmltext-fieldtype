@@ -32,7 +32,7 @@ abstract class BaseTest extends APIBaseTest
             $q->insertInto($db->quoteIdentifier($table));
 
             // Contains the bound parameters
-            $values = array();
+            $values = [];
 
             // Binding the parameters
             foreach ($rows[0] as $col => $val) {

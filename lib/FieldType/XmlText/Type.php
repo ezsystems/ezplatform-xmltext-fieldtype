@@ -38,7 +38,7 @@ class Type extends FieldType
     const TAG_PRESET_SIMPLE_FORMATTING = 1;
 
     /**
-     * @var null|\eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator
+     * @var \eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator|null
      */
     protected $internalLinkValidator;
 
@@ -49,21 +49,21 @@ class Type extends FieldType
      *
      * @var array
      */
-    protected $settingsSchema = array(
-        'numRows' => array(
+    protected $settingsSchema = [
+        'numRows' => [
             'type' => 'int',
             'default' => 10,
-        ),
-        'tagPreset' => array(
+        ],
+        'tagPreset' => [
             'type' => 'choice',
             'default' => self::TAG_PRESET_DEFAULT,
-        ),
-    );
+        ],
+    ];
 
     /**
      * Type constructor.
      *
-     * @param null|\eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator $internalLinkValidator
+     * @param \eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator|null $internalLinkValidator
      */
     public function __construct(InternalLinkValidator $internalLinkValidator = null)
     {
@@ -107,7 +107,7 @@ class Type extends FieldType
             $result = $value->xml->documentElement->textContent;
         }
 
-        return trim(preg_replace(array('/\n/', '/\s\s+/'), ' ', $result));
+        return trim(preg_replace(['/\n/', '/\s\s+/'], ' ', $result));
     }
 
     /**
@@ -146,7 +146,7 @@ class Type extends FieldType
      */
     protected function createValueFromInput($inputValue)
     {
-        if (is_string($inputValue)) {
+        if (\is_string($inputValue)) {
             if (empty($inputValue)) {
                 $inputValue = Value::EMPTY_VALUE;
             }
@@ -219,7 +219,7 @@ class Type extends FieldType
      */
     public function toHash(SPIValue $value)
     {
-        return array('xml' => (string)$value);
+        return ['xml' => (string)$value];
     }
 
     /**
@@ -243,11 +243,11 @@ class Type extends FieldType
     public function toPersistenceValue(SPIValue $value)
     {
         return new FieldValue(
-            array(
+            [
                 'data' => $value->xml->saveXML(),
                 'externalData' => null,
                 'sortKey' => $this->getSortInfo($value),
-            )
+            ]
         );
     }
 
@@ -273,7 +273,7 @@ class Type extends FieldType
      */
     public function validate(FieldDefinition $fieldDefinition, SPIValue $value)
     {
-        $validationErrors = array();
+        $validationErrors = [];
 
         if ($this->internalLinkValidator !== null) {
             $errors = $this->internalLinkValidator->validate($value->xml);
@@ -294,35 +294,35 @@ class Type extends FieldType
      */
     public function validateFieldSettings($fieldSettings)
     {
-        $validationErrors = array();
+        $validationErrors = [];
 
         foreach ($fieldSettings as $name => $value) {
             if (isset($this->settingsSchema[$name])) {
                 switch ($name) {
                     case 'numRows':
-                        if (!is_int($value)) {
+                        if (!\is_int($value)) {
                             $validationErrors[] = new ValidationError(
                                 "Setting '%setting%' value must be of integer type",
                                 null,
-                                array(
+                                [
                                     'setting' => $name,
-                                ),
+                                ],
                                 "[$name]"
                             );
                         }
                         break;
                     case 'tagPreset':
-                        $definedTagPresets = array(
+                        $definedTagPresets = [
                             self::TAG_PRESET_DEFAULT,
                             self::TAG_PRESET_SIMPLE_FORMATTING,
-                        );
-                        if (!empty($value) && !in_array($value, $definedTagPresets, true)) {
+                        ];
+                        if (!empty($value) && !\in_array($value, $definedTagPresets, true)) {
                             $validationErrors[] = new ValidationError(
                                 "Setting '%setting%' is of unknown tag preset",
                                 null,
-                                array(
+                                [
                                     'setting' => $name,
-                                ),
+                                ],
                                 "[$name]"
                             );
                         }
@@ -332,9 +332,9 @@ class Type extends FieldType
                 $validationErrors[] = new ValidationError(
                     "Setting '%setting%' is unknown",
                     null,
-                    array(
+                    [
                         'setting' => $name,
-                    ),
+                    ],
                     "[$name]"
                 );
             }
@@ -370,14 +370,14 @@ class Type extends FieldType
      */
     public function getRelations(SPIValue $value)
     {
-        $relations = array();
+        $relations = [];
 
         /** @var \eZ\Publish\Core\FieldType\XmlText\Value $value */
         if ($value->xml instanceof DOMDocument) {
-            $relations = array(
+            $relations = [
                 Relation::LINK => $this->getRelatedObjectIds($value, Relation::LINK),
                 Relation::EMBED => $this->getRelatedObjectIds($value, Relation::EMBED),
-            );
+            ];
         }
 
         return $relations;
@@ -391,8 +391,8 @@ class Type extends FieldType
             $tagName = 'link';
         }
 
-        $locationIds = array();
-        $contentIds = array();
+        $locationIds = [];
+        $contentIds = [];
         $linkTags = $fieldValue->xml->getElementsByTagName($tagName);
         if ($linkTags->length > 0) {
             /** @var $link \DOMElement */
@@ -409,9 +409,9 @@ class Type extends FieldType
             }
         }
 
-        return array(
+        return [
             'locationIds' => array_unique($locationIds),
             'contentIds' => array_unique($contentIds),
-        );
+        ];
     }
 }

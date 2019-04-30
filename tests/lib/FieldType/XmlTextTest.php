@@ -53,7 +53,7 @@ class XmlTextTest extends TestCase
     {
         return $this->getMockForAbstractClass(
             TransformationProcessor::class,
-            array(),
+            [],
             '',
             false,
             true,
@@ -80,16 +80,16 @@ class XmlTextTest extends TestCase
     {
         $ft = $this->getFieldType();
         self::assertSame(
-            array(
-                'numRows' => array(
+            [
+                'numRows' => [
                     'type' => 'int',
                     'default' => 10,
-                ),
-                'tagPreset' => array(
+                ],
+                'tagPreset' => [
                     'type' => 'choice',
                     'default' => XmlTextType::TAG_PRESET_DEFAULT,
-                ),
-            ),
+                ],
+            ],
             $ft->getSettingsSchema(),
             'The settings schema does not match what is expected.'
         );
@@ -109,7 +109,7 @@ class XmlTextTest extends TestCase
             'The method validateFieldSettings() must return an array.'
         );
         $this->assertEquals(
-            array(),
+            [],
             $validationResult,
             'validateFieldSettings() considered the input settings invalid, while they should be valid: '
         );
@@ -130,7 +130,7 @@ class XmlTextTest extends TestCase
         );
 
         $this->assertNotEquals(
-            array(),
+            [],
             $validationResult,
             'validateFieldSettings() considered the input settings valid, while they should be invalid.'
         );
@@ -146,10 +146,11 @@ class XmlTextTest extends TestCase
 
     /**
      * @covers \eZ\Publish\Core\FieldType\XmlText\Type::acceptValue
-     * @expectedException \eZ\Publish\API\Repository\Exceptions\InvalidArgumentException
      */
     public function testAcceptValueInvalidType()
     {
+        $this->expectException(\eZ\Publish\API\Repository\Exceptions\InvalidArgumentException::class);
+
         $this->getFieldType()->acceptValue($this->createMock(Value::class));
     }
 
@@ -177,7 +178,7 @@ class XmlTextTest extends TestCase
             $this->assertEquals($errorMessage, $e->getMessage());
         } catch (Exception $e) {
             $this->fail(
-                'An InvalidArgumentException was expected! ' . get_class($e) . ' thrown with message: ' . $e->getMessage()
+                'An InvalidArgumentException was expected! ' . \get_class($e) . ' thrown with message: ' . $e->getMessage()
             );
         }
     }
@@ -204,86 +205,86 @@ class XmlTextTest extends TestCase
 
     public static function providerForTestValidateFieldSettingsValid()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'numRows' => 10,
                     'tagPreset' => '',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'numRows' => 10,
                     'tagPreset' => 0,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public static function providerForTestValidateFieldSettingsInvalid()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'numRows' => '',
                     'tagPreset' => '',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'numRows' => 10,
                     'tagPreset' => 'a',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'numRows' => 'a',
                     'tagPreset' => 0,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     public static function providerForTestAcceptValueValidFormat()
     {
-        return array(
-            array(
+        return [
+            [
                 $xml = '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header level="1">This is a piece of text</header></section>',
-            ),
-            array(new EzXml($xml)),
+            ],
+            [new EzXml($xml)],
 
-            array(
+            [
                 $xml = '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/" />',
-            ),
-            array(new EzXml($xml)),
-        );
+            ],
+            [new EzXml($xml)],
+        ];
     }
 
     public static function providerForTestAcceptValueInvalidFormat()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section><h1>This is a piece of text</h1></section>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'h1': This element is not expected. Expected is one of ( section, paragraph, header ).",
-            ),
+            ],
 
-            array(
+            [
                 'This is not XML at all!',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Start tag expected, '<' not found\nThe document has no document element.",
-            ),
+            ],
 
-            array(
+            [
                 '<unknown><format /></unknown>',
                 "Argument 'xmlString' is invalid: Validation of XML content failed: Element 'unknown': No matching global declaration available for the validation root.",
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -316,87 +317,87 @@ class XmlTextTest extends TestCase
 
     public static function providerForTestGetName()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header level="1">This is a piece of text</header></section>',
                 'This is a piece of text',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header level="1">This is a piece of <emphasize>text</emphasize></header></section>',
                 /* @todo FIXME: should probably be "This is a piece of text" */
                 'This is a piece of',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header level="1"><strong>This is a piece</strong> of text</header></section>',
                 /* @todo FIXME: should probably be "This is a piece of text" */
                 'This is a piece',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><header level="1"><strong><emphasize>This is</emphasize> a piece</strong> of text</header></section>',
                 /* @todo FIXME: should probably be "This is a piece of text" */
                 'This is',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph><table class="default" border="0" width="100%" custom:summary="wai" custom:caption=""><tr><td><paragraph>First cell</paragraph></td><td><paragraph>Second cell</paragraph></td></tr><tr><td><paragraph>Third cell</paragraph></td><td><paragraph>Fourth cell</paragraph></td></tr></table></paragraph><paragraph>Text after table</paragraph></section>',
                 /* @todo FIXME: should probably be "First cell" */
                 'First cellSecond cell',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/"><ul><li><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">List item</paragraph></li></ul></paragraph></section>',
                 'List item',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/"><ul><li><paragraph xmlns:tmp="http://ez.no/namespaces/ezpublish3/temporary/">List <emphasize>item</emphasize></paragraph></li></ul></paragraph></section>',
                 'List item',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/" />',
                 '',
-            ),
+            ],
 
-            array(
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/"
          xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/"
          xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph><strong><emphasize>A simple</emphasize></strong> paragraph!</paragraph></section>',
                 'A simple',
-            ),
+            ],
 
-            array('<section><paragraph>test</paragraph></section>', 'test'),
+            ['<section><paragraph>test</paragraph></section>', 'test'],
 
-            array('<section><paragraph><link node_id="1">test</link><link object_id="1">test</link></paragraph></section>', 'test'),
-        );
+            ['<section><paragraph><link node_id="1">test</link><link object_id="1">test</link></paragraph></section>', 'test'],
+        ];
     }
 
     /**
@@ -428,16 +429,16 @@ EOT;
 
         $ft = $this->getFieldType();
         $this->assertEquals(
-            array(
-                Relation::LINK => array(
-                    'locationIds' => array(72, 61),
-                    'contentIds' => array(70, 75),
-                ),
-                Relation::EMBED => array(
-                    'locationIds' => array(52, 42),
-                    'contentIds' => array(72, 74),
-                ),
-            ),
+            [
+                Relation::LINK => [
+                    'locationIds' => [72, 61],
+                    'contentIds' => [70, 75],
+                ],
+                Relation::EMBED => [
+                    'locationIds' => [52, 42],
+                    'contentIds' => [72, 74],
+                ],
+            ],
             $ft->getRelations($ft->acceptValue($xml))
         );
     }
@@ -449,6 +450,6 @@ EOT;
 
     public function provideDataForGetName()
     {
-        return array();
+        return [];
     }
 }

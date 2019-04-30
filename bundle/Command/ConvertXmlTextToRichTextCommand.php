@@ -277,7 +277,7 @@ EOT
             $this->imageContentTypeIdentifiers = ['image'];
         }
         $imageContentTypeIds = $this->gateway->getContentTypeIds($this->imageContentTypeIdentifiers);
-        if (count($imageContentTypeIds) !== count($this->imageContentTypeIdentifiers)) {
+        if (\count($imageContentTypeIds) !== \count($this->imageContentTypeIdentifiers)) {
             throw new RuntimeException('Unable to lookup all content type identifiers, not found: ' . implode(',', array_diff($this->imageContentTypeIdentifiers, array_keys($imageContentTypeIds))));
         }
         $this->converter->setImageContentTypes($imageContentTypeIds);
@@ -285,7 +285,7 @@ EOT
 
     protected function getCustomTagLogFileName()
     {
-        return $this->kernelCacheDir . DIRECTORY_SEPARATOR . 'customtags.log';
+        return $this->kernelCacheDir . \DIRECTORY_SEPARATOR . 'customtags.log';
     }
 
     protected function createCustomTagLog()
@@ -297,14 +297,14 @@ EOT
     protected function writeCustomTagLog()
     {
         $customTagLog = $this->converter->getCustomTagLog();
-        if (count($customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) > 0) {
+        if (\count($customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) > 0) {
             file_put_contents(
                 $this->getCustomTagLogFileName(),
                 RichTextConverter::INLINE_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::INLINE_CUSTOM_TAG]) . PHP_EOL,
                 FILE_APPEND
             );
         }
-        if (count($customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) > 0) {
+        if (\count($customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) > 0) {
             file_put_contents($this->getCustomTagLogFileName(),
                 RichTextConverter::BLOCK_CUSTOM_TAG . ':' . implode(',', $customTagLog[RichTextConverter::BLOCK_CUSTOM_TAG]) . PHP_EOL,
                 FILE_APPEND
@@ -350,13 +350,13 @@ EOT
         $io->text('Below are the list of custom tags found during conversion of ezxmltext fields');
         $io->section('Inline custom tags');
         $io->listing($inlines);
-        if (count($inlines) === 0) {
+        if (\count($inlines) === 0) {
             $io->text('No inline custom tags converted');
         }
 
         $io->section('Block custom tags');
         $io->listing($blocks);
-        if (count($blocks) === 0) {
+        if (\count($blocks) === 0) {
             $io->text('No block custom tags converted');
         }
     }
@@ -487,7 +487,7 @@ EOT
 
     protected function processSlotAvailable()
     {
-        return count($this->processes) < $this->maxConcurrency;
+        return \count($this->processes) < $this->maxConcurrency;
     }
 
     protected function waitForChild(OutputInterface $output)
@@ -584,13 +584,13 @@ EOT
 
     protected function dumpOnErrors($errors, $dataText, $contentobjectId, $contentobjectAttribute, $version, $languageCode)
     {
-        if (($this->exportDir !== '') && (count($errors) > 0)) {
+        if (($this->exportDir !== '') && (\count($errors) > 0)) {
             $filterMatch = false;
-            $filename = $this->exportDir . DIRECTORY_SEPARATOR . "ezxmltext_${contentobjectId}_${contentobjectAttribute}_${version}_${languageCode}";
+            $filename = $this->exportDir . \DIRECTORY_SEPARATOR . "ezxmltext_${contentobjectId}_${contentobjectAttribute}_${version}_${languageCode}";
 
             // Write error log
             foreach ($errors as $logLevel => $logErrors) {
-                if (!in_array($logLevel, $this->exportDirFilter)) {
+                if (!\in_array($logLevel, $this->exportDirFilter)) {
                     continue;
                 }
                 $fileFlag = $filterMatch ? FILE_APPEND : 0;
@@ -598,7 +598,7 @@ EOT
                 foreach ($logErrors as $logError) {
                     $message = $logError['message'];
                     file_put_contents("$filename.log", "$logLevel: $message\n", $fileFlag);
-                    if (array_key_exists('errors', $logError['context'])) {
+                    if (\array_key_exists('errors', $logError['context'])) {
                         foreach ($logError['context']['errors'] as $contextError) {
                             file_put_contents("$filename.log", "- context : $contextError\n", FILE_APPEND);
                         }
@@ -711,7 +711,7 @@ EOT
             $offset += $objectsPerChild;
         } while ($offset <= $count);
 
-        while (count($this->processes) > 0) {
+        while (\count($this->processes) > 0) {
             $this->waitForChild($output);
             $this->progressBarAdvance($objectsPerChild);
         }

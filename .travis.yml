@@ -26,6 +26,8 @@ matrix:
         - php: 7.3
           env: TEST_CONFIG="phpunit.xml"
         - php: 7.1
+          env: TEST_CONFIG="phpunit-integration-legacy.xml"
+        - php: 7.1
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.5" CORES_SETUP="shared" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
         - php: 7.2
           env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb"
@@ -49,7 +51,7 @@ before_script:
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 
 script:
-    - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
+    - php vendor/bin/phpunit -c $TEST_CONFIG
     - if [ "$CHECK_CS" == "true" ]; then ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
 
 notifications:

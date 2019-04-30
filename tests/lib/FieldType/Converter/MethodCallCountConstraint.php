@@ -44,7 +44,7 @@ class MethodCallCountConstraint extends InvokedRecorder
      * @return mixed|void
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    public function invoked(Invocation $invocation): void
+    public function invoked(Invocation $invocation)
     {
         parent::invoked($invocation);
 
@@ -62,7 +62,7 @@ class MethodCallCountConstraint extends InvokedRecorder
      *
      * @return string
      */
-    public function toString(): string
+    public function toString()
     {
         return 'MethodCallCountConstraint';
     }

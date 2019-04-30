@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <section xmlns="http://docbook.org/ns/docbook" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
   <table>
+    <ezattribute>
+      <ezvalue key="caption">some caption</ezvalue>
+    </ezattribute>
     <caption>some caption</caption>
     <tbody>
       <tr>
@@ -11,6 +14,9 @@
       <tr>
         <td>
           <table>
+            <ezattribute>
+              <ezvalue key="caption">some caption</ezvalue>
+            </ezattribute>
             <caption>some caption</caption>
             <tbody>
               <tr>
@@ -25,6 +31,9 @@
     </tbody>
   </table>
   <table>
+    <ezattribute>
+      <ezvalue key="caption">some caption</ezvalue>
+    </ezattribute>
     <caption>some caption</caption>
     <tbody>
       <tr>

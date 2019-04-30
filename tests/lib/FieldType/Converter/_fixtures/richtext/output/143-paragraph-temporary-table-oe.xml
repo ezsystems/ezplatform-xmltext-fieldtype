@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
     <table width="100%" title="test table summary">
+        <ezattribute>
+            <ezvalue key="summary">test table summary</ezvalue>
+            <ezvalue key="caption">my caption</ezvalue>
+        </ezattribute>
         <caption>my caption</caption>
         <tbody>
             <tr>
@@ -40,6 +44,10 @@
     </table>
     <title ezxhtml:level="2">Header 1</title>
     <table class="default" width="100%" title="summary2">
+        <ezattribute>
+            <ezvalue key="summary">summary2</ezvalue>
+            <ezvalue key="caption">caption2</ezvalue>
+        </ezattribute>
         <caption>caption2</caption>
         <tbody>
             <tr>

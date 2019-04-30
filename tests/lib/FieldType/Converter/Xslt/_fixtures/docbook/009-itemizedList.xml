@@ -7,4 +7,17 @@
   <itemizedlist ezxhtml:class="itemizedListClass">
     <listitem ezxhtml:class="listItemClass"><para>This is a list item.</para></listitem>
   </itemizedlist>
+  <itemizedlist>
+    <ezattribute>
+      <ezvalue key="name-1">list 1</ezvalue>
+      <ezvalue key="name-2">list 2</ezvalue>
+    </ezattribute>
+    <listitem>
+      <ezattribute>
+        <ezvalue key="name-1">list item 1</ezvalue>
+        <ezvalue key="name-2">list item 2</ezvalue>
+      </ezattribute>
+      <para>This is a list item.</para>
+    </listitem>
+  </itemizedlist>
 </section>

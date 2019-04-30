@@ -19,7 +19,7 @@ use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
 use Psr\Log\NullLogger;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
-use eZ\Publish\Core\FieldType\RichText\Validator;
+use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 
 class RichTextTest extends TestCase
 {
@@ -258,8 +258,8 @@ class RichTextTest extends TestCase
     {
         return new Validator(
             array(
-                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/ezpublish.rng',
-                './vendor/ezsystems/ezpublish-kernel/eZ/Publish/Core/FieldType/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
+                './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/ezpublish.rng',
+                './vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources/schemas/docbook/docbook.iso.sch.xsl',
             )
         );
     }

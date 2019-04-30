@@ -5,4 +5,5 @@
          xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
          version="5.0-variant ezpublish-1.0">
   <para>The equation e<superscript>πi</superscript> + 1 = 0 ties together five of the most important mathematical constants.</para>
+  <para>The equation e<superscript><ezattribute><ezvalue key="name-1">value 1</ezvalue><ezvalue key="name-2">value 2</ezvalue></ezattribute>&#x3C0;i (custom attributes)</superscript> + 1 = 0 ties together five of the most important mathematical constants.</para>
 </section>

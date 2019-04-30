@@ -21,4 +21,7 @@
     <link object_id="333" xhtml:id="id5" xhtml:title="Content title" class="linkClass5">Content name</link>
   </paragraph>
   <paragraph><anchor name="anchor"/>Some anchored content.</paragraph>
+  <paragraph>
+    <link object_id="333" xhtml:id="id6" custom:name-1="value 1" custom:name-2="value 2">Link with custom attributes</link>
+  </paragraph>
 </section>

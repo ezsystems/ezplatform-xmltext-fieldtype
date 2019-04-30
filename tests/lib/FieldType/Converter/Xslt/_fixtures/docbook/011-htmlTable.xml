@@ -5,21 +5,53 @@
          xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
          version="5.0-variant ezpublish-1.0">
   <table class="tableClass" width="24%" title="tableTitle">
+    <ezattribute>
+      <ezvalue key="summary">tableTitle</ezvalue>
+      <ezvalue key="caption">Table caption.</ezvalue>
+      <ezvalue key="table-1">value 1</ezvalue>
+      <ezvalue key="table-2">value 2</ezvalue>
+    </ezattribute>
     <caption>Table caption.</caption>
     <tbody>
       <tr class="rowClass1">
+        <ezattribute>
+          <ezvalue key="row">value 1</ezvalue>
+        </ezattribute>
         <th class="headingClass1" ezxhtml:width="102" valign="top" colspan="1" rowspan="5" abbr="XSLT" scope="col">
+          <ezattribute>
+            <ezvalue key="valign">top</ezvalue>
+            <ezvalue key="abbr">XSLT</ezvalue>
+            <ezvalue key="scope">col</ezvalue>
+            <ezvalue key="header">value 1</ezvalue>
+          </ezattribute>
           <para>11</para>
         </th>
         <th class="headingClass2" ezxhtml:width="37%" valign="middle" colspan="2" rowspan="6" abbr="XSD" scope="row">
+          <ezattribute>
+            <ezvalue key="valign">middle</ezvalue>
+            <ezvalue key="abbr">XSD</ezvalue>
+            <ezvalue key="scope">row</ezvalue>
+            <ezvalue key="header">value 2</ezvalue>
+          </ezattribute>
           <para>12</para>
         </th>
       </tr>
       <tr class="rowClass2">
+        <ezattribute>
+          <ezvalue key="row">value 2</ezvalue>
+        </ezattribute>
         <td class="cellClass1" ezxhtml:width="74%" valign="bottom" colspan="3" rowspan="7">
+          <ezattribute>
+            <ezvalue key="valign">bottom</ezvalue>
+            <ezvalue key="column">value 1</ezvalue>
+          </ezattribute>
           <para>21</para>
         </td>
         <td class="cellClass2" ezxhtml:width="38" valign="baseline" colspan="4" rowspan="8">
+          <ezattribute>
+            <ezvalue key="valign">baseline</ezvalue>
+            <ezvalue key="column">value 2</ezvalue>
+          </ezattribute>
           <para>22</para>
         </td>
       </tr>

@@ -7,6 +7,10 @@
   <eztemplate name="factbox" ezxhtml:class="templateClass" ezxhtml:align="left">
     <ezcontent>
       <table title="tableTitle">
+        <ezattribute>
+          <ezvalue key="summary">tableTitle</ezvalue>
+          <ezvalue key="caption">About factoids</ezvalue>
+        </ezattribute>
         <caption>About factoids</caption>
         <tbody>
           <tr>

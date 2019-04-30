@@ -6,6 +6,10 @@
         xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
     <para>some table</para>
     <table class="default" width="100%" title="custom summary">
+        <ezattribute>
+            <ezvalue key="summary">custom summary</ezvalue>
+            <ezvalue key="caption">custom caption</ezvalue>
+        </ezattribute>
         <caption>custom caption</caption>
         <tbody>
             <tr>

@@ -6,4 +6,5 @@
     <header>This is a heading.</header>
   </section>
   <paragraph>This is a paragraph with <emphasize class="emphasisClass">emphasized</emphasize> text.</paragraph>
+  <paragraph>This is a paragraph with <emphasize custom:name-1="value 1" custom:name-2="value 2">emphasized (custom attributes)</emphasize> text.</paragraph>
 </section>

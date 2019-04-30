@@ -21,7 +21,7 @@
         "phpunit/phpunit": "^5.7.27",
         "matthiasnoback/symfony-dependency-injection-test": "^1.2.0",
         "ezsystems/ezplatform-solr-search-engine": "^1.5.7",
-        "friendsofphp/php-cs-fixer": "~2.7.5"
+        "friendsofphp/php-cs-fixer": "v2.14.2"
     },
     "autoload": {
         "psr-4": {

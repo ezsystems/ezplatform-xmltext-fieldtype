@@ -38,7 +38,13 @@
         }
     },
     "scripts": {
-        "fix-cs": "@php ./vendor/bin/php-cs-fixer fix -v --show-progress=estimating"
+        "fix-cs": "php-cs-fixer fix -v --show-progress=estimating",
+        "unit": "phpunit -c phpunit.xml",
+        "integration": "phpunit -c phpunit-integration-legacy.xml",
+        "test": [
+            "@unit",
+            "@integration"
+        ]
     },
     "extra": {
         "branch-alias": {

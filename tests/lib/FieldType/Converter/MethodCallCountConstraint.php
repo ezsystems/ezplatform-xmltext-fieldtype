@@ -73,17 +73,18 @@ class MethodCallCountConstraint extends InvokedRecorder
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    public function verify()
+    public function verify($test = null)
     {
         $count = $this->getInvocationCount();
         if ($count != $this->expectedCount) {
-            throw new PHPUnit_Framework_ExpectationFailedException(
+            throw new ExpectationFailedException(
                 sprintf(
                     'Methods of class was expected to be called %d times, ' .
-                    'actually called %d times.',
+                    'actually called %d times.' . ($test ? "\nWhile testing '%s'." : ''),
 
                     $this->expectedCount,
-                    $count
+                    $count,
+                    $test
                 )
             );
         }

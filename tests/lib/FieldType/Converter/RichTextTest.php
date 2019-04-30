@@ -232,7 +232,7 @@ class RichTextTest extends TestCase
         $richText->setImageContentTypes([27]);
 
         $result = $richText->convert($inputDocument, true, true);
-        $this->methodCallCountConstraint->verify();
+        $this->methodCallCountConstraint->verify(basename($inputFilePath));
 
         if ($result === false && !file_exists($outputFilePath)) {
             return;

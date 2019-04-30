@@ -21,6 +21,7 @@ return PhpCsFixer\Config::create()
 
         // 2019 style updates with cs-fixer 2.14, all above are in sync with kernel
         '@PHPUnit57Migration:risky' => true,
+        '@PHPUnit60Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'static_lambda' => true,
     ])

@@ -14,13 +14,17 @@ addons:
 
 matrix:
     include:
+        - php: 7.1
+          env: TEST_CONFIG="phpunit.xml"
         - php: 7.2
           env: TEST_CONFIG="phpunit.xml" CHECK_CS=true
+        - php: 7.3
+          env: TEST_CONFIG="phpunit.xml"
         - php: 7.1
           env: TEST_CONFIG="phpunit-integration-legacy-solr.xml" SOLR_VERSION="6.6.0" CORES_SETUP="shared" SOLR_CONFIG="vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/schema.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/custom-fields-types.xml vendor/ezsystems/ezplatform-solr-search-engine/lib/Resources/config/solr/language-fieldtypes.xml"
-        - php: 7.1
+        - php: 7.2
           env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="postgresql" DATABASE="pgsql://postgres@localhost/testdb"
-        - php: 7.1
+        - php: 7.3
           env: TEST_CONFIG="phpunit-integration-legacy-empty-db.xml" DB="mysql" DATABASE="mysql://root@localhost/testdb"
 
 # test only master (+ Pull requests)

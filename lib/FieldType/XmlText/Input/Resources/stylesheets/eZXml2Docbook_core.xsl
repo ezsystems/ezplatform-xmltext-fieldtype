@@ -720,10 +720,24 @@
       <xsl:when test="translate($align, $uppercase, $lowercase) = 'start'">
         <!-- start not supported ATM, removing-->
       </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'center'">
+        <xsl:attribute name="ezxhtml:textalign">center</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'left'">
+        <xsl:attribute name="ezxhtml:textalign">left</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'right'">
+        <xsl:attribute name="ezxhtml:textalign">right</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'justify'">
+        <xsl:attribute name="ezxhtml:textalign">justify</xsl:attribute>
+      </xsl:when>
       <xsl:otherwise>
+        <!-- we can not use custom values here, as it will break richtext shema
         <xsl:attribute name="ezxhtml:textalign">
           <xsl:value-of select="translate($align, $uppercase, $lowercase)"/>
         </xsl:attribute>
+        -->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

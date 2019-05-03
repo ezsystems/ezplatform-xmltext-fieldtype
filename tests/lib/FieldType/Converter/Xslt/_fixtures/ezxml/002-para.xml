@@ -10,4 +10,5 @@
   <paragraph align="center">This is a centered paragraph.</paragraph>
   <paragraph align="right">This is a right aligned paragraph.</paragraph>
   <paragraph align="justify">This is a justified paragraph.</paragraph>
+  <paragraph align="unsupported">This is a paragraph with unsupported align attribute.</paragraph>
 </section>

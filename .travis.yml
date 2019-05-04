@@ -1,3 +1,4 @@
+dist: trusty
 language: php
 
 services:
@@ -11,6 +12,10 @@ addons:
     - mysql-server-5.6
     - mysql-client-core-5.6
     - mysql-client-5.6
+
+cache:
+    directories:
+        - $HOME/.composer/cache/files
 
 matrix:
     include:
@@ -41,19 +46,21 @@ branches:
 
 # setup requirements for running db tests
 before_install:
-  - if [ "$TEST_CONFIG" != "" ] ; then ./bin/.travis/prepare_unittest.sh ; fi
+    - ./bin/.travis/prepare_unittest.sh
 
 before_script:
     # Disable memory_limit for composer
     - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    - mkdir -p ~/.composer
-    - cp bin/.travis/composer-auth.json ~/.composer/auth.json
-    - composer install --no-progress --no-interaction --prefer-dist
+    - travis_retry composer install --no-progress --no-interaction --prefer-dist
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 
 script:
-    - php vendor/bin/phpunit --bootstrap tests/bootstrap.php -c $TEST_CONFIG
+    - php vendor/bin/phpunit -c $TEST_CONFIG
     - if [ "$CHECK_CS" == "true" ]; then ./vendor/bin/php-cs-fixer fix -v --dry-run --diff --show-progress=estimating; fi
 
 notifications:
     email: false
+
+# reduce depth (history) of git checkout
+git:
+    depth: 30

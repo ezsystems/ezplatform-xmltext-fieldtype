@@ -1,7 +1,7 @@
 {
     "name": "ezsystems/ezplatform-xmltext-fieldtype",
     "description": "XmlText field type implementation for eZ Platform",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-only",
     "type": "ezplatform-bundle",
     "authors": [
         {
@@ -10,14 +10,16 @@
         }
     ],
     "require": {
-        "ezsystems/ezpublish-kernel": "^6.13.6@dev || ^7.2.5@dev",
+        "ext-xsl": "*",
+        "ext-dom": "*",
+        "ezsystems/ezpublish-kernel": "^6.13.6@dev || ^7.4.1",
         "ezsystems/repository-forms": "^1.9 || ^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
-        "matthiasnoback/symfony-dependency-injection-test": "~1.0",
-        "ezsystems/ezplatform-solr-search-engine": "^1.5",
-        "friendsofphp/php-cs-fixer": "~2.7.1"
+        "matthiasnoback/symfony-dependency-injection-test": "^1.2.0",
+        "ezsystems/ezplatform-solr-search-engine": "^1.5.7",
+        "friendsofphp/php-cs-fixer": "v2.14.2"
     },
     "autoload": {
         "psr-4": {
@@ -34,11 +36,17 @@
         }
     },
     "scripts": {
-        "fix-cs": "@php ./vendor/bin/php-cs-fixer fix -v --show-progress=estimating"
+        "fix-cs": "php-cs-fixer fix -v --show-progress=estimating",
+        "unit": "phpunit -c phpunit.xml",
+        "integration": "phpunit -c phpunit-integration-legacy.xml",
+        "test": [
+            "@unit",
+            "@integration"
+        ]
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.6.x-dev"
+            "dev-master": "1.9.x-dev"
         }
     }
 }

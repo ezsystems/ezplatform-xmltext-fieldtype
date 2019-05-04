@@ -99,7 +99,7 @@ class ContentModelGateway
      */
     public function getRowCountOfContentObjectAttributes($datatypes, $contentId)
     {
-        if (!is_array($datatypes)) {
+        if (!\is_array($datatypes)) {
             $datatypes = [$datatypes];
         }
 
@@ -140,7 +140,7 @@ class ContentModelGateway
      */
     public function getFieldRows($datatypes, $contentId, $offset, $limit)
     {
-        if (!is_array($datatypes)) {
+        if (!\is_array($datatypes)) {
             $datatypes = [$datatypes];
         }
 

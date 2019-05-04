@@ -16,10 +16,10 @@ class FormMapper implements FieldValueFormMapperInterface
                     ->create(
                         'value',
                         FormType::class,
-                        array(
+                        [
                             'required' => $data->fieldDefinition->isRequired,
                             'label' => $data->fieldDefinition->getName(),
-                        )
+                        ]
                     )
                     ->setAutoInitialize(false)
                     ->getForm()

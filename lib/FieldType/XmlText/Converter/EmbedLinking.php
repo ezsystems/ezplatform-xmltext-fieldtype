@@ -37,7 +37,7 @@ class EmbedLinking implements Converter
 
         $linkedEmbeds = $xpath->query($xpathExpression);
 
-        $collection = array();
+        $collection = [];
         foreach ($linkedEmbeds as $embed) {
             $collection[] = $embed;
         }
@@ -114,7 +114,7 @@ class EmbedLinking implements Converter
         /** @var \DOMText|\DOMElement $node */
         foreach ($link->childNodes as $node) {
             if (!($node->nodeType === XML_TEXT_NODE && $node->isWhitespaceInElementContent())) {
-                $childCount += 1;
+                ++$childCount;
             }
         }
 

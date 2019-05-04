@@ -46,15 +46,15 @@ class Expanding implements Converter
      *
      * @var array
      */
-    protected $containmentMap = array(
-        'embed' => array(
+    protected $containmentMap = [
+        'embed' => [
             'link' => true,
-        ),
-        'table' => array(),
-        'ul' => array(),
-        'ol' => array(),
-        'literal' => array(),
-    );
+        ],
+        'table' => [],
+        'ul' => [],
+        'ol' => [],
+        'literal' => [],
+    ];
 
     public function convert(DOMDocument $document)
     {
@@ -67,7 +67,7 @@ class Expanding implements Converter
 
         $paragraphs = $xpath->query($xpathExpression);
 
-        $paragraphsDepthSorted = array();
+        $paragraphsDepthSorted = [];
 
         foreach ($paragraphs as $paragraph) {
             $paragraphsDepthSorted[$this->getNodeDepth($paragraph)][] = $paragraph;
@@ -352,7 +352,7 @@ class Expanding implements Converter
     {
         $clone = $element->cloneNode(true);
 
-        $children = array();
+        $children = [];
 
         // Collect child nodes first, as we can't iterate and
         // remove from \DOMNodeList directly

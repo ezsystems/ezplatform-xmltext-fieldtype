@@ -26,13 +26,13 @@ class EmbedLinkingTest extends TestCase
      */
     public function providerForTestConvert()
     {
-        $map = array();
+        $map = [];
 
         foreach (glob(__DIR__ . '/_fixtures/embed_linking/input/*.xml') as $inputFilePath) {
             $basename = basename($inputFilePath, '.xml');
             $outputFilePath = __DIR__ . "/_fixtures/embed_linking/output/{$basename}.xml";
 
-            $map[] = array($inputFilePath, $outputFilePath);
+            $map[] = [$inputFilePath, $outputFilePath];
         }
 
         return $map;

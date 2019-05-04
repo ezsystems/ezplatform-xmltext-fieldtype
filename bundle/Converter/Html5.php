@@ -19,10 +19,10 @@ use eZ\Publish\Core\MVC\ConfigResolverInterface;
  */
 class Html5 extends BaseHtml5Converter
 {
-    public function __construct($stylesheet, ConfigResolverInterface $configResolver, array $preConverters = array())
+    public function __construct($stylesheet, ConfigResolverInterface $configResolver, array $preConverters = [])
     {
         $customStylesheets = $configResolver->getParameter('fieldtypes.ezxml.custom_xsl');
-        $customStylesheets = $customStylesheets ?: array();
+        $customStylesheets = $customStylesheets ?: [];
         parent::__construct($stylesheet, $customStylesheets, $preConverters);
     }
 }

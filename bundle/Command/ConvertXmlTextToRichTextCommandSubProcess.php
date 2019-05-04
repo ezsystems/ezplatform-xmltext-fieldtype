@@ -7,7 +7,6 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use eZ\Publish\Core\FieldType\XmlText\Value;
 
 class ConvertXmlTextToRichTextCommandSubProcess extends ConvertXmlTextToRichTextCommand
 {

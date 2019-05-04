@@ -196,7 +196,7 @@ class RichTextTest extends TestCase
                     ->with($logLevel, $this->callback(function ($actualLogMessage) use ($logMessage) {
                         $expectedLogMessage = substr($logMessage, 0, strpos($logMessage, '*'));
 
-                        $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
+                        $this->assertEquals($expectedLogMessage, substr($actualLogMessage, 0, \strlen($expectedLogMessage)), 'Actual log message do not match the expected one');
 
                         return true;
                     }));
@@ -264,7 +264,7 @@ class RichTextTest extends TestCase
 
         $inputDocument = $this->createDocument($inputFilePath);
         $richText = new RichText($apiRepositoryStub);
-        $richText->setImageContentTypes(array(27));
+        $richText->setImageContentTypes([27]);
 
         $richText->tagEmbeddedImages($inputDocument, null);
 

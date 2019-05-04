@@ -35,38 +35,38 @@ class EzLinkToHtml5Test extends TestCase
      */
     public function providerLinkXmlSample()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link url="/test">object link</link>.</paragraph></section>',
                 '/test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link url="/test" anchor_name="anchor">object link</link>.</paragraph></section>',
                 '/test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed ezlegacytmp-embed-link-url="/test"/></section>',
                 '/test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed ezlegacytmp-embed-link-url="/test" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 '/test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline ezlegacytmp-embed-link-url="/test"/></section>',
                 '/test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline ezlegacytmp-embed-link-url="/test" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 '/test#anchor',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -74,56 +74,56 @@ class EzLinkToHtml5Test extends TestCase
      */
     public function providerObjectLinkXmlSample()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link object_id="104">object link</link>.</paragraph></section>',
                 104,
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link object_id="104" anchor_name="anchor">object link</link>.</paragraph></section>',
                 104,
                 106,
                 'test',
                 'test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed object_id="103" ezlegacytmp-embed-link-object_id="104"/></section>',
                 104,
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed object_id="103" ezlegacytmp-embed-link-object_id="104" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 104,
                 106,
                 'test',
                 'test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline object_id="103" ezlegacytmp-embed-link-object_id="104"/></section>',
                 104,
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline object_id="103" ezlegacytmp-embed-link-object_id="104" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 104,
                 106,
                 'test',
                 'test#anchor',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -131,50 +131,50 @@ class EzLinkToHtml5Test extends TestCase
      */
     public function providerLocationLinkXmlSample()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is a <link node_id="106">node link</link>.</paragraph></section>',
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is a <link node_id="106" anchor_name="anchor">node link</link>.</paragraph></section>',
                 106,
                 'test',
                 'test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed node_id="105" ezlegacytmp-embed-link-node_id="106" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 106,
                 'test',
                 'test#anchor',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 'test',
                 'test',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline node_id="105" ezlegacytmp-embed-link-node_id="106" ezlegacytmp-embed-link-anchor_name="anchor"/></section>',
                 106,
                 'test',
                 'test#anchor',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -182,56 +182,56 @@ class EzLinkToHtml5Test extends TestCase
      */
     public function providerBadLocationSample()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is a <link node_id="106">node link</link>.</paragraph></section>',
                 106,
                 new APINotFoundException('Location', 106),
                 'warning',
                 'While generating links for xmltext, could not locate Location with ID 106',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is a <link node_id="106">node link</link>.</paragraph></section>',
                 106,
                 new APIUnauthorizedException('Location', 106),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Location with ID 106',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 new APINotFoundException('Location', 106),
                 'warning',
                 'While generating links for xmltext, could not locate Location with ID 106',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 new APIUnauthorizedException('Location', 106),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Location with ID 106',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 new APINotFoundException('Location', 106),
                 'warning',
                 'While generating links for xmltext, could not locate Location with ID 106',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline node_id="105" ezlegacytmp-embed-link-node_id="106"/></section>',
                 106,
                 new APIUnauthorizedException('Location', 106),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Location with ID 106',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -239,56 +239,56 @@ class EzLinkToHtml5Test extends TestCase
      */
     public function providerBadObjectSample()
     {
-        return array(
-            array(
+        return [
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link object_id="205">object link</link>.</paragraph></section>',
                 205,
                 new APINotFoundException('Content', 205),
                 'warning',
                 'While generating links for xmltext, could not locate Content object with ID 205',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><paragraph>This is an <link object_id="205">object link</link>.</paragraph></section>',
                 205,
                 new APIUnauthorizedException('Content', 205),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Content object with ID 205',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed object_id="204" ezlegacytmp-embed-link-object_id="205"/></section>',
                 205,
                 new APINotFoundException('Content', 205),
                 'warning',
                 'While generating links for xmltext, could not locate Content object with ID 205',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed object_id="204" ezlegacytmp-embed-link-object_id="205"/></section>',
                 205,
                 new APIUnauthorizedException('Content', 205),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Content object with ID 205',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline object_id="204" ezlegacytmp-embed-link-object_id="205"/></section>',
                 205,
                 new APINotFoundException('Content', 205),
                 'warning',
                 'While generating links for xmltext, could not locate Content object with ID 205',
-            ),
-            array(
+            ],
+            [
                 '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/"><embed-inline object_id="204" ezlegacytmp-embed-link-object_id="205"/></section>',
                 205,
                 new APIUnauthorizedException('Content', 205),
                 'notice',
                 'While generating links for xmltext, unauthorized to load Content object with ID 205',
-            ),
-        );
+            ],
+        ];
     }
 
     /**

@@ -26,7 +26,7 @@ class XmlTextTest extends AbstractParserTestCase
      */
     protected function getContainerExtensions()
     {
-        $extension = new EzPublishCoreExtension(array(new XmlTextConfigParser()));
+        $extension = new EzPublishCoreExtension([new XmlTextConfigParser()]);
 
         $extension->addDefaultSettings(
             __DIR__ . '/../../../../../../bundle/Resources/config',
@@ -49,11 +49,11 @@ class XmlTextTest extends AbstractParserTestCase
     public function testXmlTextSettings(array $config, array $expected)
     {
         $this->load(
-            array(
-                'system' => array(
+            [
+                'system' => [
                     'ezdemo_site' => $config,
-                ),
-            )
+                ],
+            ]
         );
 
         foreach ($expected as $key => $val) {
@@ -63,30 +63,30 @@ class XmlTextTest extends AbstractParserTestCase
 
     public function xmlTextSettingsProvider()
     {
-        return array(
-            array(
-                array(
-                    'fieldtypes' => array(
-                        'ezxml' => array(
-                            'custom_tags' => array(
-                                array('path' => '/foo/bar.xsl', 'priority' => 123),
-                                array('path' => '/foo/custom.xsl', 'priority' => -10),
-                                array('path' => '/another/custom.xsl', 'priority' => 27),
-                            ),
-                        ),
-                    ),
-                ),
-                array(
-                    'fieldtypes.ezxml.custom_xsl' => array(
+        return [
+            [
+                [
+                    'fieldtypes' => [
+                        'ezxml' => [
+                            'custom_tags' => [
+                                ['path' => '/foo/bar.xsl', 'priority' => 123],
+                                ['path' => '/foo/custom.xsl', 'priority' => -10],
+                                ['path' => '/another/custom.xsl', 'priority' => 27],
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'fieldtypes.ezxml.custom_xsl' => [
                         // Default settings will be added
-                        array('path' => '%kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5_core.xsl', 'priority' => 0),
-                        array('path' => '%kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5_custom.xsl', 'priority' => 0),
-                        array('path' => '/foo/bar.xsl', 'priority' => 123),
-                        array('path' => '/foo/custom.xsl', 'priority' => -10),
-                        array('path' => '/another/custom.xsl', 'priority' => 27),
-                    ),
-                ),
-            ),
-        );
+                        ['path' => '%kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5_core.xsl', 'priority' => 0],
+                        ['path' => '%kernel.root_dir%/../vendor/ezsystems/ezplatform-xmltext-fieldtype/lib/FieldType/XmlText/Input/Resources/stylesheets/eZXml2Html5_custom.xsl', 'priority' => 0],
+                        ['path' => '/foo/bar.xsl', 'priority' => 123],
+                        ['path' => '/foo/custom.xsl', 'priority' => -10],
+                        ['path' => '/another/custom.xsl', 'priority' => 27],
+                    ],
+                ],
+            ],
+        ];
     }
 }

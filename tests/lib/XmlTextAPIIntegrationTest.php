@@ -79,36 +79,36 @@ EOT
     {
         $contentService = $this->getRepository()->getContentService();
 
-        return array(
+        return [
             new Relation(
-                array(
+                [
                     'type' => Relation::LINK,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(56),
-                )
+                ]
             ),
             new Relation(
-                array(
+                [
                     'type' => Relation::LINK,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(54),
-                )
+                ]
             ),
             new Relation(
-                array(
+                [
                     'type' => Relation::EMBED,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(58),
-                )
+                ]
             ),
             new Relation(
-                array(
+                [
                     'type' => Relation::EMBED,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(56),
-                )
+                ]
             ),
-        );
+        ];
     }
 
     /**
@@ -120,22 +120,22 @@ EOT
     {
         $contentService = $this->getRepository()->getContentService();
 
-        return array(
+        return [
             new Relation(
-                array(
+                [
                     'type' => Relation::LINK,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(58),
-                )
+                ]
             ),
             new Relation(
-                array(
+                [
                     'type' => Relation::EMBED,
                     'sourceContentInfo' => $content->contentInfo,
                     'destinationContentInfo' => $contentService->loadContentInfo(56),
-                )
+                ]
             ),
-        );
+        ];
     }
 
     /**
@@ -155,16 +155,16 @@ EOT
      */
     public function getSettingsSchema()
     {
-        return array(
-            'numRows' => array(
+        return [
+            'numRows' => [
                 'type' => 'int',
                 'default' => 10,
-            ),
-            'tagPreset' => array(
+            ],
+            'tagPreset' => [
                 'type' => 'choice',
                 'default' => XmlTextType::TAG_PRESET_DEFAULT,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -174,10 +174,10 @@ EOT
      */
     public function getValidFieldSettings()
     {
-        return array(
+        return [
             'numRows' => 0,
             'tagPreset' => XmlTextType::TAG_PRESET_DEFAULT,
-        );
+        ];
     }
 
     /**
@@ -187,9 +187,9 @@ EOT
      */
     public function getInvalidFieldSettings()
     {
-        return array(
+        return [
             'somethingUnknown' => 0,
-        );
+        ];
     }
 
     /**
@@ -199,7 +199,7 @@ EOT
      */
     public function getValidatorSchema()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -209,7 +209,7 @@ EOT
      */
     public function getValidValidatorConfiguration()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -219,9 +219,9 @@ EOT
      */
     public function getInvalidValidatorConfiguration()
     {
-        return array(
-            'unknown' => array('value' => 23),
-        );
+        return [
+            'unknown' => ['value' => 23],
+        ];
     }
 
     /**
@@ -275,9 +275,9 @@ EOT
         );
 
         $this->assertPropertiesCorrect(
-            array(
+            [
                 'xml' => $this->createdDOMValue,
-            ),
+            ],
             $field->value
         );
     }
@@ -305,12 +305,12 @@ EOT
      */
     public function provideInvalidCreationFieldData()
     {
-        return array(
-            array(
+        return [
+            [
                 new \stdClass(),
                 InvalidArgumentType::class,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -338,9 +338,9 @@ EOT
         );
 
         $this->assertPropertiesCorrect(
-            array(
+            [
                 'xml' => $this->updatedDOMValue,
-            ),
+            ],
             $field->value
         );
     }
@@ -387,9 +387,9 @@ EOT
         );
 
         $this->assertPropertiesCorrect(
-            array(
+            [
                 'xml' => $this->createdDOMValue,
-            ),
+            ],
             $field->value
         );
     }
@@ -425,12 +425,12 @@ EOT
 EOT
         );
 
-        return array(
-            array(
+        return [
+            [
                 new XmlTextValue($xml),
-                array('xml' => $xml->saveXML()),
-            ),
-        );
+                ['xml' => $xml->saveXML()],
+            ],
+        ];
     }
 
     /**
@@ -442,17 +442,17 @@ EOT
      */
     public function provideFromHashData()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'xml' => '<?xml version="1.0" encoding="utf-8"?>
 <section xmlns:image="http://ez.no/namespaces/ezpublish3/image/" xmlns:xhtml="http://ez.no/namespaces/ezpublish3/xhtml/" xmlns:custom="http://ez.no/namespaces/ezpublish3/custom/">
 <paragraph>Foobar</paragraph>
 </section>
 ',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -481,10 +481,10 @@ EOT
         $doc = new DOMDocument();
         $doc->loadXML('<section></section>');
 
-        return array(
-            array(new XmlTextValue()),
-            array(new XmlTextValue($doc)),
-        );
+        return [
+            [new XmlTextValue()],
+            [new XmlTextValue($doc)],
+        ];
     }
 
     public function providerForTestIsNotEmptyValue()
@@ -494,13 +494,13 @@ EOT
         $doc2 = new DOMDocument();
         $doc2->loadXML('<section><paragraph></paragraph></section>');
 
-        return array(
-            array(
+        return [
+            [
                 $this->getValidCreationFieldData(),
-            ),
-            array(new XmlTextValue($doc)),
-            array(new XmlTextValue($doc2)),
-        );
+            ],
+            [new XmlTextValue($doc)],
+            [new XmlTextValue($doc2)],
+        ];
     }
 
     /**
@@ -515,8 +515,8 @@ EOT
         $remote_id = '[RemoteId]';
         $object_id = '[ObjectId]';
 
-        return array(
-            array(
+        return [
+            [
                 // test link
                 '<?xml version="1.0" encoding="utf-8"?>
 <section>
@@ -528,8 +528,8 @@ EOT
     <paragraph><link anchor_name="test" object_id="' . $object_id . '">link</link></paragraph>
 </section>
 ',
-            ),
-            array(
+            ],
+            [
                 // test embed
                 '<?xml version="1.0" encoding="utf-8"?>
 <section>
@@ -541,8 +541,8 @@ EOT
     <paragraph><embed view="embed" size="medium" object_id="' . $object_id . '"/></paragraph>
 </section>
 ',
-            ),
-            array(
+            ],
+            [
                 // test embed-inline
                 '<?xml version="1.0" encoding="utf-8"?>
 <section>
@@ -554,8 +554,8 @@ EOT
     <paragraph><embed-inline size="medium" object_id="' . $object_id . '"/></paragraph>
 </section>
 ',
-            ),
-        );
+            ],
+        ];
     }
 
     /**
@@ -580,7 +580,7 @@ EOT
         $createStruct->setField('name', 'Folder Link');
         $draft = $contentService->createContent(
             $createStruct,
-            array($locationService->newLocationCreateStruct(2))
+            [$locationService->newLocationCreateStruct(2)]
         );
 
         $target = $contentService->publishVersion(
@@ -604,7 +604,7 @@ EOT
         );
         $test = $contentService->createContent(
             $testStruct,
-            array($locationService->newLocationCreateStruct($node_id))
+            [$locationService->newLocationCreateStruct($node_id)]
         );
 
         $this->assertEquals(
@@ -615,7 +615,7 @@ EOT
 
     protected function checkSearchEngineSupport()
     {
-        if (ltrim(get_class($this->getSetupFactory()), '\\') === LegacySetupFactory::class) {
+        if (ltrim(\get_class($this->getSetupFactory()), '\\') === LegacySetupFactory::class) {
             $this->markTestSkipped(
                 "'ezxmltext' field type is not searchable with Legacy Search Engine"
             );
@@ -656,8 +656,8 @@ EOT;
 
     protected function getFullTextIndexedFieldData()
     {
-        return array(
-            array('mediocrity', 'analysis'),
-        );
+        return [
+            ['mediocrity', 'analysis'],
+        ];
     }
 }

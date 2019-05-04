@@ -1,8 +1,8 @@
 <?php
 
-return array(
-    'ezcontentclass' => array(
-        0 => array(
+return [
+    'ezcontentclass' => [
+        0 => [
             'always_available' => 0,
             'contentobject_name' => '<name>',
             'created' => 1024392098,
@@ -21,8 +21,8 @@ return array(
             'sort_order' => 1,
             'url_alias_name' => '',
             'version' => 0,
-        ),
-        1 => array(
+        ],
+        1 => [
             'always_available' => 0,
             'contentobject_name' => '<name>',
             'created' => 1024392098,
@@ -41,8 +41,8 @@ return array(
             'sort_order' => 1,
             'url_alias_name' => '',
             'version' => 0,
-        ),
-        2 => array(
+        ],
+        2 => [
             'always_available' => 0,
             'contentobject_name' => '<name>',
             'created' => 1024392098,
@@ -61,6 +61,6 @@ return array(
             'sort_order' => 1,
             'url_alias_name' => '',
             'version' => 0,
-        ),
-    ),
-);
+        ],
+    ],
+];

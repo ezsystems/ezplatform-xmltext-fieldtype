@@ -52,7 +52,7 @@ class EmbedToHtml5 implements Converter
      *
      * @var array
      */
-    protected $excludedAttributes = array();
+    protected $excludedAttributes = [];
 
     /**
      * @var \Symfony\Component\HttpKernel\Fragment\FragmentHandler
@@ -102,7 +102,7 @@ class EmbedToHtml5 implements Converter
                 try {
                     /** @var \eZ\Publish\API\Repository\Values\Content\Content $content */
                     $content = $this->repository->sudo(
-                        function (Repository $repository) use ($contentId) {
+                        static function (Repository $repository) use ($contentId) {
                             return $repository->getContentService()->loadContent($contentId);
                         }
                     );
@@ -111,7 +111,7 @@ class EmbedToHtml5 implements Converter
                         !$this->repository->canUser('content', 'read', $content)
                         && !$this->repository->canUser('content', 'view_embed', $content)
                     ) {
-                        throw new UnauthorizedException('content', 'read', array('contentId' => $contentId));
+                        throw new UnauthorizedException('content', 'read', ['contentId' => $contentId]);
                     }
 
                     // Check published status of the Content
@@ -119,18 +119,18 @@ class EmbedToHtml5 implements Converter
                         $content->getVersionInfo()->status !== APIVersionInfo::STATUS_PUBLISHED
                         && !$this->repository->canUser('content', 'versionread', $content)
                     ) {
-                        throw new UnauthorizedException('content', 'versionread', array('contentId' => $contentId));
+                        throw new UnauthorizedException('content', 'versionread', ['contentId' => $contentId]);
                     }
 
                     $embedContent = $this->fragmentHandler->render(
                         new ControllerReference(
                             'ez_content:embedAction',
-                            array(
+                            [
                                 'contentId' => $contentId,
                                 'viewType' => $view,
                                 'layout' => false,
                                 'params' => $parameters,
-                            )
+                            ]
                         )
                     );
                 } catch (APINotFoundException $e) {
@@ -145,7 +145,7 @@ class EmbedToHtml5 implements Converter
                 try {
                     /** @var \eZ\Publish\API\Repository\Values\Content\Location $location */
                     $location = $this->repository->sudo(
-                        function (Repository $repository) use ($locationId) {
+                        static function (Repository $repository) use ($locationId) {
                             return $repository->getLocationService()->loadLocation($locationId);
                         }
                     );
@@ -154,19 +154,19 @@ class EmbedToHtml5 implements Converter
                         !$this->repository->canUser('content', 'read', $location->getContentInfo(), $location)
                         && !$this->repository->canUser('content', 'view_embed', $location->getContentInfo(), $location)
                     ) {
-                        throw new UnauthorizedException('content', 'read', array('locationId' => $location->id));
+                        throw new UnauthorizedException('content', 'read', ['locationId' => $location->id]);
                     }
 
                     $embedContent = $this->fragmentHandler->render(
                         new ControllerReference(
                             'ez_content:embedAction',
-                            array(
+                            [
                                 'contentId' => $location->getContentInfo()->id,
                                 'locationId' => $location->id,
                                 'viewType' => $view,
                                 'layout' => false,
                                 'params' => $parameters,
-                            )
+                            ]
                         )
                     );
                 } catch (APINotFoundException $e) {
@@ -200,10 +200,10 @@ class EmbedToHtml5 implements Converter
      */
     protected function getParameters(DOMElement $embed)
     {
-        $parameters = array(
+        $parameters = [
             'noLayout' => true,
-            'objectParameters' => array(),
-        );
+            'objectParameters' => [],
+        ];
 
         $linkParameters = $this->getLinkParameters($embed);
 
@@ -254,12 +254,12 @@ class EmbedToHtml5 implements Converter
             $resourceId = $embed->getAttribute(EmbedLinking::TEMP_PREFIX . 'node_id');
         }
 
-        $parameters = array(
+        $parameters = [
             'href' => $embed->getAttribute('url'),
             'resourceType' => $resourceType,
             'resourceId' => $resourceId,
             'wrapped' => $this->isLinkWrapped($embed),
-        );
+        ];
 
         if (!empty($resourceFragmentIdentifier)) {
             $parameters['resourceFragmentIdentifier'] = $resourceFragmentIdentifier;
@@ -305,7 +305,7 @@ class EmbedToHtml5 implements Converter
             /** @var \DOMText|\DOMElement $node */
             foreach ($parentNode->childNodes as $node) {
                 if (!($node->nodeType === XML_TEXT_NODE && $node->isWhitespaceInElementContent())) {
-                    $childCount += 1;
+                    ++$childCount;
                 }
             }
 

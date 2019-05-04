@@ -23,7 +23,7 @@ class FormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('xml', TextareaType::class, array('attr' => array('rows' => 10)))
+            ->add('xml', TextareaType::class, ['attr' => ['rows' => 10]])
             ->addModelTransformer(
                 new FieldValueTransformer(
                     $this->fieldTypeService->getFieldType('ezxmltext')

@@ -52,13 +52,13 @@ class LegacyStorage extends Gateway
         $linkTags = $doc->getElementsByTagName('link');
 
         if ($linkTags->length > 0) {
-            $links = array();
+            $links = [];
 
             foreach ($linkTags as $link) {
                 $urlId = $link->getAttribute('url_id');
                 if (!empty($urlId)) {
                     if (!isset($links[$urlId])) {
-                        $links[$urlId] = array();
+                        $links[$urlId] = [];
                     }
                     $links[$urlId][] = $link;
                 }
@@ -100,10 +100,10 @@ class LegacyStorage extends Gateway
         }
 
         // Get all element tag types that contain url's or object_remote_id
-        $urls = array();
-        $remoteIds = array();
-        $elements = array();
-        foreach (array('link', 'embed', 'embed-inline') as $tagName) {
+        $urls = [];
+        $remoteIds = [];
+        $elements = [];
+        foreach (['link', 'embed', 'embed-inline'] as $tagName) {
             $tags = $doc->getElementsByTagName($tagName);
             if ($tags->length === 0) {
                 continue;
@@ -137,7 +137,7 @@ class LegacyStorage extends Gateway
         if (!empty($elements)) {
             $linksIds = $this->getUrlIdMap(array_keys($urls));
             $objectRemoteIdMap = $this->getObjectId(array_keys($remoteIds));
-            $urlLinkSet = array();
+            $urlLinkSet = [];
 
             // Now loop again to insert the right value in "url_id" attribute and fix "object_remote_id"
             /** @var $element \DOMElement */
@@ -205,7 +205,7 @@ class LegacyStorage extends Gateway
      */
     protected function getObjectId(array $linksRemoteIds)
     {
-        $objectRemoteIdMap = array();
+        $objectRemoteIdMap = [];
 
         if (!empty($linksRemoteIds)) {
             /** @var $q \eZ\Publish\Core\Persistence\Database\SelectQuery */

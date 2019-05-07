@@ -617,6 +617,9 @@
     </xsl:element>
   </xsl:template>
 
+  <xsl:template match="link/embed|link/embed-inline">
+  </xsl:template>
+
   <xsl:template name="addEmbedLinkAttributes">
     <xsl:variable name="fragment">
       <xsl:if test="@ezlegacytmp-embed-link-anchor_name != ''">

@@ -21,4 +21,7 @@
     <link xlink:href="ezcontent://333" xlink:show="none" xml:id="id5" xlink:title="Content title" ezxhtml:class="linkClass5">Content name</link>
   </para>
   <para><anchor xml:id="anchor"/>Some anchored content.</para>
+  <para>
+    <link xlink:href="ezcontent://333" xlink:show="none" xml:id="id7">link with nested embed</link>
+  </para>
 </section>

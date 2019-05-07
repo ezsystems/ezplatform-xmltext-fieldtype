@@ -1,8 +1,8 @@
 | Question           | Answer
 | ------------------ | ------------------
 | **JIRA issue**     | [EZP-XXXXX](https://jira.ez.no/browse/EZP-XXXXX)
-| **Type**           | One of Bug/Improvement/Feature/Misc
-| **Target version** | latest stable (1.8) for bug fixes, master for new features
+| **Type**           | Bug/Improvement/Feature/Misc
+| **Target version** | latest stable `1.8` for bug fixes, `master` for new features
 | **BC breaks**      | yes/no
 | **Doc needed**     | yes/no
 

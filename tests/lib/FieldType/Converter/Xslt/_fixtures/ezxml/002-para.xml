@@ -11,4 +11,5 @@
   <paragraph align="right">This is a right aligned paragraph.</paragraph>
   <paragraph align="justify">This is a justified paragraph.</paragraph>
   <paragraph align="unsupported">This is a paragraph with unsupported align attribute.</paragraph>
+  <paragraph align="LEFT">this is a paragraph with translated valid align attribute.</paragraph>
 </section>

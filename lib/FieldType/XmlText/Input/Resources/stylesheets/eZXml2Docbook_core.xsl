@@ -732,13 +732,6 @@
       <xsl:when test="translate($align, $uppercase, $lowercase) = 'justify'">
         <xsl:attribute name="ezxhtml:textalign">justify</xsl:attribute>
       </xsl:when>
-      <xsl:otherwise>
-        <!-- we can not use custom values here, as it will break richtext shema
-        <xsl:attribute name="ezxhtml:textalign">
-          <xsl:value-of select="translate($align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
-        -->
-      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 

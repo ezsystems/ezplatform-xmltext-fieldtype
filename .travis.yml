@@ -37,7 +37,7 @@ matrix:
 branches:
     only:
         - master
-
+        - /^\d.\d+$/
 
 # setup requirements for running db tests
 before_install:

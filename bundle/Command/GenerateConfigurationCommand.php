@@ -30,12 +30,12 @@ class GenerateConfigurationCommand extends Command
         'config-file' => [
             'mode' => InputOption::VALUE_OPTIONAL,
             'description' => 'Path where configurations file will be generated',
-            'default' => 'app/config/custom_tags.yml'
+            'default' => 'app/config/custom_tags.yml',
         ],
         'override-config' => [
             'mode' => InputOption::VALUE_NONE,
-            'description' => 'If specified configuration file exists, this option is required to update it'
-        ]
+            'description' => 'If specified configuration file exists, this option is required to update it',
+        ],
     ];
 
     /**
@@ -88,7 +88,6 @@ class GenerateConfigurationCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $this->io = new SymfonyStyle($input, $output);
 
         $file = $input->getOption('config-file');
@@ -97,12 +96,13 @@ class GenerateConfigurationCommand extends Command
             $this->checkConfigFile($file, $override);
         } catch (Exception $e) {
             $this->io->error($e->getMessage());
+
             return;
         }
 
         $config = $this->getCustomTagsConfig();
         $this->saveConfig($file, $config);
-        $this->io->success('Configurations are saved for ' . count($config) . ' custom tags into "' . $file . '"');
+        $this->io->success('Configurations are saved for ' . \count($config) . ' custom tags into "' . $file . '"');
     }
 
     /**
@@ -115,13 +115,13 @@ class GenerateConfigurationCommand extends Command
      */
     protected function checkConfigFile(string $file, bool $override = false): void
     {
-        $dir = dirname($file);
-        if (is_writeable($dir) === false) {
-            throw new Exception('Path "' . $dir .'" is not writable');
+        $dir = \dirname($file);
+        if (is_writable($dir) === false) {
+            throw new Exception('Path "' . $dir . '" is not writable');
         }
 
         if (file_exists($file) && $override === false) {
-            throw new Exception('File "' . $file .'" exists, please use --override-config option or provide another --config-file');
+            throw new Exception('File "' . $file . '" exists, please use --override-config option or provide another --config-file');
         }
     }
 
@@ -151,11 +151,11 @@ class GenerateConfigurationCommand extends Command
                     $tags[$tag] = [];
                 }
 
-                $attributes= $xpath->query("*[local-name()='ezconfig']/*[local-name()='ezvalue'][@key]", $element);
+                $attributes = $xpath->query("*[local-name()='ezconfig']/*[local-name()='ezvalue'][@key]", $element);
                 foreach ($attributes as $attribute) {
                     $attr = $attribute->getAttribute('key');
 
-                    if (in_array($attr, $tags[$tag])) {
+                    if (\in_array($attr, $tags[$tag])) {
                         continue;
                     }
 
@@ -170,6 +170,7 @@ class GenerateConfigurationCommand extends Command
 
         return $tags;
     }
+
     /**
      * Fetches Rich Text attributes for published versions only.
      *
@@ -214,7 +215,7 @@ class GenerateConfigurationCommand extends Command
                 'template' => '@ezdesign/custom_tag/' . $customTag . '.html.twig',
                 'icon' => '/bundles/app/img/custom-tag-icons.svg#' . $customTag,
                 'is_inline' => false,
-                'attributes' => []
+                'attributes' => [],
             ];
 
             foreach ($attributes as $attribute) {
@@ -228,11 +229,11 @@ class GenerateConfigurationCommand extends Command
                 'default' => [
                     'fieldtypes' => [
                         'ezrichtext' => [
-                            'custom_tags' => array_keys($customTags)
-                        ]
-                    ]
-                ]
-            ]
+                            'custom_tags' => array_keys($customTags),
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         $yaml = Yaml::dump($parameters, 7);

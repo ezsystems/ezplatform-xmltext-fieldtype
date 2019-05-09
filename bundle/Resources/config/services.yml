@@ -36,6 +36,14 @@ services:
         tags:
             -  { name: console.command }
 
+    ezxmltext.command.generate_configuration:
+        class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\GenerateConfigurationCommand
+        arguments:
+            - "@database_connection"
+            - "@ezrichtext.converter.edit.xhtml5"
+        tags:
+            - { name: console.command }
+
     ezxmltext.richtext_converter:
         class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText
         arguments:

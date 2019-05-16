@@ -34,6 +34,7 @@
     </xs:choice>
     <xs:attributeGroup ref="align"/>
     <xs:attributeGroup ref="class"/>
+    <xs:anyAttribute namespace="http://ez.no/namespaces/ezpublish3/custom/" processContents="skip"/>
   </xs:complexType>
 
   <xs:complexType name="header" mixed="true">

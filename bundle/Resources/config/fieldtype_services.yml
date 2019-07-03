@@ -13,8 +13,7 @@ services:
         class: "%ezpublish.fieldType.ezxmltext.converter.html5.class%"
         arguments:
             - "%ezpublish.fieldType.ezxmltext.converter.html5.resources%"
-        calls:
-            - [ setCustomStylesheets, [ "$fieldtypes.ezxml.custom_xsl$" ] ]
+            - "@ezpublish.config.resolver"
 
     ezpublish.fieldType.ezxmltext.converter.expanding:
         class: "%ezpublish.fieldType.ezxmltext.converter.expanding.class%"

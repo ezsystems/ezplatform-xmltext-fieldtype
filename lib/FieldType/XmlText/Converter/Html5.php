@@ -13,6 +13,7 @@ namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 use eZ\Publish\Core\FieldType\XmlText\Converter;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use DOMDocument;
+use eZ\Publish\Core\MVC\ConfigResolverInterface;
 use XSLTProcessor;
 use RuntimeException;
 
@@ -27,6 +28,11 @@ class Html5 implements Converter
      * @var string
      */
     protected $stylesheet;
+
+    /**
+     * @var \eZ\Publish\Core\MVC\ConfigResolverInterface
+     */
+    protected $configResolver;
 
     /**
      * Array of XSL stylesheets to add to the main one, grouped by priority.
@@ -51,14 +57,16 @@ class Html5 implements Converter
      * Constructor.
      *
      * @param string $stylesheet Stylesheet to use for conversion
+     * @param \eZ\Publish\Core\MVC\ConfigResolverInterface $configResolver
      * @param array $customStylesheets Array of XSL stylesheets. Each entry consists in a hash having "path" and "priority" keys.
      * @param \eZ\Publish\Core\FieldType\XmlText\Converter[] $preConverters Array of pre-converters
      *
      * @throws \eZ\Publish\Core\Base\Exceptions\InvalidArgumentType
      */
-    public function __construct($stylesheet, array $customStylesheets = [], array $preConverters = [])
+    public function __construct($stylesheet, ConfigResolverInterface $configResolver, array $customStylesheets = [], array $preConverters = [])
     {
         $this->stylesheet = $stylesheet;
+        $this->configResolver = $configResolver;
         $this->setCustomStylesheets($customStylesheets);
 
         foreach ($preConverters as $preConverter) {
@@ -131,6 +139,8 @@ class Html5 implements Converter
         // Now loading custom xsl stylesheets dynamically.
         // According to XSL spec, each <xsl:import> tag MUST be loaded BEFORE any other element.
         $insertBeforeEl = $xslDoc->documentElement->firstChild;
+
+        $this->setCustomStylesheets($this->configResolver->getParameter('fieldtypes.ezxml.custom_xsl'));
         foreach ($this->getSortedCustomStylesheets() as $stylesheet) {
             if (!file_exists($stylesheet)) {
                 throw new RuntimeException("Cannot find XSL stylesheet for XMLText rendering: $stylesheet");

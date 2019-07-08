@@ -40,7 +40,7 @@ class EzxmlToDocbookTest extends BaseTest
         $apiRepositoryStub->method('getLocationService')
             ->willReturn($locationServiceStub);
         $contentServiceStub->method('loadContentInfo')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         // image content type has id=27, file content type has id=27
         $contentInfoImageStub->method('__get')->willReturn(27);

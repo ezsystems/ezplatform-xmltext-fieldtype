@@ -335,15 +335,15 @@ class EzLinkToHtml5Test extends TestCase
 
         $repository->expects($this->any())
             ->method('getContentService')
-            ->will($this->returnValue($contentService));
+            ->willReturn($contentService);
 
         $repository->expects($this->any())
             ->method('getLocationService')
-            ->will($this->returnValue($locationService));
+            ->willReturn($locationService);
 
         $repository->expects($this->any())
             ->method('getURLAliasService')
-            ->will($this->returnValue($urlAliasService));
+            ->willReturn($urlAliasService);
 
         return $repository;
     }
@@ -413,12 +413,12 @@ class EzLinkToHtml5Test extends TestCase
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo($locationId))
-            ->will($this->returnValue($location));
+            ->willReturn($location);
 
         $urlAliasRouter->expects($this->once())
             ->method('generate')
             ->with($this->equalTo($location))
-            ->will($this->returnValue($rawUrl));
+            ->willReturn($rawUrl);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter);
         $converter->convert($xmlDoc);
@@ -460,22 +460,22 @@ class EzLinkToHtml5Test extends TestCase
         $contentInfo->expects($this->once())
             ->method('__get')
             ->with($this->equalTo('mainLocationId'))
-            ->will($this->returnValue($locationId));
+            ->willReturn($locationId);
 
         $contentService->expects($this->any())
             ->method('loadContentInfo')
             ->with($this->equalTo($contentId))
-            ->will($this->returnValue($contentInfo));
+            ->willReturn($contentInfo);
 
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo($locationId))
-            ->will($this->returnValue($location));
+            ->willReturn($location);
 
         $urlAliasRouter->expects($this->once())
             ->method('generate')
             ->with($this->equalTo($location))
-            ->will($this->returnValue($rawUrl));
+            ->willReturn($rawUrl);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter);
         $converter->convert($xmlDoc);

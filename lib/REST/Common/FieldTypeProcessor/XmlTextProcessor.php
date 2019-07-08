@@ -10,7 +10,7 @@
  */
 namespace eZ\Publish\Core\REST\Common\FieldTypeProcessor;
 
-use eZ\Publish\Core\REST\Common\FieldTypeProcessor;
+use EzSystems\EzPlatformRest\FieldTypeProcessor;
 use eZ\Publish\Core\FieldType\XmlText\Type;
 
 class XmlTextProcessor extends FieldTypeProcessor

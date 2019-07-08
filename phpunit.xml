@@ -4,7 +4,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         syntaxCheck="true">
+         beStrictAboutTestsThatDoNotTestAnything="false">
     <testsuites>
         <testsuite name="XmlText field type unit tests">
             <directory suffix="Test.php">./tests/bundle/</directory>

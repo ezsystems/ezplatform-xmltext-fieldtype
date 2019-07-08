@@ -637,19 +637,19 @@ ezlegacytmp-embed-link-node_id="222"
         $repository->expects($this->any())
             ->method('sudo')
             ->with($this->anything())
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 static function ($callback) use ($repository) {
                     return $callback($repository);
                 }
-            ));
+            );
 
         $repository->expects($this->any())
             ->method('getContentService')
-            ->will($this->returnValue($contentService));
+            ->willReturn($contentService);
 
         $repository->expects($this->any())
             ->method('getLocationService')
-            ->will($this->returnValue($locationService));
+            ->willReturn($locationService);
 
         return $repository;
     }
@@ -674,17 +674,17 @@ ezlegacytmp-embed-link-node_id="222"
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
-            ->will($this->returnValue($status));
+            ->willReturn($status);
 
         $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
-            ->will($this->returnValue($versionInfo));
+            ->willReturn($versionInfo);
 
         $contentService->expects($this->once())
             ->method('loadContent')
             ->with($this->equalTo($contentId))
-            ->will($this->returnValue($content));
+            ->willReturn($content);
 
         $repository = $this->getMockRepository($contentService, null);
         foreach ($permissionsMap as $index => $permissions) {
@@ -696,8 +696,8 @@ ezlegacytmp-embed-link-node_id="222"
                     $content,
                     null
                 )
-                ->will(
-                    $this->returnValue($permissions[2])
+                ->willReturn(
+                    $permissions[2]
                 );
         }
 
@@ -746,7 +746,7 @@ ezlegacytmp-embed-link-node_id="222"
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo($locationId))
-            ->will($this->returnValue($location));
+            ->willReturn($location);
 
         $repository = $this->getMockRepository(null, $locationService);
         foreach ($permissionsMap as $index => $permissions) {
@@ -758,8 +758,8 @@ ezlegacytmp-embed-link-node_id="222"
                     $contentInfo,
                     $location
                 )
-                ->will(
-                    $this->returnValue($permissions[2])
+                ->willReturn(
+                    $permissions[2]
                 );
         }
 
@@ -860,17 +860,17 @@ ezlegacytmp-embed-link-node_id="222"
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
-            ->will($this->returnValue(APIVersionInfo::STATUS_DRAFT));
+            ->willReturn(APIVersionInfo::STATUS_DRAFT);
 
         $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
-            ->will($this->returnValue($versionInfo));
+            ->willReturn($versionInfo);
 
         $contentService->expects($this->once())
             ->method('loadContent')
             ->with($this->equalTo(42))
-            ->will($this->returnValue($content));
+            ->willReturn($content);
 
         $repository = $this->getMockRepository($contentService, null);
         foreach ($permissionsMap as $index => $permissions) {
@@ -882,8 +882,8 @@ ezlegacytmp-embed-link-node_id="222"
                     $content,
                     null
                 )
-                ->will(
-                    $this->returnValue($permissions[2])
+                ->willReturn(
+                    $permissions[2]
                 );
         }
 
@@ -912,25 +912,25 @@ ezlegacytmp-embed-link-node_id="222"
         $location
             ->expects($this->exactly(2))
             ->method('getContentInfo')
-            ->will($this->returnValue($contentInfo));
+            ->willReturn($contentInfo);
 
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo(42))
-            ->will($this->returnValue($location));
+            ->willReturn($location);
 
         $repository = $this->getMockRepository(null, $locationService);
         $repository->expects($this->at(2))
             ->method('canUser')
             ->with('content', 'read', $contentInfo, $location)
-            ->will(
-                $this->returnValue(false)
+            ->willReturn(
+                false
             );
         $repository->expects($this->at(3))
             ->method('canUser')
             ->with('content', 'view_embed', $contentInfo, $location)
-            ->will(
-                $this->returnValue(false)
+            ->willReturn(
+                false
             );
 
         $converter = new EmbedToHtml5(
@@ -1105,17 +1105,17 @@ ezlegacytmp-embed-link-node_id="222"
         $versionInfo->expects($this->any())
             ->method('__get')
             ->with('status')
-            ->will($this->returnValue($status));
+            ->willReturn($status);
 
         $content = $this->createMock(Content::class);
         $content->expects($this->any())
             ->method('getVersionInfo')
-            ->will($this->returnValue($versionInfo));
+            ->willReturn($versionInfo);
 
         $contentService->expects($this->once())
             ->method('loadContent')
             ->with($this->equalTo($contentId))
-            ->will($this->returnValue($content));
+            ->willReturn($content);
 
         $repository = $this->getMockRepository($contentService, null);
         foreach ($permissionsMap as $index => $permissions) {
@@ -1127,14 +1127,14 @@ ezlegacytmp-embed-link-node_id="222"
                     $content,
                     null
                 )
-                ->will(
-                    $this->returnValue($permissions[2])
+                ->willReturn(
+                    $permissions[2]
                 );
         }
 
         $fragmentHandler->expects($this->once())
             ->method('render')
-            ->will($this->returnValue($contentReplacement));
+            ->willReturn($contentReplacement);
 
         $converter = new EmbedToHtml5(
             $fragmentHandler,

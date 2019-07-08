@@ -14,8 +14,8 @@ use DOMElement;
 use DOMXPath;
 use DOMNode;
 use Psr\Log\LoggerInterface;
-use eZ\Publish\Core\FieldType\RichText\Converter\Aggregate;
-use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
+use EzSystems\EzPlatformRichText\eZ\RichText\Converter\Aggregate;
+use EzSystems\EzPlatformRichText\eZ\RichText\Converter\Xslt;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use Psr\Log\NullLogger;
 use Psr\Log\LogLevel;
@@ -28,7 +28,7 @@ class RichText implements Converter
     const INLINE_CUSTOM_TAG = 'inline';
     const BLOCK_CUSTOM_TAG = 'block';
     /**
-     * @var \eZ\Publish\Core\FieldType\RichText\Converter
+     * @var \EzSystems\EzPlatformRichText\eZ\RichText\Converter
      */
     private $converter;
 
@@ -37,7 +37,7 @@ class RichText implements Converter
      */
     private $imageContentTypes;
     /**
-     * @var \eZ\Publish\Core\FieldType\RichText\Validator
+     * @var \EzSystems\EzPlatformRichText\eZ\RichText\ValidatorInterface
      */
     private $validator;
     /**
@@ -633,7 +633,7 @@ class RichText implements Converter
         if ($result) {
             $this->tagEmbeddedImages($convertedDocumentNormalized, $contentFieldId);
 
-            $errors = $this->validator->validate($convertedDocumentNormalized);
+            $errors = $this->validator->validateDocument($convertedDocumentNormalized);
 
             $result = $convertedDocumentNormalized->saveXML();
 

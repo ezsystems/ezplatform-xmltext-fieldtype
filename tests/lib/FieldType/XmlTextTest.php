@@ -15,6 +15,7 @@ use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
 use eZ\Publish\Core\Persistence\TransformationProcessor;
 use eZ\Publish\API\Repository\Values\Content\Relation;
+use eZ\Publish\Core\Repository\Values\ContentType\FieldDefinition;
 use eZ\Publish\SPI\FieldType\ValidationError;
 use eZ\Publish\Core\FieldType\Value;
 use Exception;
@@ -103,8 +104,7 @@ class XmlTextTest extends TestCase
     {
         $validationResult = $this->getFieldType()->validateFieldSettings($settings);
 
-        $this->assertInternalType(
-            'array',
+        $this->assertIsArray(
             $validationResult,
             'The method validateFieldSettings() must return an array.'
         );
@@ -123,8 +123,7 @@ class XmlTextTest extends TestCase
     {
         $validationResult = $this->getFieldType()->validateFieldSettings($settings);
 
-        $this->assertInternalType(
-            'array',
+        $this->assertIsArray(
             $validationResult,
             'The method validateFieldSettings() must return an array.'
         );
@@ -199,7 +198,7 @@ class XmlTextTest extends TestCase
 
         $fieldValue = $ft->toPersistenceValue($ft->acceptValue($xmlData));
 
-        self::assertInternalType('string', $fieldValue->data);
+        self::assertIsString($fieldValue->data);
         self::assertSame($xmlDoc->saveXML(), $fieldValue->data);
     }
 
@@ -296,7 +295,7 @@ class XmlTextTest extends TestCase
         $ft = $this->getFieldType();
         $this->assertEquals(
             $value,
-            $ft->getName($ft->acceptValue($xml))
+            $ft->getName($ft->acceptValue($xml), new FieldDefinition(), 'eng-GB')
         );
     }
 
@@ -310,7 +309,9 @@ class XmlTextTest extends TestCase
         $this->assertEquals(
             $value,
             $ft->getName(
-                $ft->acceptValue($xml)
+                $ft->acceptValue($xml),
+                new FieldDefinition(),
+                'eng-GB'
             )
         );
     }

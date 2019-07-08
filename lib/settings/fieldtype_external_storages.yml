@@ -4,6 +4,7 @@ parameters:
 services:
     ezpublish.fieldType.ezxmltext.externalStorage:
         class: "%ezpublish.fieldType.ezxmltext.externalStorage.class%"
+        public: true
         arguments:
             - "@ezpublish.fieldType.ezxmltext.storage_gateway"
         tags:

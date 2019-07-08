@@ -24,7 +24,7 @@ class XmlTextTest extends AbstractParserTestCase
      *
      * @return ExtensionInterface[]
      */
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         $extension = new EzPublishCoreExtension([new XmlTextConfigParser()]);
 
@@ -38,7 +38,7 @@ class XmlTextTest extends AbstractParserTestCase
         ];
     }
 
-    protected function getMinimalConfiguration()
+    protected function getMinimalConfiguration(): array
     {
         return Yaml::parse(file_get_contents(__DIR__ . '/../../../Fixtures/ezpublish_minimal.yml'));
     }

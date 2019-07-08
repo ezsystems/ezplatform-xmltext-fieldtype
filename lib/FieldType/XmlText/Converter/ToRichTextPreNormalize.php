@@ -8,7 +8,7 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\RichText\Converter;
+use EzSystems\EzPlatformRichText\eZ\RichText\Converter;
 use DOMDocument;
 
 /**

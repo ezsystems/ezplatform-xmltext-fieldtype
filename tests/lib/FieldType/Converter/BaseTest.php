@@ -8,7 +8,6 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use eZ\Publish\Core\FieldType\RichText\Converter\Xslt;
 use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use DOMXpath;
@@ -19,12 +18,12 @@ use DOMXpath;
 abstract class BaseTest extends TestCase
 {
     /**
-     * @var \eZ\Publish\Core\FieldType\RichText\Converter
+     * @var \EzSystems\EzPlatformRichText\eZ\RichText\Converter
      */
     protected $converter;
 
     /**
-     * @var \eZ\Publish\Core\FieldType\RichText\Validator
+     * @var \EzSystems\EzPlatformRichText\eZ\RichText\ValidatorInterface
      */
     protected $validator;
 

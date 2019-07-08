@@ -633,7 +633,7 @@ class RichText implements Converter
         if ($result) {
             $this->tagEmbeddedImages($convertedDocumentNormalized, $contentFieldId);
 
-            $errors = $this->validator->validate($convertedDocumentNormalized);
+            $errors = $this->validator->validateDocument($convertedDocumentNormalized);
 
             $result = $convertedDocumentNormalized->saveXML();
 

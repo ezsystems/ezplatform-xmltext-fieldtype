@@ -1,0 +1,10 @@
+parameters:
+    ezrichtext.resources: '../../../vendor/ezsystems/ezplatform-richtext/src/lib/eZ/RichText/Resources'
+    ezrichtext.validator.docbook.resources:
+        - '%ezrichtext.resources%/schemas/docbook/ezpublish.rng'
+        - '%ezrichtext.resources%/schemas/docbook/docbook.iso.sch.xsl'
+
+services:
+    ezrichtext.validator.docbook:
+        class: EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator
+        arguments: ['%ezrichtext.validator.docbook.resources%']

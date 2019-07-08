@@ -32,6 +32,7 @@ class LegacyEmptyDBSetupFactory extends CoreLegacySetupFactory
         $loader->load('fieldtypes.yml');
         $loader->load('indexable_fieldtypes.yml');
         $loader->load('../../bundle/Resources/config/services.yml');
+        $loader->load('../../tests/lib/settings/services.yml');
 
         // Service ezxmltext.command.convert_to_richtext requires kernel.cache_dir
         $containerBuilder->setParameter('kernel.cache_dir', __DIR__);

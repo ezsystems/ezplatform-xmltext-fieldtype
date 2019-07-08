@@ -33,7 +33,7 @@ class XmlTextTest extends TestCase
      */
     private $xmlText;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->converter = new XmlTextConverter();
@@ -44,7 +44,7 @@ class XmlTextTest extends TestCase
 EOT;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->xmlText);
         parent::tearDown();

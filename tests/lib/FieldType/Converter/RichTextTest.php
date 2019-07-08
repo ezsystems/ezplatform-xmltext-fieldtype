@@ -159,10 +159,10 @@ class RichTextTest extends TestCase
         $apiRepositoryStub->method('getLocationService')
             ->willReturn($locationServiceStub);
         $contentServiceStub->method('loadContentInfo')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         $contentServiceStub->method('loadContentInfoByRemoteId')
-            ->will($this->returnCallBack([$this, 'callbackLoadContentInfoByRemoteId']));
+            ->willReturnCallback([$this, 'callbackLoadContentInfoByRemoteId']);
 
         // image content type has id=27, file content type has id=27
         $contentInfoImageStub->method('__get')->willReturn(27);
@@ -171,7 +171,7 @@ class RichTextTest extends TestCase
         $locationServiceStub->method('loadLocation')->willReturn($locationStub);
         $locationStub->method('getContentInfo')->willReturn($contentInfoImageStub);
         $locationServiceStub->method('loadLocationByRemoteId')
-            ->will($this->returnCallBack([$this, 'callbackLoadLocationByRemoteId']));
+            ->willReturnCallback([$this, 'callbackLoadLocationByRemoteId']);
 
         return $apiRepositoryStub;
     }

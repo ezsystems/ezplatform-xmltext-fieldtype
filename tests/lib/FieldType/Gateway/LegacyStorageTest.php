@@ -216,7 +216,7 @@ class LegacyStorageTest extends TestCase
                 $legacyStorage->expects($this->once())
                     ->method($method)
                     ->with($this->equalTo($data[0]))
-                    ->will($this->returnValue($data[1]));
+                    ->willReturn($data[1]);
             }
         }
 
@@ -306,7 +306,7 @@ class LegacyStorageTest extends TestCase
                 $legacyStorage->expects($this->once())
                     ->method($method)
                     ->with($this->equalTo($data[0]))
-                    ->will($this->returnValue($data[1]));
+                    ->willReturn($data[1]);
             }
         }
 
@@ -373,7 +373,7 @@ class LegacyStorageTest extends TestCase
             $legacyStorage->expects($this->once())
                 ->method('getIdUrlMap')
                 ->with($this->equalTo($getLinksUrlData[0]))
-                ->will($this->returnValue($getLinksUrlData[1]));
+                ->willReturn($getLinksUrlData[1]);
         }
 
         $legacyStorage->getFieldData($field);

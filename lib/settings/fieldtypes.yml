@@ -11,12 +11,12 @@ services:
         arguments:
             - '@?ezpublish.fieldType.ezxmltext.validator.internal_link'
         tags:
-            - {name: ezpublish.fieldType, alias: ezxmltext}
+            - {name: ezplatform.field_type, alias: ezxmltext}
 
     ezpublish.fieldType.ezxmltext.formMapper:
         class: "%ezpublish.fieldType.ezxmltext.formMapper.class%"
         tags:
-            - { name: ez.fieldFormMapper.value, fieldType: ezxmltext }
+            - { name: ezplatform.field_type.form_mapper.value, fieldType: ezxmltext }
 
     ezpublish.fieldType.ezxmltext.formType:
         class: "%ezpublish.fieldType.ezxmltext.formType.class%"

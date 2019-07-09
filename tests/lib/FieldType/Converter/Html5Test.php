@@ -14,6 +14,7 @@ use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
 use eZ\Publish\Core\FieldType\XmlText\Converter\Html5;
 use eZ\Publish\Core\FieldType\XmlText\Converter;
+use eZ\Publish\Core\MVC\ConfigResolverInterface;
 use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use DOMNodeList;
@@ -64,7 +65,7 @@ class Html5Test extends TestCase
     {
         $this->expectException(\eZ\Publish\Core\Base\Exceptions\InvalidArgumentType::class);
 
-        new Html5('', [], $preConverters);
+        new Html5('', $this->getMockBuilder(ConfigResolverInterface::class)->getMock(), [], $preConverters);
     }
 
     public function testPreConverterCalled()
@@ -84,6 +85,7 @@ class Html5Test extends TestCase
 
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 $preConverterMock1,
@@ -149,7 +151,7 @@ class Html5Test extends TestCase
     {
         $dom = new DomDocument();
         $dom->loadXML($xml);
-        $html5 = new Html5($this->getDefaultStylesheet(), []);
+        $html5 = new Html5($this->getDefaultStylesheet(), $this->getMockBuilder(ConfigResolverInterface::class)->getMock(), []);
 
         $result = new DomDocument();
         $result->loadXML($html5->convert($dom));
@@ -213,6 +215,7 @@ class Html5Test extends TestCase
         $dom->loadXML($xml);
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),
@@ -235,6 +238,7 @@ class Html5Test extends TestCase
         );
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),
@@ -255,6 +259,7 @@ class Html5Test extends TestCase
         );
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),
@@ -272,7 +277,7 @@ class Html5Test extends TestCase
 
     public function testAddPreConverter()
     {
-        $html5Converter = new Html5('foo.xsl');
+        $html5Converter = new Html5('foo.xsl', $this->getMockBuilder(ConfigResolverInterface::class)->getMock());
         $converter1 = $this->getPreConvertMock();
         $html5Converter->addPreConverter($converter1);
         $converter2 = $this->getPreConvertMock();
@@ -329,6 +334,7 @@ class Html5Test extends TestCase
 
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),
@@ -407,6 +413,7 @@ class Html5Test extends TestCase
 
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),
@@ -474,6 +481,7 @@ class Html5Test extends TestCase
 
         $html5 = new Html5(
             $this->getDefaultStylesheet(),
+            $this->getMockBuilder(ConfigResolverInterface::class)->getMock(),
             [],
             [
                 new Expanding(),

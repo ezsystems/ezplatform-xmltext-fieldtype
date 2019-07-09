@@ -5,4 +5,4 @@ services:
     ezpublish.fieldType.indexable.ezxmltext:
         class: "%ezpublish.fieldType.indexable.ezxmltext.class%"
         tags:
-            - {name: ezpublish.fieldType.indexable, alias: ezxmltext}
+            - {name: ezplatform.field_type.indexable, alias: ezxmltext}

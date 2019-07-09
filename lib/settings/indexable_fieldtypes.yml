@@ -1,8 +1,5 @@
-parameters:
-    ezpublish.fieldType.indexable.ezxmltext.class: eZ\Publish\Core\FieldType\XmlText\SearchField
-
 services:
     ezpublish.fieldType.indexable.ezxmltext:
-        class: "%ezpublish.fieldType.indexable.ezxmltext.class%"
+        class: eZ\Publish\Core\FieldType\XmlText\SearchField
         tags:
             - {name: ezpublish.fieldType.indexable, alias: ezxmltext}

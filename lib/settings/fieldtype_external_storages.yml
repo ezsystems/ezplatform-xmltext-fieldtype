@@ -1,9 +1,6 @@
-parameters:
-    ezpublish.fieldType.ezxmltext.externalStorage.class: eZ\Publish\Core\FieldType\XmlText\XmlTextStorage
-
 services:
     ezpublish.fieldType.ezxmltext.externalStorage:
-        class: "%ezpublish.fieldType.ezxmltext.externalStorage.class%"
+        class: eZ\Publish\Core\FieldType\XmlText\XmlTextStorage
         public: true
         arguments:
             - "@ezpublish.fieldType.ezxmltext.storage_gateway"

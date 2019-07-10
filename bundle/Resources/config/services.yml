@@ -1,9 +1,6 @@
-parameters:
-    ezpublish_rest.field_type_processor.ezxmltext.class: eZ\Publish\Core\REST\Common\FieldTypeProcessor\XmlTextProcessor
-
 services:
     ezpublish_rest.field_type_processor.ezxmltext:
-        class: "%ezpublish_rest.field_type_processor.ezxmltext.class%"
+        class: eZ\Publish\Core\REST\Common\FieldTypeProcessor\XmlTextProcessor
         tags:
             - { name: ezpublish_rest.field_type_processor, alias: ezxmltext }
 

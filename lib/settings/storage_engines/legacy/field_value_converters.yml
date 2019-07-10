@@ -1,10 +1,5 @@
-parameters:
-    ezpublish.fieldType.ezxmltext.converter.class: eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter
-
 services:
-    # Note: converter services tagged with 'ezpublish.storageEngine.legacy.converter' are
-    # registered to this one using compilation pass and factory
     ezpublish.fieldType.ezxmltext.converter:
-        class: "%ezpublish.fieldType.ezxmltext.converter.class%"
+        class: eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter
         tags:
             - {name: ezplatform.field_type.legacy_storage.converter, alias: ezxmltext}

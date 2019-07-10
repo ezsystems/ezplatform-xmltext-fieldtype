@@ -1,9 +1,6 @@
-parameters:
-    ezpublish.fieldType.ezxmltext.storage_gateway.class: eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
-
 services:
     ezpublish.fieldType.ezxmltext.storage_gateway:
-        class: "%ezpublish.fieldType.ezxmltext.storage_gateway.class%"
+        class: eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
         arguments:
             - "@ezpublish.api.storage_engine.legacy.dbhandler"
             - "@ezpublish.fieldType.ezurl.storage_gateway"

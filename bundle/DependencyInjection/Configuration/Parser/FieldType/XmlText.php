@@ -42,7 +42,7 @@ class XmlText extends AbstractFieldTypeParser
                 ->info('Custom XSL stylesheets to use for XmlText transformation to HTML5. Useful for "custom tags".')
                 ->example(
                     [
-                        'path' => '%kernel.root_dir%/../src/Acme/TestBundle/Resources/myTag.xsl',
+                        'path' => '%kernel.project_dir%/src/Acme/TestBundle/Resources/myTag.xsl',
                         'priority' => 10,
                     ]
                 )

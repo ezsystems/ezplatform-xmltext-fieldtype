@@ -5,4 +5,4 @@ services:
         arguments:
             - "@ezpublish.fieldType.ezxmltext.storage_gateway"
         tags:
-            - {name: ezpublish.fieldType.externalStorageHandler, alias: ezxmltext}
+            - {name: ezplatform.field_type.external_storage_handler, alias: ezxmltext}

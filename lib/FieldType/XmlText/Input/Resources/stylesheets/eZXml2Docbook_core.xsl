@@ -28,11 +28,6 @@
           <xsl:value-of select="@custom:class"/>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="@custom:align">
-        <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
-      </xsl:if>
       <xsl:if test="./text()">
         <xsl:element name="ezcontent" namespace="http://docbook.org/ns/docbook">
           <xsl:apply-templates/>
@@ -58,11 +53,6 @@
       <xsl:if test="@custom:class">
         <xsl:attribute name="ezxhtml:class">
           <xsl:value-of select="@custom:class"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@custom:align">
-        <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="./* | ./text()">

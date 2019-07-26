@@ -4,7 +4,7 @@
          xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
          xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
          version="5.0-variant ezpublish-1.0">
-  <eztemplate name="factbox" ezxhtml:class="templateClass" ezxhtml:align="left">
+  <eztemplate name="factbox" ezxhtml:class="templateClass">
     <ezcontent>
       <table title="tableTitle">
         <ezattribute>
@@ -35,7 +35,7 @@
       <ezvalue key="title">Factoids</ezvalue>
     </ezconfig>
   </eztemplate>
-  <eztemplate name="externalimage" ezxhtml:class="templateClass2" ezxhtml:align="right">
+  <eztemplate name="externalimage" ezxhtml:class="templateClass2">
     <ezconfig>
       <ezvalue key="src">http://upload.wikimedia.org/wikipedia/commons/c/c6/R-S_mk2.gif</ezvalue>
       <ezvalue key="height">365</ezvalue>
@@ -44,8 +44,8 @@
       <ezvalue key="caption">bistable multivibrator</ezvalue>
     </ezconfig>
   </eztemplate>
-  <eztemplate name="factoidbox" ezxhtml:class="templateClass3" ezxhtml:align="center">
+  <eztemplate name="factoidbox" ezxhtml:class="templateClass3">
     <ezcontent>It is widely known that the bistable multivibrator hums z's in the middle octave key of E.</ezcontent>
   </eztemplate>
-  <eztemplate name="factoidbox" ezxhtml:class="templateClass4" ezxhtml:align="center"/>
+  <eztemplate name="factoidbox" ezxhtml:class="templateClass4"/>
 </section>

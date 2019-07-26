@@ -4,7 +4,7 @@
         xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
         xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
   <eztemplate name="linebreak"/>
-  <eztemplate name="mycustomtag" ezxhtml:align="left" ezxhtml:class="templateClass">
+  <eztemplate name="mycustomtag" ezxhtml:class="templateClass">
     <ezcontent>
             custom tag content
         </ezcontent>

@@ -39,7 +39,7 @@ services:
     ezxmltext.command.generate_configuration:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\GenerateConfigurationCommand
         arguments:
-            - "@database_connection"
+            - "@ezxmltext.persistence.legacy.content_model_gateway"
             - "@ezrichtext.converter.edit.xhtml5"
         tags:
             - { name: console.command }

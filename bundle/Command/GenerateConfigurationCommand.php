@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 use EzSystems\EzPlatformRichText\eZ\RichText\Converter;
+use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 
 class GenerateConfigurationCommand extends Command
 {
@@ -39,14 +40,15 @@ class GenerateConfigurationCommand extends Command
     ];
 
     /**
-     * @var Connection
+     * @var Gateway
      */
-    protected $db;
+    private $gateway;
 
     /**
      * @var Converter
      */
-    protected $converter;
+    private $converter;
+
 
     /**
      * @var SymfonyStyle
@@ -54,12 +56,12 @@ class GenerateConfigurationCommand extends Command
     protected $io;
 
     /**
-     * @param Connection $db
+     * @param Gateway $gateway
      * @param Converter $converter
      */
-    public function __construct(Connection $db, Converter $converter)
+    public function __construct(Gateway $gateway, Converter $converter)
     {
-        $this->db = $db;
+        $this->gateway = $gateway;
         $this->converter = $converter;
 
         parent::__construct();
@@ -136,7 +138,7 @@ class GenerateConfigurationCommand extends Command
 
         $tags = [];
 
-        $statement = $this->getRichTextAttributes('eztemplate');
+        $statement = $this->gateway->getRichTextAttributes('eztemplate');
         $this->io->progressStart($statement->rowCount());
         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
             $xml = new DOMDocument();
@@ -169,34 +171,6 @@ class GenerateConfigurationCommand extends Command
         $this->io->progressFinish();
 
         return $tags;
-    }
-
-    /**
-     * Fetches Rich Text attributes for published versions only.
-     *
-     * @param string|null $filterBy Is used to filter Rich Text attributes by content
-     *
-     * @return PDOStatement
-     */
-    protected function getRichTextAttributes(string $filterBy = null): PDOStatement
-    {
-        $query = $this->db->createQueryBuilder();
-        $query->select('a.data_text', 'a.version', 'o.id')
-            ->from('ezcontentobject_attribute', 'a')
-            ->leftJoin('a', 'ezcontentobject', 'o', 'o.id = a.contentobject_id AND o.current_version = a.version')
-            ->where($query->expr()->andx(
-                $query->expr()->eq('a.data_type_string', ':data_type_string'),
-                $query->expr()->isNotNull('o.id')
-            ))
-            ->orderBy('a.id')
-            ->setParameter('data_type_string', 'ezrichtext');
-
-        if ($filterBy !== null) {
-            $condition = $query->expr()->like('a.data_text', ':custom_attributes_element');
-            $query->andWhere($condition)->setParameter('custom_attributes_element', '%' . $filterBy . '%');
-        }
-
-        return $query->execute();
     }
 
     /**

@@ -2,7 +2,6 @@ services:
     ezpublish.fieldType.ezxmltext:
         class: eZ\Publish\Core\FieldType\XmlText\Type
         parent: ezpublish.fieldType
-        public: true
         arguments:
             - '@?ezpublish.fieldType.ezxmltext.validator.internal_link'
         tags:

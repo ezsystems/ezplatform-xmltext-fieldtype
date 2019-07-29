@@ -405,8 +405,8 @@ class GenerateConfigurationCommand extends Command
                 $customClasses[self::$elementsMap[$element]] = [
                     'choices' => $classes,
                     'default_value' => $classes[0],
-                    'required' => 'false',
-                    'multiple' => 'false',
+                    'required' => false,
+                    'multiple' => false,
                 ];
             }
 

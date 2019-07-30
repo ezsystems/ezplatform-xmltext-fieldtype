@@ -29,9 +29,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:align">
-        <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="customtagalign">
+          <xsl:with-param name="align" select="@custom:align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:if test="./text()">
         <xsl:element name="ezcontent" namespace="http://docbook.org/ns/docbook">
@@ -61,9 +61,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:align">
-        <xsl:attribute name="ezxhtml:align">
-          <xsl:value-of select="translate(@custom:align, $uppercase, $lowercase)"/>
-        </xsl:attribute>
+        <xsl:call-template name="customtagalign">
+          <xsl:with-param name="align" select="@custom:align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:if test="./* | ./text()">
         <xsl:element name="ezcontent" namespace="http://docbook.org/ns/docbook">
@@ -589,16 +589,9 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:attribute name="ezxhtml:align">
-          <xsl:choose>
-            <xsl:when test="translate(@align, $uppercase, $lowercase) = 'justify'">
-              <xsl:value-of select="'center'"/>
-            </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="translate(@align, $uppercase, $lowercase)"/>
-          </xsl:otherwise>
-          </xsl:choose>
-        </xsl:attribute>
+        <xsl:call-template name="customtagalign">
+          <xsl:with-param name="align" select="@align"/>
+        </xsl:call-template>
       </xsl:if>
       <xsl:if test="@*[starts-with( name( . ), 'ezlegacytmp-embed-link-' )]">
         <xsl:element name="ezlink" namespace="http://docbook.org/ns/docbook">
@@ -731,6 +724,24 @@
       </xsl:when>
       <xsl:when test="translate($align, $uppercase, $lowercase) = 'justify'">
         <xsl:attribute name="ezxhtml:textalign">justify</xsl:attribute>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="customtagalign">
+    <xsl:param name="align"/>
+    <xsl:choose>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'center'">
+        <xsl:attribute name="ezxhtml:align">center</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'left'">
+        <xsl:attribute name="ezxhtml:align">left</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'right'">
+        <xsl:attribute name="ezxhtml:align">right</xsl:attribute>
+      </xsl:when>
+      <xsl:when test="translate($align, $uppercase, $lowercase) = 'justify'">
+        <xsl:attribute name="ezxhtml:align">justify</xsl:attribute>
       </xsl:when>
     </xsl:choose>
   </xsl:template>

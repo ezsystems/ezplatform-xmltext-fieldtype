@@ -741,7 +741,7 @@
         <xsl:attribute name="ezxhtml:align">right</xsl:attribute>
       </xsl:when>
       <xsl:when test="translate($align, $uppercase, $lowercase) = 'justify'">
-        <xsl:attribute name="ezxhtml:align">justify</xsl:attribute>
+        <xsl:attribute name="ezxhtml:align">center</xsl:attribute>
       </xsl:when>
     </xsl:choose>
   </xsl:template>

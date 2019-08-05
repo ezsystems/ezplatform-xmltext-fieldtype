@@ -47,10 +47,6 @@ before_install:
 before_script:
     # Disable memory_limit for composer
     - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    # Enable swap to avoid Composer memory issues
-    - sudo /bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=2048
-    - sudo /sbin/mkswap /var/swap.1
-    - sudo /sbin/swapon /var/swap.1
     - travis_retry composer install --no-progress --no-interaction --prefer-dist
     - if [ "$SOLR_VERSION" != "" ] ; then ./vendor/ezsystems/ezplatform-solr-search-engine/bin/.travis/init_solr.sh ; fi
 

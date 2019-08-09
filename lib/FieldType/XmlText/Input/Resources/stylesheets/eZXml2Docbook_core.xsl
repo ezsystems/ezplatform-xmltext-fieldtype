@@ -29,7 +29,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:align">
-        <xsl:call-template name="customtagalign">
+        <xsl:call-template name="align">
           <xsl:with-param name="align" select="@custom:align"/>
         </xsl:call-template>
       </xsl:if>
@@ -61,7 +61,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@custom:align">
-        <xsl:call-template name="customtagalign">
+        <xsl:call-template name="align">
           <xsl:with-param name="align" select="@custom:align"/>
         </xsl:call-template>
       </xsl:if>
@@ -589,7 +589,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@align">
-        <xsl:call-template name="customtagalign">
+        <xsl:call-template name="align">
           <xsl:with-param name="align" select="@align"/>
         </xsl:call-template>
       </xsl:if>
@@ -728,7 +728,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="customtagalign">
+  <xsl:template name="align">
     <xsl:param name="align"/>
     <xsl:choose>
       <xsl:when test="translate($align, $uppercase, $lowercase) = 'center'">

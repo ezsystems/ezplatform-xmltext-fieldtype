@@ -1,4 +1,4 @@
-{% extends 'EzPublishCoreBundle::content_fields.html.twig' %}
+{% extends '@EzPublishCore/content_fields.html.twig' %}
 
 {% block ezxmltext_field %}
     {%- set field_value = field.value.xml|xmltext_to_html5 -%}

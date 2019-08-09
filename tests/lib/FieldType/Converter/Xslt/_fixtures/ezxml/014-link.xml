@@ -22,6 +22,6 @@
   </paragraph>
   <paragraph><anchor name="anchor"/>Some anchored content.</paragraph>
   <paragraph>
-    <link object_id="333" xhtml:id="id7">Link with nested embed<embed-inline view="embed-inline" size="original" object_id="444"/></link>
+    <link object_id="333" xhtml:id="id7">link with nested embed<embed-inline view="embed-inline" size="original" object_id="444"/></link>
   </paragraph>
 </section>

@@ -14,7 +14,6 @@ class ConvertXmlTextToRichTextCommandSubProcess extends ConvertXmlTextToRichText
     {
         parent::configure();
         $this
-            ->setName('ezxmltext:convert-to-richtext-sub-process')
             ->setDescription('internal command used by ezxmltext:convert-to-richtext')
             ->addOption(
                 'offset',

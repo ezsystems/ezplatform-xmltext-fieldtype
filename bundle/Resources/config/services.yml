@@ -17,13 +17,13 @@ services:
             - "%kernel.cache_dir%"
             - "@?logger"
         tags:
-            -  { name: console.command }
+            -  { name: console.command, command: ezxmltext:convert-to-richtext }
 
     ezxmltext.command.convert_to_richtext_sub_process:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommandSubProcess
         parent: ezxmltext.command.convert_to_richtext
         tags:
-            -  { name: console.command }
+            -  { name: console.command, command: ezxmltext:convert-to-richtext-sub-process }
 
     ezxmltext.command.import_xml:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ImportXmlCommand
@@ -31,7 +31,7 @@ services:
             - "@ezxmltext.persistence.legacy.content_model_gateway"
             - "@ezxmltext.richtext_converter"
         tags:
-            -  { name: console.command }
+            -  { name: console.command, command: ezxmltext:import-xml }
 
     ezxmltext.richtext_converter:
         class: eZ\Publish\Core\FieldType\XmlText\Converter\RichText

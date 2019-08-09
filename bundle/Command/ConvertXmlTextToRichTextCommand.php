@@ -7,7 +7,7 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 use DOMDocument;
 use PDO;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\ProcessBuilder;
 use Psr\Log\LogLevel;
 
-class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
+class ConvertXmlTextToRichTextCommand extends Command
 {
     const MAX_OBJECTS_PER_CHILD = 1000;
     const DEFAULT_REPOSITORY_USER = 'admin';
@@ -105,7 +105,6 @@ class ConvertXmlTextToRichTextCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ezxmltext:convert-to-richtext')
             ->setDescription(<<< EOT
 Converts XmlText fields from eZ Publish Platform to RichText fields.
 

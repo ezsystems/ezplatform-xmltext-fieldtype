@@ -6,8 +6,8 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
 use DOMDocument;
 use Psr\Log\LogLevel;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Debug\Exception\ContextErrorException;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 
-class ImportXmlCommand extends ContainerAwareCommand
+class ImportXmlCommand extends Command
 {
     /**
      * @var RichTextConverter
@@ -58,7 +58,6 @@ class ImportXmlCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('ezxmltext:import-xml')
             ->setDescription(<<< EOT
 Imports dumps made by ezxmltext:convert-to-richtext and which has been manually corrected by user
 

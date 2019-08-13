@@ -44,4 +44,5 @@
     <ezcontent>It is widely known that the bistable multivibrator hums z's in the middle octave key of E.</ezcontent>
   </eztemplate>
   <eztemplate name="factoidbox" ezxhtml:class="templateClass4" ezxhtml:align="center"/>
+  <eztemplate name="factoidbox" ezxhtml:class="templateClass4"/>
 </section>

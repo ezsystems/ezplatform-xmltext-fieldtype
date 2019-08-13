@@ -11,4 +11,6 @@
   <para ezxhtml:textalign="right">This is a right aligned paragraph.</para>
   <para ezxhtml:textalign="justify">This is a justified paragraph.</para>
   <para><ezattribute><ezvalue key="name-1">value 1</ezvalue><ezvalue key="name-2">value 2</ezvalue></ezattribute>This is a paragraph with custom tags.</para>
+  <para>This is a paragraph with unsupported align attribute.</para>
+  <para ezxhtml:textalign="left">This is a paragraph with translated valid align attribute.</para>
 </section>

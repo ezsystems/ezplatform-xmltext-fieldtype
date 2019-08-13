@@ -10,4 +10,6 @@
   <para ezxhtml:textalign="center">This is a centered paragraph.</para>
   <para ezxhtml:textalign="right">This is a right aligned paragraph.</para>
   <para ezxhtml:textalign="justify">This is a justified paragraph.</para>
+  <para>This is a paragraph with unsupported align attribute.</para>
+  <para ezxhtml:textalign="left">This is a paragraph with translated valid align attribute.</para>
 </section>

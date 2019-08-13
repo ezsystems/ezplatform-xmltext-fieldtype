@@ -12,4 +12,5 @@
     </ezconfig>
   </ezembed>
   <ezembed xlink:href="ezlocation://601" view="line" xml:id="embed-id-2" ezxhtml:class="embedClass2" ezxhtml:align="right"/>
+  <ezembed xlink:href="ezlocation://601" view="line" xml:id="embed-id-3" ezxhtml:class="embedClass2"/>
 </section>

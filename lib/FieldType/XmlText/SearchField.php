@@ -22,9 +22,6 @@ use DOMNode;
  */
 class SearchField implements Indexable
 {
-    // solr.StrField max length have a hard limit of slightly less than 32K.
-    const VALUE_LIMIT = 31744;
-
     /**
      * Get index data for field for search backend.
      *
@@ -84,15 +81,25 @@ class SearchField implements Indexable
     private function extractShortText(DOMDocument $document)
     {
         $result = null;
+        // try to extract first paragraph/tag
         if ($section = $document->documentElement->firstChild) {
-            $result = $section->textContent;
+            $textDom = $section->firstChild;
+
+            if ($textDom && $textDom->hasChildNodes()) {
+                $result = $textDom->firstChild->textContent;
+            } elseif ($textDom) {
+                $result = $textDom->textContent;
+            }
         }
 
         if ($result === null) {
             $result = $document->documentElement->textContent;
         }
 
-        return mb_substr(strtok(trim($result), "\r\n"), 0, self::VALUE_LIMIT);
+        // In case of newlines, extract first line. Also limit size to 255 which is maxsize on sql impl.
+        $lines = preg_split('/\r\n|\n|\r/', trim($result), -1, PREG_SPLIT_NO_EMPTY);
+
+        return empty($lines) ? '' : trim(mb_substr($lines[0], 0, 255));
     }
 
     /**

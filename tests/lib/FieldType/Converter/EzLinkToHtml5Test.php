@@ -292,7 +292,7 @@ class EzLinkToHtml5Test extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockContentService()
     {
@@ -300,7 +300,7 @@ class EzLinkToHtml5Test extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockLocationService()
     {
@@ -308,7 +308,7 @@ class EzLinkToHtml5Test extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockURLAliasService()
     {
@@ -316,7 +316,7 @@ class EzLinkToHtml5Test extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockUrlAliasRouter()
     {
@@ -327,7 +327,7 @@ class EzLinkToHtml5Test extends TestCase
      * @param $contentService
      * @param $locationService
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockRepository($contentService, $locationService, $urlAliasService)
     {

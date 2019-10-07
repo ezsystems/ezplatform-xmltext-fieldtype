@@ -594,7 +594,7 @@ ezlegacytmp-embed-link-node_id="222"
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockFragmentHandler()
     {
@@ -602,7 +602,7 @@ ezlegacytmp-embed-link-node_id="222"
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockContentService()
     {
@@ -610,7 +610,7 @@ ezlegacytmp-embed-link-node_id="222"
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockLocationService()
     {
@@ -618,7 +618,7 @@ ezlegacytmp-embed-link-node_id="222"
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockPermissionResolver()
     {
@@ -626,7 +626,7 @@ ezlegacytmp-embed-link-node_id="222"
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getLoggerMock()
     {
@@ -638,7 +638,7 @@ ezlegacytmp-embed-link-node_id="222"
      * @param $locationService
      * @param $permissionResolver
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockRepository($contentService, $locationService, $permissionResolver)
     {

@@ -40,9 +40,9 @@ class MethodCallCountConstraint extends InvokedRecorder
     }
 
     /**
-     * @param  PHPUnit_Framework_MockObject_Invocation $invocation
+     * @param  \PHPUnit\Framework\MockObject\Invocation $invocation
      * @return mixed|void
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function invoked(Invocation $invocation): void
     {
@@ -71,7 +71,7 @@ class MethodCallCountConstraint extends InvokedRecorder
      * Verifies that the current expectation is valid. If everything is OK the
      * code should just return, if not it must throw an exception.
      *
-     * @throws PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function verify($test = null): void
     {

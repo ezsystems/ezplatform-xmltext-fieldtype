@@ -23,7 +23,7 @@ use PHPUnit\Framework\TestCase;
 class LegacyStorageTest extends TestCase
 {
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
+     * @return \PHPUnit\Framework\MockObject\MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
      */
     protected function getPartlyMockedLegacyStorage(array $testMethods = null)
     {

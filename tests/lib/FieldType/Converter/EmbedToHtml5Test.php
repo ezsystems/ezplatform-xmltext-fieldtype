@@ -12,6 +12,7 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedToHtml5;
 use eZ\Publish\Core\Repository\LocationService;
+use eZ\Publish\Core\Repository\Permission\PermissionResolver;
 use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
 use eZ\Publish\Core\Repository\Values\Content\Location;
@@ -619,6 +620,14 @@ ezlegacytmp-embed-link-node_id="222"
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
+    protected function getMockPermissionResolver()
+    {
+        return $this->createMock(PermissionResolver::class);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
     protected function getLoggerMock()
     {
         return $this->createMock(LoggerInterface::class);
@@ -627,10 +636,11 @@ ezlegacytmp-embed-link-node_id="222"
     /**
      * @param $contentService
      * @param $locationService
+     * @param $permissionResolver
      *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getMockRepository($contentService, $locationService)
+    protected function getMockRepository($contentService, $locationService, $permissionResolver)
     {
         $repository = $this->createMock(Repository::class);
 
@@ -651,6 +661,10 @@ ezlegacytmp-embed-link-node_id="222"
             ->method('getLocationService')
             ->willReturn($locationService);
 
+        $repository->expects($this->any())
+            ->method('getPermissionResolver')
+            ->willReturn($permissionResolver);
+
         return $repository;
     }
 
@@ -669,6 +683,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
+        $permissionResolver = $this->getMockPermissionResolver();
 
         $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
@@ -686,15 +701,15 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo($contentId))
             ->willReturn($content);
 
-        $repository = $this->getMockRepository($contentService, null);
+        $repository = $this->getMockRepository($contentService, null, $permissionResolver);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 2))
+            $permissionResolver->expects($this->at($index))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
                     $permissions[1],
                     $content,
-                    null
+                    []
                 )
                 ->willReturn(
                     $permissions[2]
@@ -739,6 +754,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $fragmentHandler = $this->getMockFragmentHandler();
         $locationService = $this->getMockLocationService();
+        $permissionResolver = $this->getMockPermissionResolver();
 
         $contentInfo = new ContentInfo(['id' => 42]);
         $location = new Location(['id' => $locationId, 'contentInfo' => $contentInfo]);
@@ -748,15 +764,15 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo($locationId))
             ->willReturn($location);
 
-        $repository = $this->getMockRepository(null, $locationService);
+        $repository = $this->getMockRepository(null, $locationService, $permissionResolver);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 2))
+            $permissionResolver->expects($this->at($index))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
                     $permissions[1],
                     $contentInfo,
-                    $location
+                    [$location]
                 )
                 ->willReturn(
                     $permissions[2]
@@ -855,6 +871,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
+        $permissionResolver = $this->getMockPermissionResolver();
 
         $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
@@ -872,15 +889,15 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo(42))
             ->willReturn($content);
 
-        $repository = $this->getMockRepository($contentService, null);
+        $repository = $this->getMockRepository($contentService, null, $permissionResolver);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 2))
+            $permissionResolver->expects($this->at($index))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
                     $permissions[1],
                     $content,
-                    null
+                    []
                 )
                 ->willReturn(
                     $permissions[2]
@@ -906,6 +923,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $fragmentHandler = $this->getMockFragmentHandler();
         $locationService = $this->getMockLocationService();
+        $permissionResolver = $this->getMockPermissionResolver();
 
         $contentInfo = $this->createMock(ContentInfo::class);
         $location = $this->createMock(APILocation::class);
@@ -919,16 +937,16 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo(42))
             ->willReturn($location);
 
-        $repository = $this->getMockRepository(null, $locationService);
-        $repository->expects($this->at(2))
+        $repository = $this->getMockRepository(null, $locationService, $permissionResolver);
+        $permissionResolver->expects($this->at(0))
             ->method('canUser')
-            ->with('content', 'read', $contentInfo, $location)
+            ->with('content', 'read', $contentInfo, [$location])
             ->willReturn(
                 false
             );
-        $repository->expects($this->at(3))
+        $permissionResolver->expects($this->at(1))
             ->method('canUser')
-            ->with('content', 'view_embed', $contentInfo, $location)
+            ->with('content', 'view_embed', $contentInfo, [$location])
             ->willReturn(
                 false
             );
@@ -975,16 +993,14 @@ ezlegacytmp-embed-link-node_id="222"
     {
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
-        $repository = $this->getMockRepository($contentService, null);
+        $repository = $this->getMockRepository($contentService, null, null);
         $logger = $this->getLoggerMock();
 
         $contentService->expects($this->once())
             ->method('loadContent')
             ->with($this->equalTo(42))
-            ->will(
-                $this->throwException(
-                    $this->createMock(NotFoundException::class)
-                )
+            ->willThrowException(
+                $this->createMock(NotFoundException::class)
             );
 
         $logger->expects($this->at(0))
@@ -1043,16 +1059,14 @@ ezlegacytmp-embed-link-node_id="222"
     {
         $fragmentHandler = $this->getMockFragmentHandler();
         $locationService = $this->getMockLocationService();
-        $repository = $this->getMockRepository(null, $locationService);
+        $repository = $this->getMockRepository(null, $locationService, null);
         $logger = $this->getLoggerMock();
 
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo(42))
-            ->will(
-                $this->throwException(
-                    $this->createMock(NotFoundException::class)
-                )
+            ->willThrowException(
+                $this->createMock(NotFoundException::class)
             );
 
         $logger->expects($this->at(0))
@@ -1100,6 +1114,7 @@ ezlegacytmp-embed-link-node_id="222"
 
         $fragmentHandler = $this->getMockFragmentHandler();
         $contentService = $this->getMockContentService();
+        $permissionResolver = $this->getMockPermissionResolver();
 
         $versionInfo = $this->createMock(APIVersionInfo::class);
         $versionInfo->expects($this->any())
@@ -1117,15 +1132,15 @@ ezlegacytmp-embed-link-node_id="222"
             ->with($this->equalTo($contentId))
             ->willReturn($content);
 
-        $repository = $this->getMockRepository($contentService, null);
+        $repository = $this->getMockRepository($contentService, null, $permissionResolver);
         foreach ($permissionsMap as $index => $permissions) {
-            $repository->expects($this->at($index + 2))
+            $permissionResolver->expects($this->at($index))
                 ->method('canUser')
                 ->with(
                     $permissions[0],
                     $permissions[1],
                     $content,
-                    null
+                    []
                 )
                 ->willReturn(
                     $permissions[2]

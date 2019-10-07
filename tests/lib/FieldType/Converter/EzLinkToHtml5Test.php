@@ -517,7 +517,7 @@ class EzLinkToHtml5Test extends TestCase
         $locationService->expects($this->once())
             ->method('loadLocation')
             ->with($this->equalTo($locationId))
-            ->will($this->throwException($exception));
+            ->willThrowException($exception);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter, $logger);
         $converter->convert($xmlDoc);
@@ -551,7 +551,7 @@ class EzLinkToHtml5Test extends TestCase
         $contentService->expects($this->once())
             ->method('loadContentInfo')
             ->with($this->equalTo($contentId))
-            ->will($this->throwException($exception));
+            ->willThrowException($exception);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter, $logger);
         $converter->convert($xmlDoc);

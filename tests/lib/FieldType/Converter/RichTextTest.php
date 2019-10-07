@@ -12,7 +12,7 @@ use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
 use DOMDocument;
 use DOMXPath;
 use PHPUnit\Framework\TestCase;
-use eZ\Publish\Core\SignalSlot\Repository;
+use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;

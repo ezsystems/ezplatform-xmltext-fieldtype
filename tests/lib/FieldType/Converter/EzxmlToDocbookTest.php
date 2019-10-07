@@ -10,7 +10,7 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
-use eZ\Publish\Core\SignalSlot\Repository;
+use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;

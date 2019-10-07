@@ -108,8 +108,8 @@ class EmbedToHtml5 implements Converter
                     );
 
                     if (
-                        !$this->repository->canUser('content', 'read', $content)
-                        && !$this->repository->canUser('content', 'view_embed', $content)
+                        !$this->repository->getPermissionResolver()->canUser('content', 'read', $content)
+                        && !$this->repository->getPermissionResolver()->canUser('content', 'view_embed', $content)
                     ) {
                         throw new UnauthorizedException('content', 'read', ['contentId' => $contentId]);
                     }
@@ -117,7 +117,7 @@ class EmbedToHtml5 implements Converter
                     // Check published status of the Content
                     if (
                         $content->getVersionInfo()->status !== APIVersionInfo::STATUS_PUBLISHED
-                        && !$this->repository->canUser('content', 'versionread', $content)
+                        && !$this->repository->getPermissionResolver()->canUser('content', 'versionread', $content)
                     ) {
                         throw new UnauthorizedException('content', 'versionread', ['contentId' => $contentId]);
                     }
@@ -151,8 +151,8 @@ class EmbedToHtml5 implements Converter
                     );
 
                     if (
-                        !$this->repository->canUser('content', 'read', $location->getContentInfo(), $location)
-                        && !$this->repository->canUser('content', 'view_embed', $location->getContentInfo(), $location)
+                        !$this->repository->getPermissionResolver()->canUser('content', 'read', $location->getContentInfo(), [$location])
+                        && !$this->repository->getPermissionResolver()->canUser('content', 'view_embed', $location->getContentInfo(), [$location])
                     ) {
                         throw new UnauthorizedException('content', 'read', ['locationId' => $location->id]);
                     }

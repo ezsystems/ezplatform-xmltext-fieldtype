@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section
+        xmlns="http://docbook.org/ns/docbook"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
+        xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" version="5.0-variant ezpublish-1.0">
+    <para>paragraph text and (
+        <link xlink:href="ezlocation://333" xlink:show="none">Foo
+            <ezembedinline xlink:href="ezcontent://444" view="embed-inline"><ezconfig><ezvalue key="size">original</ezvalue></ezconfig></ezembedinline>bar
+            <ezembedinline xlink:href="ezcontent://445" view="embed-inline"><ezconfig><ezvalue key="size">original</ezvalue></ezconfig></ezembedinline>2
+        </link>    </para>
+</section>

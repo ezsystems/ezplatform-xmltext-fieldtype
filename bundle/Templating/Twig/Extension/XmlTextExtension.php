@@ -11,10 +11,10 @@
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Templating\Twig\Extension;
 
 use eZ\Publish\Core\FieldType\XmlText\Converter\Html5 as Html5Converter;
-use Twig_Extension;
-use Twig_SimpleFilter;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
-class XmlTextExtension extends Twig_Extension
+class XmlTextExtension extends AbstractExtension
 {
     /**
      * @var Html5Converter
@@ -34,7 +34,7 @@ class XmlTextExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter(
+            new TwigFilter(
                 'xmltext_to_html5',
                 [$this, 'xmlTextToHtml5'],
                 ['is_safe' => ['html']]

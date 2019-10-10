@@ -9,7 +9,7 @@
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
 use PHPUnit\Framework\MockObject\Invocation;
-use PHPUnit\Framework\MockObject\Matcher\InvokedRecorder;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -24,7 +24,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  *
  * Based on workaround proposed on https://github.com/sebastianbergmann/phpunit-mock-objects/issues/65
  */
-class MethodCallCountConstraint extends InvokedRecorder
+class MethodCallCountConstraint extends InvocationOrder
 {
     /**
      * @var int
@@ -39,15 +39,13 @@ class MethodCallCountConstraint extends InvokedRecorder
         $this->expectedCount = $expectedCount;
     }
 
-    /**
-     * @param  \PHPUnit\Framework\MockObject\Invocation $invocation
-     * @return mixed|void
-     * @throws \PHPUnit\Framework\ExpectationFailedException
-     */
-    public function invoked(Invocation $invocation): void
+    public function matches(Invocation $invocation): bool
     {
-        parent::invoked($invocation);
+        return true;
+    }
 
+    public function invokedDo(Invocation $invocation): void
+    {
         $count = $this->getInvocationCount();
 
         if ($count > $this->expectedCount) {

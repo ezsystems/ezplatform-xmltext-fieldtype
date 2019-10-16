@@ -31,9 +31,9 @@ class EmbedLinking implements Converter
     public function convert(DOMDocument $document)
     {
         $xpath = new DOMXPath($document);
-        // Select embeds that are linked
+        // Select embeds that are linked ( but only where embed is the only child of the link )
         // After Expanding converter such links will contain only single embed element
-        $xpathExpression = '//embed[parent::link]|//embed-inline[parent::link]';
+        $xpathExpression = '//embed[parent::link][count(preceding-sibling::*)+count(following-sibling::*)=0]|//embed-inline[parent::link][count(preceding-sibling::*)+count(following-sibling::*)=0]';
 
         $linkedEmbeds = $xpath->query($xpathExpression);
 

@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Helper\ProgressBar;
+use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
@@ -27,6 +28,11 @@ class ConvertXmlTextToRichTextCommand extends Command
     const MAX_OBJECTS_PER_CHILD = 1000;
     const DEFAULT_REPOSITORY_USER = 'admin';
 
+    /**
+     * @var \eZ\Publish\API\Repository\Repository
+     */
+    private $repository;
+    
     /**
      * @var \eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway
      */
@@ -91,10 +97,11 @@ class ConvertXmlTextToRichTextCommand extends Command
      */
     protected $kernelCacheDir;
 
-    public function __construct(Gateway $gateway, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
+    public function __construct(Repository $repository, Gateway $gateway, RichTextConverter $converter, $kernelCacheDir, LoggerInterface $logger)
     {
         parent::__construct();
 
+        $this->repository = $repository;
         $this->gateway = $gateway;
         $this->converter = $converter;
         $this->kernelCacheDir = $kernelCacheDir;
@@ -387,9 +394,8 @@ EOT
 
     protected function login()
     {
-        $userService = $this->getContainer()->get('ezpublish.api.service.user');
-        $repository = $this->getContainer()->get('ezpublish.api.repository');
-        $permissionResolver = $repository->getPermissionResolver();
+        $userService = $this->repository->getUserService();
+        $permissionResolver = $this->repository->getPermissionResolver();
         $permissionResolver->setCurrentUserReference($userService->loadUserByLogin($this->userLogin));
     }
 

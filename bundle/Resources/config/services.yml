@@ -12,6 +12,7 @@ services:
     ezxmltext.command.convert_to_richtext:
         class: EzSystems\EzPlatformXmlTextFieldTypeBundle\Command\ConvertXmlTextToRichTextCommand
         arguments:
+            - "@ezpublish.api.repository"
             - "@ezxmltext.persistence.legacy.content_model_gateway"
             - "@ezxmltext.richtext_converter"
             - "%kernel.cache_dir%"

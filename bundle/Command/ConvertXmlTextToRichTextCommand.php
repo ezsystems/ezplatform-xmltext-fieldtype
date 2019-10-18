@@ -19,7 +19,7 @@ use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\ProcessBuilder;
+use Symfony\Component\Process\Process;
 use Psr\Log\LogLevel;
 
 class ConvertXmlTextToRichTextCommand extends Command
@@ -535,6 +535,8 @@ EOT
             array_unshift($arguments, "memory_limit=$memoryLimit");
             array_unshift($arguments, '-d');
         }
+        
+        array_unshift($arguments, $this->getPhpPath());
 
         if ($dryRun) {
             $arguments[] = '--dry-run';
@@ -556,13 +558,11 @@ EOT
             $arguments[] = '-vvv';
         }
 
-        $process = new ProcessBuilder($arguments);
+        $process = new Process($arguments);
         $process->setTimeout(null);
-        $process->setPrefix($this->getPhpPath());
-        $p = $process->getProcess();
-        $p->start();
+        $process->start();
 
-        return $p;
+        return $process;
     }
 
     private function getPhpPath()

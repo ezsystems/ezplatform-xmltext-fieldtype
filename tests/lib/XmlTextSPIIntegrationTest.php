@@ -17,7 +17,7 @@ use eZ\Publish\Core\FieldType\FieldSettings;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
 use eZ\Publish\SPI\Persistence\Content\FieldTypeConstraints;
 use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage;
-use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\LegacyStorage as UrlGateway;
+use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\DoctrineStorage as UrlGateway;
 
 /**
  * Integration test for legacy storage field types.
@@ -69,7 +69,7 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
                 new LegacyStorage(
                     $this->getDatabaseHandler(),
                     new UrlGateway(
-                        $this->getDatabaseHandler()
+                        $this->getDatabaseConnection()
                     )
                 )
             )

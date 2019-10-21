@@ -10,27 +10,27 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway;
 
+use Doctrine\DBAL\Connection;
 use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
-use eZ\Publish\Core\Persistence\Database\DatabaseHandler;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;
 use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
 use DOMDocument;
 use PDO;
 
-class LegacyStorage extends Gateway
+class DoctrineStorage extends Gateway
 {
     /**
-     * @var \eZ\Publish\Core\Persistence\Database\DatabaseHandler
+     * @var \Doctrine\DBAL\Connection
      */
-    protected $dbHandler;
+    protected $connection;
 
-    public function __construct(DatabaseHandler $dbHandler, UrlGateway $urlGateway)
+    public function __construct(Connection $connection, UrlGateway $urlGateway)
     {
         parent::__construct($urlGateway);
 
-        $this->dbHandler = $dbHandler;
+        $this->connection = $connection;
     }
 
     /**
@@ -208,15 +208,21 @@ class LegacyStorage extends Gateway
         $objectRemoteIdMap = [];
 
         if (!empty($linksRemoteIds)) {
-            /** @var $q \eZ\Publish\Core\Persistence\Database\SelectQuery */
-            $q = $this->dbHandler->createSelectQuery();
-            $q
-                ->select('id', 'remote_id')
-                ->from('ezcontentobject')
-                ->where($q->expr->in('remote_id', $linksRemoteIds));
+            $q = $this->connection->createQueryBuilder();
+            $q->select(
+                $this->connection->quoteIdentifier('id'),
+                $this->connection->quoteIdentifier('remote_id')
+            )->from(
+                'ezcontentobject'
+            )->where(
+                $q->expr()->in('remote_id', ':remote_ids')
+            )->setParameter(
+                ':remote_ids',
+                $linksRemoteIds,
+                Connection::PARAM_STR_ARRAY
+            );
 
-            $statement = $q->prepare();
-            $statement->execute();
+            $statement = $q->execute();
             foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 $objectRemoteIdMap[$row['remote_id']] = $row['id'];
             }

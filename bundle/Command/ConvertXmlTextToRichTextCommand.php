@@ -32,7 +32,7 @@ class ConvertXmlTextToRichTextCommand extends Command
      * @var \eZ\Publish\API\Repository\Repository
      */
     private $repository;
-    
+
     /**
      * @var \eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway
      */
@@ -541,7 +541,7 @@ EOT
             array_unshift($arguments, "memory_limit=$memoryLimit");
             array_unshift($arguments, '-d');
         }
-        
+
         array_unshift($arguments, $this->getPhpPath());
 
         if ($dryRun) {

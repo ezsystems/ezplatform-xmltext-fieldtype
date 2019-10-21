@@ -13,21 +13,22 @@ namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Gateway;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use eZ\Publish\SPI\Persistence\Content\Field;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
-use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the LegacyStorage
- * Class LegacyStorageTest.
+ * Tests the DoctrineStorage
+ * Class DoctrineStorageTest.
  */
-class LegacyStorageTest extends TestCase
+class DoctrineStorageTest extends TestCase
 {
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage
+     * @return \PHPUnit\Framework\MockObject\MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage
      */
-    protected function getPartlyMockedLegacyStorage(array $testMethods = null)
+    protected function getPartlyMockedDoctrineStorage(array $testMethods = null)
     {
-        return $this->getMockBuilder(LegacyStorage::class)
+        return $this->getMockBuilder(DoctrineStorage::class)
             ->disableOriginalConstructor()
             ->setMethods($testMethods)
             ->getMock();
@@ -200,7 +201,7 @@ class LegacyStorageTest extends TestCase
     ) {
         $versionInfo = new VersionInfo();
         $field = new Field(['value' => new FieldValue(['data' => $inputXML])]);
-        $legacyStorage = $this->getPartlyMockedLegacyStorage(['getUrlIdMap', 'getObjectId', 'insertUrl', 'linkUrl']);
+        $doctrineStorage = $this->getPartlyMockedDoctrineStorage(['getUrlIdMap', 'getObjectId', 'insertUrl', 'linkUrl']);
 
         $methodMap = [
             'getUrlIdMap' => $getLinksIdData,
@@ -210,17 +211,17 @@ class LegacyStorageTest extends TestCase
         ];
         foreach ($methodMap as $method => $data) {
             if (empty($data)) {
-                $legacyStorage->expects($this->never())
+                $doctrineStorage->expects($this->never())
                     ->method($method);
             } else {
-                $legacyStorage->expects($this->once())
+                $doctrineStorage->expects($this->once())
                     ->method($method)
                     ->with($this->equalTo($data[0]))
                     ->willReturn($data[1]);
             }
         }
 
-        $this->assertEquals($expectedReturnValue, $legacyStorage->storeFieldData($versionInfo, $field));
+        $this->assertEquals($expectedReturnValue, $doctrineStorage->storeFieldData($versionInfo, $field));
         $this->assertEquals($expectedResultXML, $field->value->data);
     }
 
@@ -287,11 +288,11 @@ class LegacyStorageTest extends TestCase
         $getObjectIdData,
         $insertLinkData
     ) {
-        $this->expectException(\eZ\Publish\Core\Base\Exceptions\NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $versionInfo = new VersionInfo();
         $field = new Field(['value' => new FieldValue(['data' => $inputXML])]);
-        $legacyStorage = $this->getPartlyMockedLegacyStorage(['getUrlIdMap', 'getObjectId', 'insertUrl']);
+        $doctrineStorage = $this->getPartlyMockedDoctrineStorage(['getUrlIdMap', 'getObjectId', 'insertUrl']);
 
         $methodMap = [
             'getUrlIdMap' => $getLinksIdData,
@@ -300,17 +301,17 @@ class LegacyStorageTest extends TestCase
         ];
         foreach ($methodMap as $method => $data) {
             if (empty($data)) {
-                $legacyStorage->expects($this->never())
+                $doctrineStorage->expects($this->never())
                     ->method($method);
             } else {
-                $legacyStorage->expects($this->once())
+                $doctrineStorage->expects($this->once())
                     ->method($method)
                     ->with($this->equalTo($data[0]))
                     ->willReturn($data[1]);
             }
         }
 
-        $legacyStorage->storeFieldData($versionInfo, $field);
+        $doctrineStorage->storeFieldData($versionInfo, $field);
     }
 
     /**
@@ -364,19 +365,19 @@ class LegacyStorageTest extends TestCase
         $expectedResultXML
     ) {
         $field = new Field(['value' => new FieldValue(['data' => $inputXML])]);
-        $legacyStorage = $this->getPartlyMockedLegacyStorage(['getIdUrlMap']);
+        $doctrineStorage = $this->getPartlyMockedDoctrineStorage(['getIdUrlMap']);
 
         if (empty($getLinksUrlData)) {
-            $legacyStorage->expects($this->never())
+            $doctrineStorage->expects($this->never())
                 ->method('getIdUrlMap');
         } else {
-            $legacyStorage->expects($this->once())
+            $doctrineStorage->expects($this->once())
                 ->method('getIdUrlMap')
                 ->with($this->equalTo($getLinksUrlData[0]))
                 ->willReturn($getLinksUrlData[1]);
         }
 
-        $legacyStorage->getFieldData($field);
+        $doctrineStorage->getFieldData($field);
         $this->assertEquals($expectedResultXML, $field->value->data);
     }
 }

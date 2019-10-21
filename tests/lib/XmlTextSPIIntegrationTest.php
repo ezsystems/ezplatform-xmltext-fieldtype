@@ -16,7 +16,7 @@ use eZ\Publish\Core\FieldType;
 use eZ\Publish\Core\FieldType\FieldSettings;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
 use eZ\Publish\SPI\Persistence\Content\FieldTypeConstraints;
-use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\LegacyStorage;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
 use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\DoctrineStorage as UrlGateway;
 
 /**
@@ -66,8 +66,8 @@ class XmlTextSPIIntegrationTest extends BaseIntegrationTest
             $fieldType,
             new XmlTextConverter(),
             new FieldType\XmlText\XmlTextStorage(
-                new LegacyStorage(
-                    $this->getDatabaseHandler(),
+                new DoctrineStorage(
+                    $this->getDatabaseConnection(),
                     new UrlGateway(
                         $this->getDatabaseConnection()
                     )

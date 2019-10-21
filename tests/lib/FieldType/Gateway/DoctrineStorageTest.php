@@ -26,11 +26,11 @@ class DoctrineStorageTest extends TestCase
     /**
      * @return \PHPUnit\Framework\MockObject\MockObject|\eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage
      */
-    protected function getPartlyMockedDoctrineStorage(array $testMethods = null)
+    protected function getPartlyMockedDoctrineStorage(array $testMethods)
     {
         return $this->getMockBuilder(DoctrineStorage::class)
             ->disableOriginalConstructor()
-            ->setMethods($testMethods)
+            ->onlyMethods($testMethods)
             ->getMock();
     }
 

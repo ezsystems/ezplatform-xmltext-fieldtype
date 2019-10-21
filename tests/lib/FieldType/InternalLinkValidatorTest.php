@@ -174,10 +174,10 @@ class InternalLinkValidatorTest extends TestCase
     /**
      * @return \eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator|\PHPUnit\Framework\MockObject\MockObject
      */
-    private function getInternalLinkValidator(array $methods = null)
+    private function getInternalLinkValidator()
     {
         return $this->getMockBuilder(InternalLinkValidator::class)
-            ->setMethods($methods)
+            ->onlyMethods([])
             ->setConstructorArgs([
                 $this->contentHandler,
                 $this->locationHandler,

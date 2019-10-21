@@ -72,7 +72,7 @@ class XmlTextConverterPassTest extends AbstractCompilerPassTestCase
     {
         $container = new ContainerBuilder();
         $html5ConvertDef = $this->getMockBuilder(Definition::class)
-            ->setMethods(['addMethodCall'])
+            ->onlyMethods(['addMethodCall'])
             ->getMock();
         $container->setDefinition('ezpublish.fieldType.ezxmltext.converter.html5', $html5ConvertDef);
 

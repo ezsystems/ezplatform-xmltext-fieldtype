@@ -42,3 +42,10 @@ services:
             - "@ezpublish.api.repository"
             - "@?logger"
             - "@ezpublish.fieldType.ezrichtext.validator.docbook"
+
+    ezxmltext.graphql.resolver:
+        class: EzSystems\EzPlatformXmlTextFieldTypeBundle\GraphQL\Resolver\XmlTextResolver
+        arguments:
+            - "@ezpublish.fieldType.ezxmltext.converter.html5"
+        tags:
+            - { name: overblog_graphql.resolver, alias: "XmlTextToHtml5", method: "xmlTextToHtml5" }

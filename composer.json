@@ -14,7 +14,7 @@
         "ext-xsl": "*",
         "ext-dom": "*",
         "ezsystems/ezpublish-kernel": "8.0.x-dev",
-        "ezsystems/repository-forms": "3.0.x-dev",
+        "ezsystems/ezplatform-content-forms": "1.0.x-dev",
         "ezsystems/ezplatform-richtext": "2.0.x-dev",
         "ezsystems/ezplatform-rest": "1.0.x-dev"
     },

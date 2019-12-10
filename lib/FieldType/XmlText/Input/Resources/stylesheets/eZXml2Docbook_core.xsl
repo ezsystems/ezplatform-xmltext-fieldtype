@@ -65,11 +65,9 @@
           <xsl:with-param name="align" select="@custom:align"/>
         </xsl:call-template>
       </xsl:if>
-      <xsl:if test="./* | ./text()">
-        <xsl:element name="ezcontent" namespace="http://docbook.org/ns/docbook">
-          <xsl:apply-templates/>
-        </xsl:element>
-      </xsl:if>
+      <xsl:element name="ezcontent" namespace="http://docbook.org/ns/docbook">
+        <xsl:apply-templates/>
+      </xsl:element>
       <xsl:if test="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">
         <xsl:element name="ezconfig" namespace="http://docbook.org/ns/docbook">
           <xsl:for-each select="@*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/' and not( local-name() = 'class' ) and not( local-name() = 'align' )]">

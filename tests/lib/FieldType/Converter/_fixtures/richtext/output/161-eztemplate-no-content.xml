@@ -3,16 +3,14 @@
         xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
         xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml"
         xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
-  <eztemplate name="linebreak">
+    <eztemplate name="linebreak">
     <ezcontent/>
-  </eztemplate>
-  <eztemplate name="mycustomtag" ezxhtml:align="left" ezxhtml:class="templateClass">
-    <ezcontent>
-            custom tag content
-        </ezcontent>
-    <ezconfig>
-      <ezvalue key="title">foobar</ezvalue>
-    </ezconfig>
-  </eztemplate>
+    </eztemplate>
+    <eztemplate name="mycustomtag" ezxhtml:align="left" ezxhtml:class="templateClass">
+        <ezcontent/>
+        <ezconfig>
+            <ezvalue key="title">foobar</ezvalue>
+        </ezconfig>
+    </eztemplate>
 </section>
 

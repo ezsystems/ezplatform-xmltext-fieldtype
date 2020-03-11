@@ -677,6 +677,13 @@
           <xsl:value-of select="concat( 'ezcontent://', @ezlegacytmp-embed-link-object_id, $fragment )"/>
         </xsl:attribute>
       </xsl:when>
+      <xsl:otherwise>
+        <xsl:if test="$fragment">
+          <xsl:attribute name="xlink:href">
+            <xsl:value-of select="$fragment"/>
+          </xsl:attribute>
+        </xsl:if>
+      </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="@ezlegacytmp-embed-link-url_id or @ezlegacytmp-embed-link-node_id or @ezlegacytmp-embed-link-object_id">
       <xsl:attribute name="xlink:show">

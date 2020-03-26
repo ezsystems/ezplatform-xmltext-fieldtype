@@ -37,5 +37,7 @@ class ConvertXmlTextToRichTextCommandSubProcess extends ConvertXmlTextToRichText
         $limit = $input->getOption('limit');
 
         $this->convertFields($dryRun, null, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $offset, $limit);
+
+        return 0;
     }
 }

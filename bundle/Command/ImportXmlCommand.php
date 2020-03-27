@@ -123,6 +123,8 @@ EOT
         $this->converter->setImageContentTypes($imageContentTypeIds);
 
         $this->importDumps($dryRun);
+
+        return 0;
     }
 
     protected function importDumps($dryRun)

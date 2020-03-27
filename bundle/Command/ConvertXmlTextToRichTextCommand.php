@@ -218,7 +218,7 @@ EOT
             $output->writeln('Fixing embedded images only. No other changes are done to the database' . PHP_EOL);
             $this->fixEmbeddedImages($dryRun, $testContentId, $output);
 
-            return;
+            return 0;
         }
 
         if ($testContentId === null) {
@@ -227,12 +227,14 @@ EOT
             $dryRun = true;
             $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), null, null);
 
-            return;
+            return 0;
         }
 
         $this->processFields($dryRun, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
         $this->reportCustomTags($input, $output);
         $this->removeCustomTagLog();
+
+        return 0;
     }
 
     protected function baseExecute(InputInterface $input, OutputInterface $output, &$dryRun)

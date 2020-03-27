@@ -124,6 +124,7 @@ EOT
 
         $this->importDumps($dryRun);
 
+        $output->writeln('Test' . PHP_EOL);
         return 0;
     }
 

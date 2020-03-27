@@ -653,17 +653,23 @@ ezlegacytmp-embed-link-node_id="222"
                 }
             );
 
-        $repository->expects($this->any())
-            ->method('getContentService')
-            ->willReturn($contentService);
+        if ($contentService !== null) {
+            $repository->expects($this->any())
+                ->method('getContentService')
+                ->willReturn($contentService);
+        }
 
-        $repository->expects($this->any())
-            ->method('getLocationService')
-            ->willReturn($locationService);
+        if ($locationService !== null) {
+            $repository->expects($this->any())
+                ->method('getLocationService')
+                ->willReturn($locationService);
+        }
 
-        $repository->expects($this->any())
-            ->method('getPermissionResolver')
-            ->willReturn($permissionResolver);
+        if ($permissionResolver !== null) {
+            $repository->expects($this->any())
+                ->method('getPermissionResolver')
+                ->willReturn($permissionResolver);
+        }
 
         return $repository;
     }

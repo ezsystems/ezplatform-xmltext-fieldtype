@@ -8,11 +8,11 @@
     <embed view="embed" size="medium" object_id="126" custom:offset="0" custom:limit="5" ezlegacytmp-embed-link-title="custom title" ezlegacytmp-embed-link-id="customID" ezlegacytmp-embed-link-url="http://ez.no" url="http://ez.no">
         <![CDATA[
 
-        <!-- START ezpublish-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (@EzPublishCore/default/content/embed_image.html.twig) -->
+        <!-- START ezplatform-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (@EzPublishCore/default/content/embed_image.html.twig) -->
         <figure class="ezimage-field">
             <img src="http://localhost/var/ezdemo_site/storage/images/_aliases/medium/media/images/ez/775-1-eng-GB/ez.gif" alt="my alt text" height="67 " width="200 " />
         </figure>
-        <!-- STOP ezpublish-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (@EzPublishCore/default/content/embed_image.html.twig) -->
+        <!-- STOP ezplatform-kernel/eZ/Bundle/EzPublishCoreBundle/Resources/views/default/content/embed_image.html.twig (@EzPublishCore/default/content/embed_image.html.twig) -->
 ]]>
     </embed>
 </section>

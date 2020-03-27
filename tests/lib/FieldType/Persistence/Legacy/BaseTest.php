@@ -12,7 +12,7 @@ use eZ\Publish\API\Repository\Tests\BaseTest as APIBaseTest;
 abstract class BaseTest extends APIBaseTest
 {
     /**
-     * Taken from ezpublish-kernel/eZ/Publish/Core/Persistence/Legacy/Tests/TestCase.php.
+     * Taken from ezplatform-kernel/eZ/Publish/Core/Persistence/Legacy/Tests/TestCase.php.
      *
      * @param string $file
      * @throws \Exception

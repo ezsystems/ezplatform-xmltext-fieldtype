@@ -417,7 +417,10 @@ class EzLinkToHtml5Test extends TestCase
 
         $urlAliasRouter->expects($this->once())
             ->method('generate')
-            ->with($this->equalTo($location))
+            ->with(
+                $this->equalTo(UrlAliasRouter::URL_ALIAS_ROUTE_NAME),
+                $this->equalTo(['locationId' => $location->id])
+            )
             ->willReturn($rawUrl);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter);
@@ -474,7 +477,10 @@ class EzLinkToHtml5Test extends TestCase
 
         $urlAliasRouter->expects($this->once())
             ->method('generate')
-            ->with($this->equalTo($location))
+            ->with(
+                $this->equalTo(UrlAliasRouter::URL_ALIAS_ROUTE_NAME),
+                $this->equalTo(['locationId' => $location->id])
+            )
             ->willReturn($rawUrl);
 
         $converter = new EzLinkToHtml5($locationService, $contentService, $urlAliasRouter);

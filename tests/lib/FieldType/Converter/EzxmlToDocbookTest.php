@@ -29,18 +29,25 @@ class EzxmlToDocbookTest extends BaseTest
         $contentInfoImageStub = $this->createMock(ContentInfo::class);
         $contentInfoFileStub = $this->createMock(ContentInfo::class);
         $locationStub = $this->createMock(Location::class);
+
         // content with id=126 is an image, content with id=128,129 is a file
         $map = [
-            [126, $contentInfoImageStub],
-            [128, $contentInfoFileStub],
-            [129, $contentInfoFileStub],
+            126 => $contentInfoImageStub,
+            128 => $contentInfoFileStub,
+            129 => $contentInfoFileStub,
         ];
+
         $apiRepositoryStub->method('getContentService')
             ->willReturn($contentServiceStub);
         $apiRepositoryStub->method('getLocationService')
             ->willReturn($locationServiceStub);
+
         $contentServiceStub->method('loadContentInfo')
-            ->willReturnMap($map);
+            ->willReturnCallback(
+                function(int $id) use ($map): ContentInfo {
+                    return $map[$id] ?? $this->createMock(ContentInfo::class);
+                }
+            );
 
         // image content type has id=27, file content type has id=27
         $contentInfoImageStub->method('__get')->willReturn(27);

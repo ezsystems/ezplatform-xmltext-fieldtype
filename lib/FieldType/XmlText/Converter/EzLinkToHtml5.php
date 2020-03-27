@@ -114,7 +114,10 @@ class EzLinkToHtml5 implements Converter
             }
 
             if ($location !== null) {
-                $element->setAttribute('url', $this->urlAliasRouter->generate($location));
+                $element->setAttribute('url', $this->urlAliasRouter->generate(
+                    UrlAliasRouter::URL_ALIAS_ROUTE_NAME,
+                    ['locationId' => $location->id]
+                ));
             }
 
             // Copy temporary URL if it exists and is not set at this point

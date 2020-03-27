@@ -5,23 +5,23 @@
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
 use DOMDocument;
-use PDO;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Helper\ProgressBar;
 use eZ\Publish\API\Repository\Repository;
-use eZ\Publish\Core\FieldType\XmlText\Value;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
+use eZ\Publish\Core\FieldType\XmlText\Value;
+use PDO;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\RuntimeException;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use Psr\Log\LogLevel;
 
 class ConvertXmlTextToRichTextCommand extends Command
 {
@@ -581,9 +581,7 @@ EOT
         $phpFinder = new PhpExecutableFinder();
         $this->phpPath = $phpFinder->find();
         if (!$this->phpPath) {
-            throw new \RuntimeException(
-                'The php executable could not be found, it\'s needed for executing parable sub processes, so add it to your PATH environment variable and try again'
-            );
+            throw new \RuntimeException('The php executable could not be found, it\'s needed for executing parable sub processes, so add it to your PATH environment variable and try again');
         }
 
         return $this->phpPath;

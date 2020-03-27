@@ -10,9 +10,9 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Input;
 
-use eZ\Publish\Core\FieldType\XmlText\Input;
-use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
 use DOMDocument;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
+use eZ\Publish\Core\FieldType\XmlText\Input;
 
 class EzXml extends Input
 {
@@ -31,10 +31,7 @@ class EzXml extends Input
         }
 
         if (!file_exists($schemaPath)) {
-            throw new InvalidArgumentException(
-                'schemaPath',
-                "Validation of XML content cannot be performed, file '$schemaPath' does not exist."
-            );
+            throw new InvalidArgumentException('schemaPath', "Validation of XML content cannot be performed, file '$schemaPath' does not exist.");
         }
 
         $doc = new DOMDocument();
@@ -48,10 +45,7 @@ class EzXml extends Input
                 $messages[] = trim($error->message);
             }
 
-            throw new InvalidArgumentException(
-                'xmlString',
-                'Validation of XML content failed: ' . implode("\n", $messages)
-            );
+            throw new InvalidArgumentException('xmlString', 'Validation of XML content failed: ' . implode("\n", $messages));
         }
 
         $this->internalRepresentation = $xmlString;

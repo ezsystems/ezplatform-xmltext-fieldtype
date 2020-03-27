@@ -10,10 +10,10 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter;
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
 
 /**
  * EmbedLinking converter adds link parameters to the embed element

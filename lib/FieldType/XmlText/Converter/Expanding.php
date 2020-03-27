@@ -8,12 +8,12 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter;
-use DOMDocumentFragment;
 use DOMDocument;
+use DOMDocumentFragment;
 use DOMElement;
-use DOMXPath;
 use DOMNode;
+use DOMXPath;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
 
 /**
  * Class Expanding.

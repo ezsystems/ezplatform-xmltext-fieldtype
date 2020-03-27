@@ -8,9 +8,9 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use DOMXpath;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base class for XSLT converter tests.

@@ -10,9 +10,9 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Input;
 
+use Exception;
 use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
 use PHPUnit\Framework\TestCase;
-use Exception;
 
 class EzXmlTest extends TestCase
 {

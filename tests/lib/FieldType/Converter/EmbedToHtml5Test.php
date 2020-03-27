@@ -10,22 +10,22 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
+use DOMDocument;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use eZ\Publish\API\Repository\Values\Content\Content;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
+use eZ\Publish\API\Repository\Values\Content\Location as APILocation;
+use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedToHtml5;
+use eZ\Publish\Core\Repository\ContentService;
 use eZ\Publish\Core\Repository\LocationService;
 use eZ\Publish\Core\Repository\Permission\PermissionResolver;
 use eZ\Publish\Core\Repository\Repository;
-use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
 use eZ\Publish\Core\Repository\Values\Content\Location;
-use eZ\Publish\Core\Repository\ContentService;
-use eZ\Publish\API\Repository\Values\Content\Location as APILocation;
-use eZ\Publish\API\Repository\Values\Content\Content;
-use eZ\Publish\API\Repository\Values\Content\ContentInfo;
-use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use PHPUnit\Framework\TestCase;
-use DOMDocument;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Psr\Log\LoggerInterface;
 
 /**
  * Tests the EmbedToHtml5 Preconverter

@@ -10,9 +10,9 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
+use DOMDocument;
 use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
 use PHPUnit\Framework\TestCase;
-use DOMDocument;
 
 /**
  * Tests the EmbedLinking converter.

@@ -9,10 +9,10 @@ namespace eZ\Publish\Core\FieldType\XmlText;
 
 use DOMDocument;
 use DOMXPath;
-use eZ\Publish\SPI\Persistence\Content\Handler as ContentHandler;
-use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentException;
+use eZ\Publish\SPI\Persistence\Content\Handler as ContentHandler;
+use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
 
 /**
  * Validator for XmlText internal format links.

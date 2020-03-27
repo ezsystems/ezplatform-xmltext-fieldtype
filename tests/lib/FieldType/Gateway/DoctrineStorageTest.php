@@ -10,11 +10,11 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Gateway;
 
-use eZ\Publish\SPI\Persistence\Content\VersionInfo;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
 use eZ\Publish\SPI\Persistence\Content\Field;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
-use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
-use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use PHPUnit\Framework\TestCase;
 
 /**

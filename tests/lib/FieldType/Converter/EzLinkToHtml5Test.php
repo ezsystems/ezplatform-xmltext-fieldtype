@@ -10,18 +10,18 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5;
-use PHPUnit\Framework\TestCase;
+use DOMXPath;
 use eZ\Publish\API\Repository\Repository;
+use eZ\Publish\API\Repository\Values\Content\ContentInfo;
+use eZ\Publish\API\Repository\Values\Content\Location;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException as APINotFoundException;
 use eZ\Publish\Core\Base\Exceptions\UnauthorizedException as APIUnauthorizedException;
+use eZ\Publish\Core\FieldType\XmlText\Converter\EzLinkToHtml5;
+use eZ\Publish\Core\MVC\Symfony\Routing\UrlAliasRouter;
 use eZ\Publish\Core\Repository\ContentService;
 use eZ\Publish\Core\Repository\LocationService;
 use eZ\Publish\Core\Repository\URLAliasService;
-use eZ\Publish\Core\MVC\Symfony\Routing\UrlAliasRouter;
-use eZ\Publish\API\Repository\Values\Content\Location;
-use eZ\Publish\API\Repository\Values\Content\ContentInfo;
-use DOMXPath;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**

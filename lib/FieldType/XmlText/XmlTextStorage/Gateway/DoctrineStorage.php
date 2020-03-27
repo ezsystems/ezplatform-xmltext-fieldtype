@@ -11,12 +11,12 @@
 namespace eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway;
 
 use Doctrine\DBAL\Connection;
-use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway;
-use eZ\Publish\Core\Base\Exceptions\NotFoundException;
-use eZ\Publish\SPI\Persistence\Content\VersionInfo;
-use eZ\Publish\SPI\Persistence\Content\Field;
-use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
 use DOMDocument;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway;
+use eZ\Publish\SPI\Persistence\Content\Field;
+use eZ\Publish\SPI\Persistence\Content\VersionInfo;
 use PDO;
 
 class DoctrineStorage extends Gateway

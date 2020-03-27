@@ -8,8 +8,8 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use EzSystems\EzPlatformRichText\eZ\RichText\Converter;
 use DOMDocument;
+use EzSystems\EzPlatformRichText\eZ\RichText\Converter;
 
 /**
  * Expands paragraphs and links embeds of a XML document in legacy ezxml format.

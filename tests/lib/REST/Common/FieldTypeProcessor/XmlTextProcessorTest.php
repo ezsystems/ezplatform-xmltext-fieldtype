@@ -10,8 +10,8 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\REST\Common\FieldTypeProcessor;
 
-use eZ\Publish\Core\REST\Common\FieldTypeProcessor\XmlTextProcessor;
 use eZ\Publish\Core\FieldType\XmlText\Type;
+use eZ\Publish\Core\REST\Common\FieldTypeProcessor\XmlTextProcessor;
 use PHPUnit\Framework\TestCase;
 
 class XmlTextProcessorTest extends TestCase

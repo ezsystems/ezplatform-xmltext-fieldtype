@@ -7,11 +7,11 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType;
 
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use eZ\Publish\Core\Base\Tests\PHPUnit5CompatTrait;
 use eZ\Publish\Core\FieldType\XmlText\InternalLinkValidator;
 use eZ\Publish\SPI\Persistence\Content\Handler as ContentHandler;
 use eZ\Publish\SPI\Persistence\Content\Location\Handler as LocationHandler;
-use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class InternalLinkValidatorTest extends TestCase

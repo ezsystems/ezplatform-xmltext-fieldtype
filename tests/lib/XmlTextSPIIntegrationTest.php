@@ -10,14 +10,14 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests;
 
-use eZ\Publish\SPI\Tests\FieldType\BaseIntegrationTest;
-use eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter;
 use eZ\Publish\Core\FieldType;
 use eZ\Publish\Core\FieldType\FieldSettings;
-use eZ\Publish\SPI\Persistence\Content\FieldValue;
-use eZ\Publish\SPI\Persistence\Content\FieldTypeConstraints;
-use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
 use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway\DoctrineStorage as UrlGateway;
+use eZ\Publish\Core\FieldType\XmlText\XmlTextStorage\Gateway\DoctrineStorage;
+use eZ\Publish\Core\Persistence\Legacy\Content\FieldValue\Converter\XmlTextConverter;
+use eZ\Publish\SPI\Persistence\Content\FieldTypeConstraints;
+use eZ\Publish\SPI\Persistence\Content\FieldValue;
+use eZ\Publish\SPI\Tests\FieldType\BaseIntegrationTest;
 
 /**
  * Integration test for legacy storage field types.

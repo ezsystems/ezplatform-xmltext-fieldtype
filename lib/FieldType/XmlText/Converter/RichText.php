@@ -8,20 +8,20 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter;
 use DOMDocument;
 use DOMElement;
-use DOMXPath;
 use DOMNode;
-use Psr\Log\LoggerInterface;
+use DOMXPath;
+use eZ\Publish\API\Repository\Repository;
+use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
 use EzSystems\EzPlatformRichText\eZ\RichText\Converter\Aggregate;
 use EzSystems\EzPlatformRichText\eZ\RichText\Converter\Xslt;
-use eZ\Publish\Core\Base\Exceptions\NotFoundException;
-use Psr\Log\NullLogger;
-use Psr\Log\LogLevel;
-use Symfony\Component\Debug\Exception\ContextErrorException;
-use eZ\Publish\API\Repository\Repository;
 use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Psr\Log\NullLogger;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
 {

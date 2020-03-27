@@ -8,9 +8,9 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class MethodCallCountConstraint.
@@ -75,16 +75,7 @@ class MethodCallCountConstraint extends InvocationOrder
     {
         $count = $this->getInvocationCount();
         if ($count != $this->expectedCount) {
-            throw new ExpectationFailedException(
-                sprintf(
-                    'Methods of class was expected to be called %d times, ' .
-                    'actually called %d times.' . ($test ? "\nWhile testing '%s'." : ''),
-
-                    $this->expectedCount,
-                    $count,
-                    $test
-                )
-            );
+            throw new ExpectationFailedException(sprintf('Methods of class was expected to be called %d times, ' . 'actually called %d times.' . ($test ? "\nWhile testing '%s'." : ''), $this->expectedCount, $count, $test));
         }
     }
 }

@@ -10,10 +10,10 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\XmlTextStorage;
 
+use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
 use eZ\Publish\SPI\FieldType\StorageGateway;
 use eZ\Publish\SPI\Persistence\Content\Field;
 use eZ\Publish\SPI\Persistence\Content\VersionInfo;
-use eZ\Publish\Core\FieldType\Url\UrlStorage\Gateway as UrlGateway;
 
 /**
  * Abstract gateway class for XmlText type.

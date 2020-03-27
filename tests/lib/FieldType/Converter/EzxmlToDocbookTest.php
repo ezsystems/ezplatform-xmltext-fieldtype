@@ -8,13 +8,13 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
-use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
-use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
+use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
+use eZ\Publish\Core\Repository\Repository;
+use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 
 /**
  * Tests conversion from legacy ezxml to docbook format.
@@ -44,7 +44,7 @@ class EzxmlToDocbookTest extends BaseTest
 
         $contentServiceStub->method('loadContentInfo')
             ->willReturnCallback(
-                function(int $id) use ($map): ContentInfo {
+                function (int $id) use ($map): ContentInfo {
                     return $map[$id] ?? $this->createMock(ContentInfo::class);
                 }
             );

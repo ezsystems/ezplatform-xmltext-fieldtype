@@ -10,12 +10,12 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter;
-use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
 use DOMDocument;
+use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
 use eZ\Publish\Core\MVC\ConfigResolverInterface;
-use XSLTProcessor;
 use RuntimeException;
+use XSLTProcessor;
 
 /**
  * Converts internal XmlText representation to HTML5.
@@ -71,11 +71,7 @@ class Html5 implements Converter
 
         foreach ($preConverters as $preConverter) {
             if (!$preConverter instanceof Converter) {
-                throw new InvalidArgumentType(
-                    '$preConverters',
-                    'eZ\\Publish\\Core\\FieldType\\XmlText\\Converter[]',
-                    $preConverter
-                );
+                throw new InvalidArgumentType('$preConverters', 'eZ\\Publish\\Core\\FieldType\\XmlText\\Converter[]', $preConverter);
             }
         }
 

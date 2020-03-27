@@ -10,16 +10,16 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter;
-use eZ\Publish\API\Repository\Repository;
 use DOMDocument;
-use eZ\Publish\Core\Base\Exceptions\UnauthorizedException;
+use DOMElement;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException as APINotFoundException;
+use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\API\Repository\Values\Content\VersionInfo as APIVersionInfo;
+use eZ\Publish\Core\Base\Exceptions\UnauthorizedException;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use eZ\Publish\API\Repository\Exceptions\NotFoundException as APINotFoundException;
-use Psr\Log\LoggerInterface;
-use DOMElement;
 
 /**
  * Converts embedded elements from internal XmlText representation to HTML5.

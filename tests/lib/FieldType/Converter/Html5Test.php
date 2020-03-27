@@ -10,15 +10,15 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
-use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
-use eZ\Publish\Core\FieldType\XmlText\Converter\Html5;
-use eZ\Publish\Core\FieldType\XmlText\Converter;
-use eZ\Publish\Core\MVC\ConfigResolverInterface;
-use PHPUnit\Framework\TestCase;
 use DOMDocument;
 use DOMNodeList;
 use DOMXPath;
+use eZ\Publish\Core\FieldType\XmlText\Converter;
+use eZ\Publish\Core\FieldType\XmlText\Converter\EmbedLinking;
+use eZ\Publish\Core\FieldType\XmlText\Converter\Expanding;
+use eZ\Publish\Core\FieldType\XmlText\Converter\Html5;
+use eZ\Publish\Core\MVC\ConfigResolverInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Html5 converter.

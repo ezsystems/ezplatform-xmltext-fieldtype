@@ -10,16 +10,16 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Converter;
 
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
 use eZ\Publish\API\Repository\ContentService;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException as APINotFoundException;
+use eZ\Publish\API\Repository\Exceptions\UnauthorizedException as APIUnauthorizedException;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\Core\FieldType\XmlText\Converter;
 use eZ\Publish\Core\MVC\Symfony\Routing\UrlAliasRouter;
 use Psr\Log\LoggerInterface;
-use eZ\Publish\API\Repository\Exceptions\NotFoundException as APINotFoundException;
-use eZ\Publish\API\Repository\Exceptions\UnauthorizedException as APIUnauthorizedException;
-use DOMXPath;
-use DOMElement;
-use DOMDocument;
 
 class EzLinkToHtml5 implements Converter
 {

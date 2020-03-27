@@ -10,16 +10,16 @@
  */
 namespace eZ\Publish\Core\FieldType\XmlText;
 
+use DOMDocument;
+use eZ\Publish\API\Repository\Values\Content\Relation;
 use eZ\Publish\API\Repository\Values\ContentType\FieldDefinition;
-use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\FieldType\FieldType;
 use eZ\Publish\Core\FieldType\ValidationError;
+use eZ\Publish\Core\FieldType\Value as BaseValue;
 use eZ\Publish\Core\FieldType\XmlText\Input\EzXml;
 use eZ\Publish\SPI\FieldType\Value as SPIValue;
 use eZ\Publish\SPI\Persistence\Content\FieldValue;
-use eZ\Publish\Core\FieldType\Value as BaseValue;
-use eZ\Publish\API\Repository\Values\Content\Relation;
-use DOMDocument;
 use RuntimeException;
 
 /**
@@ -166,11 +166,7 @@ class Type extends FieldType
     protected function checkValueStructure(BaseValue $value)
     {
         if (!$value->xml instanceof DOMDocument) {
-            throw new InvalidArgumentType(
-                '$value->xml',
-                'DOMDocument',
-                $value
-            );
+            throw new InvalidArgumentType('$value->xml', 'DOMDocument', $value);
         }
     }
 

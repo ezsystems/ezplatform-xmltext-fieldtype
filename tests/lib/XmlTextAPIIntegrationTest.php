@@ -10,15 +10,15 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests;
 
+use DOMDocument;
 use eZ\Publish\API\Repository\Tests\FieldType\RelationSearchBaseIntegrationTestTrait;
 use eZ\Publish\API\Repository\Tests\FieldType\SearchBaseIntegrationTest;
-use eZ\Publish\Core\FieldType\XmlText\Value as XmlTextValue;
-use eZ\Publish\Core\FieldType\XmlText\Type as XmlTextType;
-use eZ\Publish\API\Repository\Values\Content\Field;
-use DOMDocument;
-use eZ\Publish\Core\Repository\Values\Content\Relation;
 use eZ\Publish\API\Repository\Values\Content\Content;
+use eZ\Publish\API\Repository\Values\Content\Field;
 use eZ\Publish\Core\Base\Exceptions\InvalidArgumentType;
+use eZ\Publish\Core\FieldType\XmlText\Type as XmlTextType;
+use eZ\Publish\Core\FieldType\XmlText\Value as XmlTextValue;
+use eZ\Publish\Core\Repository\Values\Content\Relation;
 use EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory\LegacySetupFactory;
 
 /**

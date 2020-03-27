@@ -8,18 +8,18 @@
  */
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Converter;
 
-use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
 use DOMDocument;
 use DOMXPath;
-use PHPUnit\Framework\TestCase;
-use eZ\Publish\Core\Repository\Repository;
 use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\Values\Content\ContentInfo;
 use eZ\Publish\API\Repository\Values\Content\Location;
-use Psr\Log\NullLogger;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
+use eZ\Publish\Core\FieldType\XmlText\Converter\RichText;
+use eZ\Publish\Core\Repository\Repository;
 use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 class RichTextTest extends TestCase
 {
@@ -163,7 +163,7 @@ class RichTextTest extends TestCase
 
         $contentServiceStub->method('loadContentInfo')
             ->willReturnCallback(
-                function(int $id) use ($map): ContentInfo {
+                function (int $id) use ($map): ContentInfo {
                     return $map[$id] ?? $this->createMock(ContentInfo::class);
                 }
             );

@@ -12,8 +12,8 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Tests\DependencyInjection\C
 
 use eZ\Bundle\EzPublishCoreBundle\DependencyInjection\EzPublishCoreExtension;
 use eZ\Bundle\EzPublishCoreBundle\Tests\DependencyInjection\Configuration\Parser\AbstractParserTestCase;
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Configuration\Parser\FieldType\XmlText as XmlTextConfigParser;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class XmlTextTest extends AbstractParserTestCase

@@ -18,6 +18,7 @@ return PhpCsFixer\Config::create()
         'space_after_semicolon' => false,
         'yoda_style' => false,
         'no_break_comment' => false,
+        'no_superfluous_phpdoc_tags' => false,
 
         // 2019 style updates with cs-fixer 2.14, all above are in sync with kernel
         '@PHPUnit57Migration:risky' => true,

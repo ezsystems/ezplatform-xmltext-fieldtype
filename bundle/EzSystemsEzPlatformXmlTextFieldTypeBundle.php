@@ -12,8 +12,8 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle;
 
 use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Compiler\XmlTextConverterPass;
 use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Configuration\Parser as ConfigParser;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EzSystemsEzPlatformXmlTextFieldTypeBundle extends Bundle
 {

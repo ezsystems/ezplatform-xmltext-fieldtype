@@ -8,6 +8,7 @@ namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
 use Doctrine\DBAL\FetchMode;
 use DOMDocument;
+use ErrorException;
 use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
@@ -21,7 +22,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -733,13 +733,13 @@ EOT
         $document->preserveWhiteSpace = false;
         $document->formatOutput = false;
 
-        // In dev mode, symfony may throw Symfony\Component\Debug\Exception\ContextErrorException
+        // In dev mode, symfony may throw \ErrorException
         try {
             $result = $document->loadXml($xmlString);
             if ($result === false) {
                 throw new RuntimeException('Unable to parse ezxmltext. Invalid XML format');
             }
-        } catch (ContextErrorException $e) {
+        } catch (ErrorException $e) {
             throw new RuntimeException($e->getMessage(), $e->getCode());
         }
 

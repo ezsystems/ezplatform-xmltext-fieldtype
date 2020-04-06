@@ -1,11 +1,11 @@
 <?php
 
 /**
- * This file is part of the eZ Platform XmlText Field Type package.
- *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
+declare(strict_types=1);
+
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\SetupFactory;
 
 use eZ\Publish\API\Repository\Tests\SetupFactory\Legacy as CoreLegacySetupFactory;
@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class LegacyEmptyDBSetupFactory extends CoreLegacySetupFactory
 {
-    protected function externalBuildContainer(ContainerBuilder $containerBuilder)
+    protected function externalBuildContainer(ContainerBuilder $containerBuilder): void
     {
         $loader = new YamlFileLoader(
             $containerBuilder,
@@ -38,24 +38,7 @@ class LegacyEmptyDBSetupFactory extends CoreLegacySetupFactory
         $containerBuilder->setParameter('kernel.cache_dir', __DIR__);
     }
 
-    public function getDatabaseHandler()
-    {
-        return parent::getDatabaseHandler();
-    }
-
-    public function getInitialData()
-    {
-        $data = parent::getInitialData();
-        $tables = [];
-        // just get the  table names in the dump, so that insertData() will truncate them
-        foreach (array_reverse(array_keys($data)) as $table) {
-            $tables[$table] = [];
-        }
-
-        return $tables;
-    }
-
-    public function resetDB()
+    public function resetDB(): void
     {
         $this->getRepository(true);
     }

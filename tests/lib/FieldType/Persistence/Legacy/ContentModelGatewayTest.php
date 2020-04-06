@@ -1,13 +1,16 @@
 <?php
+
 /**
- * This file is part of the eZ Platform XmlText Field Type package.
- *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
+declare(strict_types=1);
+
 namespace EzSystems\EzPlatformXmlTextFieldType\Tests\FieldType\Persistence\Legacy;
 
-use PDO;
+use function count;
+use Doctrine\DBAL\FetchMode;
+use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway;
 
 class ContentModelGatewayTest extends BaseTest
 {
@@ -17,7 +20,7 @@ class ContentModelGatewayTest extends BaseTest
         $this->getSetupFactory()->resetDB();
     }
 
-    public function getContentTypeIdsProvider()
+    public function getContentTypeIdsProvider(): array
     {
         return [
             [
@@ -33,10 +36,13 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider getContentTypeIdsProvider
-     * @param [] $identifiers
-     * @param [] $expected
+     *
+     * @param string[] $identifiers
+     * @param array $expected Content Type identifier to ID map
+     *
+     * @throws \ErrorException
      */
-    public function testGetContentTypeIds($identifiers, $expected)
+    public function testGetContentTypeIds(array $identifiers, array $expected): void
     {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentclass.php');
         $gatewayService = $this->getGatewayService();
@@ -44,7 +50,10 @@ class ContentModelGatewayTest extends BaseTest
         $this->assertEquals($expected, $ids);
     }
 
-    public function testCountContentTypeFieldsByFieldType()
+    /**
+     * @throws \ErrorException
+     */
+    public function testCountContentTypeFieldsByFieldType(): void
     {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentclass_attribute.php');
         $gatewayService = $this->getGatewayService();
@@ -59,7 +68,10 @@ class ContentModelGatewayTest extends BaseTest
         $this->assertEquals(0, $count, 'Expected to find 0 content type fields');
     }
 
-    public function testGetContentTypeFieldTypeUpdateQuery()
+    /**
+     * @throws \ErrorException
+     */
+    public function testGetContentTypeFieldTypeUpdateQuery(): void
     {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentclass_attribute.php');
         $gatewayService = $this->getGatewayService();
@@ -74,36 +86,36 @@ class ContentModelGatewayTest extends BaseTest
         $this->assertEquals(0, $count2, 'Expected all field definitions to be converted');
     }
 
-    public function getRowCountOfContentObjectAttributesProvider()
+    public function getRowCountOfContentObjectAttributesProvider(): array
     {
         return [
             [
-                'ezxmltext',
+                ['ezxmltext'],
                 68,
                 2,
             ],
             [
-                'ezstring',
+                ['ezstring'],
                 68,
                 3,
             ],
             [
-                'foobar',
+                ['foobar'],
                 68,
                 0,
             ],
             [
-                'ezxmltext',
+                ['ezxmltext'],
                 69,
                 3,
             ],
             [
-                'ezxmltext',
+                ['ezxmltext'],
                 null,
                 5,
             ],
             [
-                'ezrichtext',
+                ['ezrichtext'],
                 null,
                 2,
             ],
@@ -117,12 +129,14 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider getRowCountOfContentObjectAttributesProvider
-     * @param string $datatypeString
-     * @param int $contentId
-     * @param int $expectedCount
+     *
+     * @throws \ErrorException
      */
-    public function testGetRowCountOfContentObjectAttributes($datatypeString, $contentId, $expectedCount)
-    {
+    public function testGetRowCountOfContentObjectAttributes(
+        array $datatypeString,
+        ?int $contentId,
+        int $expectedCount
+    ): void {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentobject_attribute.php');
 
         $gatewayService = $this->getGatewayService();
@@ -131,11 +145,11 @@ class ContentModelGatewayTest extends BaseTest
         $this->assertEquals($expectedCount, $count, 'Number of attributes does not match');
     }
 
-    public function getFieldRowsProvider()
+    public function getFieldRowsProvider(): array
     {
         return [
             [ //test $contentId
-                'ezxmltext',
+                ['ezxmltext'],
                 68,
                 0,
                 100,
@@ -173,7 +187,7 @@ class ContentModelGatewayTest extends BaseTest
                 ],
             ],
             [ // test $offset, $limit
-                'ezxmltext',
+                ['ezxmltext'],
                 null,
                 0,
                 1,
@@ -196,7 +210,7 @@ class ContentModelGatewayTest extends BaseTest
                 ],
             ],
             [ // test $offset, $limit
-                'ezxmltext',
+                ['ezxmltext'],
                 null,
                 1,
                 1,
@@ -219,7 +233,7 @@ class ContentModelGatewayTest extends BaseTest
                 ],
             ],
             [ // test $offset, $limit
-                'ezxmltext',
+                ['ezxmltext'],
                 null,
                 1,
                 2,
@@ -374,55 +388,56 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider getFieldRowsProvider
-     * @param string $datatypeString
-     * @param int $contentId
-     * @param int $offset
-     * @param int $limit
-     * @param [] $expectedRows
+     *
+     * @throws \ErrorException
      */
-    public function testGetFieldRows($datatypeString, $contentId, $offset, $limit, $expectedRows)
-    {
+    public function testGetFieldRows(
+        array $datatypeString,
+        ?int $contentId,
+        int $offset,
+        int $limit,
+        array $expectedRows
+    ): void {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentobject_attribute.php');
 
         $gatewayService = $this->getGatewayService();
         $statement = $gatewayService->getFieldRows($datatypeString, $contentId, $offset, $limit);
         $index = 0;
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $this->assertLessThan(\count($expectedRows), $index, 'Too many rows returned by getFieldRows');
+        while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
+            $this->assertLessThan(count($expectedRows), $index, 'Too many rows returned by getFieldRows');
             $this->assertEquals($expectedRows[$index], $row, 'Result from getFieldRows() did not return expected result');
             ++$index;
         }
-        $this->assertEquals(\count($expectedRows), $index, 'Too few rows returned by getFieldRows');
+        $this->assertEquals(count($expectedRows), $index, 'Too few rows returned by getFieldRows');
     }
 
-    protected function getFieldRows($contentId)
+    /**
+     * @throws \ErrorException
+     */
+    protected function getFieldRows(int $contentId): array
     {
         $gatewayService = $this->getGatewayService();
         $statement = $gatewayService->getFieldRows('ezxmltext', $contentId, 0, 100);
-        $rows = [];
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
-        }
 
-        return $rows;
+        return $statement->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function getAllFieldRows()
+    /**
+     * @throws \ErrorException
+     */
+    public function getAllFieldRows(): array
     {
-        $query = $this->getDBAL()->createQueryBuilder();
+        $query = $this->getRawDatabaseConnection()->createQueryBuilder();
         $query->select('a.*')
             ->from('ezcontentobject_attribute', 'a')
             ->orderBy('a.id');
 
         $statement = $query->execute();
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $rows[] = $row;
-        }
 
-        return $rows;
+        return $statement->fetchAll(FetchMode::ASSOCIATIVE);
     }
 
-    public function getUpdateFieldRowQueryProvider()
+    public function getUpdateFieldRowQueryProvider(): array
     {
         return [
             [
@@ -440,11 +455,10 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider getUpdateFieldRowQueryProvider
-     * @param int $id
-     * @param int $version
-     * @param string $datatext
+     *
+     * @throws \ErrorException
      */
-    public function testGetUpdateFieldRowQuery($id, $version, $datatext)
+    public function testGetUpdateFieldRowQuery(int $id, int $version, string $datatext): void
     {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentobject_attribute.php');
 
@@ -455,7 +469,7 @@ class ContentModelGatewayTest extends BaseTest
         $updateQuery->execute();
 
         $updatedRows = $this->getAllFieldRows();
-        foreach ($originalRows as $key => $expectedRow) {
+        foreach ($originalRows as $expectedRow) {
             if ($expectedRow['id'] == $id && $expectedRow['version'] == $version) {
                 $expectedRow['data_text'] = $datatext;
                 $expectedRow['data_type_string'] = 'ezrichtext';
@@ -473,7 +487,7 @@ class ContentModelGatewayTest extends BaseTest
         }
     }
 
-    public function contentObjectAttributeExistsProvider()
+    public function contentObjectAttributeExistsProvider(): array
     {
         return [
             [
@@ -516,14 +530,16 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider contentObjectAttributeExistsProvider
-     * @param int $objectId
-     * @param int $attributeId
-     * @param int $version
-     * @param string $language
-     * @param bool $expectedResult
+     *
+     * @throws \ErrorException
      */
-    public function testContentObjectAttributeExists($objectId, $attributeId, $version, $language, $expectedResult)
-    {
+    public function testContentObjectAttributeExists(
+        int $objectId,
+        int $attributeId,
+        int $version,
+        string $language,
+        bool $expectedResult
+    ): void {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentobject_attribute.php');
 
         $gatewayService = $this->getGatewayService();
@@ -532,7 +548,7 @@ class ContentModelGatewayTest extends BaseTest
         $this->assertEquals($expectedResult, $result, 'contentObjectAttributeExists() did not return expected value');
     }
 
-    public function updateContentObjectAttributeProvider()
+    public function updateContentObjectAttributeProvider(): array
     {
         return [
             [
@@ -568,14 +584,16 @@ class ContentModelGatewayTest extends BaseTest
 
     /**
      * @dataProvider updateContentObjectAttributeProvider
-     * @param string $xml
-     * @param int $objectId
-     * @param int $attributeId
-     * @param int $version
-     * @param string $language
+     *
+     * @throws \ErrorException
      */
-    public function testUpdateContentObjectAttribute($xml, $objectId, $attributeId, $version, $language)
-    {
+    public function testUpdateContentObjectAttribute(
+        string $xml,
+        int $objectId,
+        int $attributeId,
+        int $version,
+        string $language
+    ): void {
         $this->insertDatabaseFixture(__DIR__ . '/_fixtures/contentobject_attribute.php');
 
         $gatewayService = $this->getGatewayService();
@@ -584,7 +602,7 @@ class ContentModelGatewayTest extends BaseTest
         $gatewayService->updateContentObjectAttribute($xml, $objectId, $attributeId, $version, $language);
 
         $updatedRows = $this->getAllFieldRows();
-        foreach ($originalRows as $key => $expectedRow) {
+        foreach ($originalRows as $expectedRow) {
             if ($expectedRow['contentobject_id'] == $objectId
                 && $expectedRow['id'] == $attributeId
                 && $expectedRow['version'] == $version
@@ -604,21 +622,18 @@ class ContentModelGatewayTest extends BaseTest
         }
     }
 
-    protected function getGatewayService()
+    /**
+     * @throws \ErrorException
+     */
+    protected function getGatewayService(): ContentModelGateway
     {
-        return $this->getSetupFactory()->getServiceContainer()->get('ezxmltext.persistence.legacy.content_model_gateway');
-    }
+        $serviceContainer = $this->getSetupFactory()->getServiceContainer();
 
-    public function getDB()
-    {
-        return $this->getSetupFactory()->getDB();
-    }
+        /** @var \eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway $contentModelGateway */
+        $contentModelGateway = $serviceContainer->get(
+            'ezxmltext.persistence.legacy.content_model_gateway'
+        );
 
-    public function getDBAL()
-    {
-        $handler = $this->getSetupFactory()->getDatabaseHandler();
-        $connection = $handler->getConnection();
-
-        return $connection;
+        return $contentModelGateway;
     }
 }

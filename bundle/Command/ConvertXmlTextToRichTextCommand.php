@@ -1,15 +1,17 @@
 <?php
+
 /**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle\Command;
 
+use Doctrine\DBAL\FetchMode;
 use DOMDocument;
 use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\Core\FieldType\XmlText\Converter\RichText as RichTextConverter;
 use eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy\ContentModelGateway as Gateway;
 use eZ\Publish\Core\FieldType\XmlText\Value;
-use PDO;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -385,7 +387,7 @@ EOT
 
         $statement = $query->execute();
 
-        $columns = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $columns = $statement->fetchAll(FetchMode::ASSOCIATIVE);
         $result = [];
         foreach ($columns as $column) {
             $result[$column['identifier']] = $column['id'];
@@ -414,7 +416,7 @@ EOT
             $limit = self::MAX_OBJECTS_PER_CHILD;
 
             $statement = $this->gateway->getFieldRows('ezrichtext', $contentId, $offset, $limit);
-            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
                 if (empty($row['data_text'])) {
                     $inputValue = Value::EMPTY_VALUE;
                 } else {
@@ -623,7 +625,7 @@ EOT
     protected function convertFields($dryRun, $contentId, $checkDuplicateIds, $checkIdValues, $offset, $limit)
     {
         $statement = $this->gateway->getFieldRows(['ezxmltext', 'ezrichtext'], $contentId, $offset, $limit);
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $statement->fetch(FetchMode::ASSOCIATIVE)) {
             if ($row['data_type_string'] === 'ezrichtext') {
                 continue;
             }

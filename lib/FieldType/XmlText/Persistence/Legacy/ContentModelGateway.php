@@ -1,11 +1,13 @@
 <?php
+
 /**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
 namespace eZ\Publish\Core\FieldType\XmlText\Persistence\Legacy;
 
 use Doctrine\DBAL\Connection;
-use PDO;
+use Doctrine\DBAL\FetchMode;
 
 class ContentModelGateway
 {
@@ -35,7 +37,7 @@ class ContentModelGateway
 
         $statement = $query->execute();
 
-        $columns = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $columns = $statement->fetchAll(FetchMode::ASSOCIATIVE);
         $result = [];
         foreach ($columns as $column) {
             $result[$column['identifier']] = $column['id'];

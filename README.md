@@ -7,7 +7,13 @@
 
 This is the XmlText field type for eZ Platform. It was extracted from the eZ Publish / Platform 5.x as it has been suceeded by docbook based [RichText](https://github.com/ezsystems/ezplatform-richtext) field type.
 
-_Note: This Field Type supports editing via Platform UI  v1 / Admin UI v2, however only as raw (simplified) xml. There has currently not been any attempts at getting Online Editor from legacy extension to work with within Platform UI, to do that among other things someone would need to port the custom html to xml handler from oe extension to this field type. So this Field Type is mainly meant for use for migrating to RichText, see below._
+
+### Support limitations
+
+- 2.x: For eZ Platform v3, this bundle is **only** supported for the purpose of migrating content from XmlText to RichText field type
+- 1.x: For eZ Platform v1 & v2, this bundle is supported for two use cases: Migration to Richtext, & rendering via Platform frontend\*.
+
+_* While it does support editing via Platform Admin UI it is only editable as raw xmltext in a textbox, so supported use as of this field type is for temprary upgrde scenarios where legacy admin interface is used, and frontend code is being developed/migrated to eZ Platform stack (including to Symfony)._
 
 
 ## Installation

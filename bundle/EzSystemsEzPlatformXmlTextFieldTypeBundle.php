@@ -11,6 +11,7 @@
 namespace EzSystems\EzPlatformXmlTextFieldTypeBundle;
 
 use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Compiler\XmlTextConverterPass;
+use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Compiler\XmlTextGraphqlSchemaPass;
 use EzSystems\EzPlatformXmlTextFieldTypeBundle\DependencyInjection\Configuration\Parser as ConfigParser;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,6 +23,7 @@ class EzSystemsEzPlatformXmlTextFieldTypeBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new XmlTextConverterPass());
+        $container->addCompilerPass(new XmlTextGraphqlSchemaPass());
 
         /**
          * @var \eZ\Bundle\EzPublishCoreBundle\DependencyInjection\EzPublishCoreExtension

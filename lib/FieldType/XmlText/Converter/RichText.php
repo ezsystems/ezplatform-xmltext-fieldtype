@@ -1,8 +1,6 @@
 <?php
 
 /**
- * This file is part of the eZ Platform XmlText Field Type package.
- *
  * @copyright Copyright (C) eZ Systems AS. All rights reserved.
  * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
@@ -12,6 +10,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
+use ErrorException;
 use eZ\Publish\API\Repository\Repository;
 use eZ\Publish\Core\Base\Exceptions\NotFoundException;
 use eZ\Publish\Core\FieldType\XmlText\Converter;
@@ -21,7 +20,6 @@ use EzSystems\EzPlatformRichText\eZ\RichText\Validator\Validator;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 
 class RichText implements Converter
 {
@@ -614,7 +612,7 @@ class RichText implements Converter
         // Needed by some disabled output escaping (eg. legacy ezxml paragraph <line/> elements)
         $convertedDocumentNormalized = new DOMDocument();
         try {
-            // If env=dev, Symfony will throw ContextErrorException on line below if xml is invalid
+            // If env=dev, Symfony will throw \ErrorException on line below if xml is invalid
             $result = $convertedDocumentNormalized->loadXML($convertedDocument->saveXML());
             if ($result === false) {
                 $this->log(LogLevel::ERROR,
@@ -622,7 +620,7 @@ class RichText implements Converter
                     ['result' => $convertedDocument->saveXML(), 'errors' => ['Unable to parse converted richtext output. See warning in logs or use --env=dev in order to se more verbose output.'], 'xmlString' => $inputDocument->saveXML()]
                 );
             }
-        } catch (ContextErrorException $e) {
+        } catch (ErrorException $e) {
             $this->log(LogLevel::ERROR,
                 "Unable to convert ezmltext for contentobject_attribute.id=$contentFieldId",
                 ['result' => $convertedDocument->saveXML(), 'errors' => [$e->getMessage()], 'xmlString' => $inputDocument->saveXML()]

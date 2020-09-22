@@ -135,7 +135,7 @@ class ContentModelGateway
 
         $query = $this->dbal->createQueryBuilder();
         $query->select('*')
-            ->from(self::CONTENTCLASS_ATTRIBUTE_TABLE, 'a')
+            ->from(self::CONTENTOBJECT_ATTRIBUTE_TABLE, 'a')
             ->where(
                 $query->expr()->in(
                     'a.data_type_string',

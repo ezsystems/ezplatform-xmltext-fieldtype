@@ -187,6 +187,13 @@ EOT
                 InputOption::VALUE_OPTIONAL,
                 'eZ Platform username (with Role containing at least Content policies: read, versionread)',
                 self::DEFAULT_REPOSITORY_USER
+            )
+            ->addOption(
+                'fields-limit',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Use this option if you aim to convert only a fixed number of fields.',
+                null
             );
     }
 
@@ -215,8 +222,10 @@ EOT
             return;
         }
 
+        $fieldsLimit = (int) $input->getOption('fields-limit');
+
         if ($testContentId === null) {
-            $this->convertFieldDefinitions($dryRun, $output);
+            $this->convertFieldDefinitions($dryRun, $fieldsLimit, $output);
         } else {
             $dryRun = true;
             $this->convertFields($dryRun, $testContentId, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), null, null);
@@ -224,7 +233,13 @@ EOT
             return;
         }
 
-        $this->processFields($dryRun, !$input->getOption('disable-duplicate-id-check'), !$input->getOption('disable-id-value-check'), $output);
+        $this->processFields(
+            $dryRun,
+            !$input->getOption('disable-duplicate-id-check'),
+            !$input->getOption('disable-id-value-check'),
+            $fieldsLimit,
+            $output
+        );
         $this->reportCustomTags($input, $output);
         $this->removeCustomTagLog();
     }
@@ -458,12 +473,12 @@ EOT
         $output->writeln(PHP_EOL . 'Updated ezembed tags in $totalCount field(s)');
     }
 
-    protected function convertFieldDefinitions($dryRun, $output)
+    protected function convertFieldDefinitions($dryRun, int $limit, OutputInterface $output)
     {
-        $count = $this->gateway->countContentTypeFieldsByFieldType('ezxmltext');
+        $count = $this->gateway->countContentTypeFieldsByFieldType('ezxmltext', $limit);
         $output->writeln("Found $count field definiton to convert.");
 
-        $updateQuery = $this->gateway->getContentTypeFieldTypeUpdateQuery('ezxmltext', 'ezrichtext');
+        $updateQuery = $this->gateway->getContentTypeFieldTypeUpdateQuery('ezxmltext', 'ezrichtext', $limit);
         if (!$dryRun) {
             $updateQuery->execute();
         }
@@ -677,19 +692,19 @@ EOT
         }
     }
 
-    protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, OutputInterface $output)
+    protected function processFields($dryRun, $checkDuplicateIds, $checkIdValues, int $fieldsLimit, OutputInterface $output)
     {
         $output->write('Finding total number of ezxmltext attributes to convert...');
-        $ezxmltextCount = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null);
+        $ezxmltextCount = $this->gateway->getRowCountOfContentObjectAttributes('ezxmltext', null, $fieldsLimit);
         $output->writeln(" Found $ezxmltextCount");
         $output->write('Finding total number of ezxmltext and ezrichtext attributes...');
-        $count = $this->gateway->getRowCountOfContentObjectAttributes(['ezxmltext', 'ezrichtext'], null);
+        $count = $this->gateway->getRowCountOfContentObjectAttributes(['ezxmltext', 'ezrichtext'], null, $fieldsLimit);
         $output->writeln(" Found $count");
 
         if ($count < self::MAX_OBJECTS_PER_CHILD * $this->maxConcurrency && $this->maxConcurrency > 1) {
             $objectsPerChild = (int) ceil($count / $this->maxConcurrency);
         } else {
-            $objectsPerChild = self::MAX_OBJECTS_PER_CHILD;
+            $objectsPerChild = min($fieldsLimit, self::MAX_OBJECTS_PER_CHILD);
         }
         $offset = 0;
         $fork = $this->maxConcurrency > 1;
@@ -709,7 +724,7 @@ EOT
                 $this->convertFields($dryRun, null, $checkDuplicateIds, $checkIdValues, $offset, $limit);
             }
             $offset += $objectsPerChild;
-        } while ($offset <= $count);
+        } while ($offset < $count);
 
         while (\count($this->processes) > 0) {
             $this->waitForChild($output);

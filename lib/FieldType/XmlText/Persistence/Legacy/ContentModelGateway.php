@@ -9,6 +9,10 @@ use PDO;
 
 class ContentModelGateway
 {
+    private const CONTENTCLASS_TABLE = 'ezcontentclass';
+    private const CONTENTCLASS_ATTRIBUTE_TABLE = 'ezcontentclass_attribute';
+    private const CONTENTOBJECT_ATTRIBUTE_TABLE = 'ezcontentobject_attribute';
+
     /**
      * @var \Doctrine\DBAL\Connection
      */
@@ -24,7 +28,7 @@ class ContentModelGateway
         $query = $this->dbal->createQueryBuilder();
 
         $query->select('c.identifier, c.id')
-            ->from('ezcontentclass', 'c')
+            ->from(self::CONTENTCLASS_TABLE, 'c')
             ->where(
                 $query->expr()->in(
                     'c.identifier',
@@ -46,13 +50,14 @@ class ContentModelGateway
 
     /**
      * @param string $fieldTypeIdentifier
+     * @param int $limit
      * @return int
      */
-    public function countContentTypeFieldsByFieldType($fieldTypeIdentifier)
+    public function countContentTypeFieldsByFieldType($fieldTypeIdentifier, $limit)
     {
         $query = $this->dbal->createQueryBuilder();
-        $query->select('count(a.id)')
-            ->from('ezcontentclass_attribute', 'a')
+        $query->select('*')
+            ->from(self::CONTENTCLASS_ATTRIBUTE_TABLE, 'a')
             ->where(
                 $query->expr()->eq(
                     'a.data_type_string',
@@ -60,20 +65,26 @@ class ContentModelGateway
                 )
             )
             ->setParameter(':datatypestring', $fieldTypeIdentifier);
+
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
+
         $statement = $query->execute();
 
-        return (int) $statement->fetchColumn();
+        return (int) $statement->rowCount();
     }
 
     /**
      * @param string $fromFieldTypeIdentifier
      * @param string $toFieldTypeIdentifier
+     * @param int $limit
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
-    public function getContentTypeFieldTypeUpdateQuery($fromFieldTypeIdentifier, $toFieldTypeIdentifier)
+    public function getContentTypeFieldTypeUpdateQuery($fromFieldTypeIdentifier, $toFieldTypeIdentifier, $limit)
     {
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentclass_attribute')
+        $updateQuery->update(self::CONTENTCLASS_ATTRIBUTE_TABLE)
             ->set('data_type_string', ':newdatatypestring')
             // was tagPreset in ezxmltext, unused in RichText
             ->set('data_text2', ':datatext2')
@@ -89,23 +100,42 @@ class ContentModelGateway
                 ':datatext2' => null,
             ]);
 
+        if ($limit) {
+            $subSubQuery = $this->dbal->createQueryBuilder();
+            $subSubQuery->select('id')
+                ->from(self::CONTENTCLASS_ATTRIBUTE_TABLE)
+                ->orderBy('data_type_string', 'DESC')
+                ->setMaxResults($limit);
+
+            $subQuery = $this->dbal->createQueryBuilder();
+            $subQuery->select('id')
+                ->from('(' . $subSubQuery->getSQL() . ')', 'subquery');
+
+            $updateQuery->andWhere(
+                $subQuery->expr()->in(
+                    'id',
+                    $subQuery->getSQL()
+                )
+            );
+        }
+
         return $updateQuery;
     }
 
     /**
-     * @param string|array $datatypes One datatype may be provided as string. Multiple datatypes areaccepted as array
+     * @param string|array $datatypes One datatype may be provided as string. Multiple datatypes are accepted as array
      * @param int $contentId
      * @return int
      */
-    public function getRowCountOfContentObjectAttributes($datatypes, $contentId)
+    public function getRowCountOfContentObjectAttributes($datatypes, $contentId, $limit)
     {
         if (!\is_array($datatypes)) {
             $datatypes = [$datatypes];
         }
 
         $query = $this->dbal->createQueryBuilder();
-        $query->select('count(a.id)')
-            ->from('ezcontentobject_attribute', 'a')
+        $query->select('*')
+            ->from(self::CONTENTCLASS_ATTRIBUTE_TABLE, 'a')
             ->where(
                 $query->expr()->in(
                     'a.data_type_string',
@@ -123,9 +153,13 @@ class ContentModelGateway
             ->setParameter(':contentid', $contentId);
         }
 
+        if ($limit > 0) {
+            $query->setMaxResults($limit);
+        }
+
         $statement = $query->execute();
 
-        return (int) $statement->fetchColumn();
+        return (int) $statement->rowCount();
     }
 
     /**
@@ -146,14 +180,14 @@ class ContentModelGateway
 
         $query = $this->dbal->createQueryBuilder();
         $query->select('a.*')
-            ->from('ezcontentobject_attribute', 'a')
+            ->from(self::CONTENTOBJECT_ATTRIBUTE_TABLE, 'a')
             ->where(
                 $query->expr()->in(
                     'a.data_type_string',
                     $query->createNamedParameter($datatypes, Connection::PARAM_STR_ARRAY)
                 )
             )
-            ->orderBy('a.id');
+            ->orderBy('a.data_type_string', 'DESC');
 
         if ($contentId === null) {
             $query->setFirstResult($offset)
@@ -180,7 +214,7 @@ class ContentModelGateway
     public function getUpdateFieldRowQuery($id, $version, $datatext)
     {
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute')
+        $updateQuery->update(self::CONTENTOBJECT_ATTRIBUTE_TABLE)
             ->set('data_type_string', ':datatypestring')
             ->set('data_text', ':datatext')
             ->where(
@@ -209,7 +243,7 @@ class ContentModelGateway
     {
         $query = $this->dbal->createQueryBuilder();
         $query->select('count(a.id)')
-            ->from('ezcontentobject_attribute', 'a')
+            ->from(self::CONTENTOBJECT_ATTRIBUTE_TABLE, 'a')
             ->where(
                 $query->expr()->eq(
                     'a.data_type_string',
@@ -255,7 +289,7 @@ class ContentModelGateway
     public function updateContentObjectAttribute($xml, $objectId, $attributeId, $version, $language)
     {
         $updateQuery = $this->dbal->createQueryBuilder();
-        $updateQuery->update('ezcontentobject_attribute')
+        $updateQuery->update(self::CONTENTOBJECT_ATTRIBUTE_TABLE)
             ->set('data_text', ':newxml')
             ->where(
                 $updateQuery->expr()->eq(

@@ -145,6 +145,7 @@
   </xsl:template>
 
   <xsl:template match="line">
+    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="paragraph">

@@ -274,8 +274,8 @@ class RichText implements Converter
     private function addXhtmlClassValue(DOMNode $node, $value)
     {
         $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
-        $isLinked = $node->lastChild->nodeName === 'ezlink';
         if ($classAttributes == null) {
+            $isLinked = $node->lastChild->nodeName === 'ezlink';
             $class = 'ez-embed-type-image';
             $class .= $isLinked ? ' is-linked' : '';
             $node->setAttribute('ezxhtml:class', $class);

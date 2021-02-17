@@ -8,12 +8,12 @@
   <para ezxhtml:class="grass">
     I<emphasis>have<link xlink:href="ezurl://73" xlink:show="none">no<emphasis role="strong">idea</emphasis></link></emphasis></para>
   <ezembed view="embed" xlink:href="ezcontent://106">
-    <ezlink xlink:href="ezurl://73" xlink:show="none"/>
     <ezconfig>
       <ezvalue key="size">medium</ezvalue>
       <ezvalue key="offset">0</ezvalue>
       <ezvalue key="limit">5</ezvalue>
     </ezconfig>
+    <ezlink xlink:href="ezurl://73" xlink:show="none"/>
   </ezembed>
   <para ezxhtml:class="grass"><emphasis><link xlink:href="ezurl://73" xlink:show="none"><emphasis role="strong">what is</emphasis>going</link>on</emphasis>here
   </para>

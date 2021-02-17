@@ -8,12 +8,12 @@
     <link xlink:href="ezurl://72" xlink:show="none">Hello </link>
   </para>
   <ezembed view="embed" xlink:href="ezcontent://110">
-    <ezlink xlink:href="ezurl://72" xlink:show="none"/>
     <ezconfig>
       <ezvalue key="size">medium</ezvalue>
       <ezvalue key="offset">0</ezvalue>
       <ezvalue key="limit">5</ezvalue>
     </ezconfig>
+    <ezlink xlink:href="ezurl://72" xlink:show="none"/>
   </ezembed>
   <para ezxhtml:class="dire">
     <link xlink:href="ezurl://72" xlink:show="none"> goodbye</link>

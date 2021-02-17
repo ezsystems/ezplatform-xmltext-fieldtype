@@ -608,11 +608,6 @@
           <xsl:with-param name="align" select="@align"/>
         </xsl:call-template>
       </xsl:if>
-      <xsl:if test="@*[starts-with( name( . ), 'ezlegacytmp-embed-link-' )]">
-        <xsl:element name="ezlink" namespace="http://docbook.org/ns/docbook">
-          <xsl:call-template name="addEmbedLinkAttributes"/>
-        </xsl:element>
-      </xsl:if>
       <xsl:if test="@size or @*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/']">
         <xsl:element name="ezconfig" namespace="http://docbook.org/ns/docbook">
           <xsl:for-each select="@size | @*[namespace-uri() = 'http://ez.no/namespaces/ezpublish3/custom/']">
@@ -620,6 +615,11 @@
               <xsl:with-param name="attribute" select="current()"/>
             </xsl:call-template>
           </xsl:for-each>
+        </xsl:element>
+      </xsl:if>
+      <xsl:if test="@*[starts-with( name( . ), 'ezlegacytmp-embed-link-' )]">
+        <xsl:element name="ezlink" namespace="http://docbook.org/ns/docbook">
+          <xsl:call-template name="addEmbedLinkAttributes"/>
         </xsl:element>
       </xsl:if>
     </xsl:element>

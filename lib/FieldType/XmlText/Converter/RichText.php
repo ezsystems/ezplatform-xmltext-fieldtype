@@ -275,7 +275,12 @@ class RichText implements Converter
     {
         $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
         if ($classAttributes == null) {
-            $node->setAttribute('ezxhtml:class', 'ez-embed-type-image');
+            $class = 'ez-embed-type-image';
+
+            $isLinked = $node->lastChild->nodeName === 'ezlink';
+            $class .= $isLinked ? ' is-linked' : '';
+
+            $node->setAttribute('ezxhtml:class', $class);
 
             return true;
         }

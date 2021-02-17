@@ -9,12 +9,12 @@
     <link xlink:href="ezurl://73" xlink:show="none">don't come in<emphasis role="strong">again like that,<emphasis role="strong">it isn't funny</emphasis></emphasis></link>
   </para>
   <ezembed view="embed" xlink:href="ezcontent://106">
-    <ezlink xlink:href="ezurl://73" xlink:show="none"/>
     <ezconfig>
       <ezvalue key="size">medium</ezvalue>
       <ezvalue key="offset">0</ezvalue>
       <ezvalue key="limit">5</ezvalue>
     </ezconfig>
+    <ezlink xlink:href="ezurl://73" xlink:show="none"/>
   </ezembed>
   <para>
     <link xlink:href="ezurl://73" xlink:show="none"><emphasis role="strong"><emphasis role="strong">and I can pay</emphasis>someone else</emphasis>to make the orchestrations</link>

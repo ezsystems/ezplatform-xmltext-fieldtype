@@ -276,7 +276,7 @@ class RichText implements Converter
         $classAttributes = $node->attributes->getNamedItemNS('http://ez.no/xmlns/ezpublish/docbook/xhtml', 'class');
         if ($classAttributes == null) {
             $class = 'ez-embed-type-image';
-            
+
             $isLinked = $node->lastChild->nodeName === 'ezlink';
             $class .= $isLinked ? ' is-linked' : '';
 

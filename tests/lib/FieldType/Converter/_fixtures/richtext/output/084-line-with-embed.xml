@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section xmlns="http://docbook.org/ns/docbook" xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom" xmlns:ezxhtml="http://ez.no/xmlns/ezpublish/docbook/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.0-variant ezpublish-1.0">
+    <ezembed view="embed" xlink:href="ezcontent://55">
+        <ezconfig>
+            <ezvalue key="size">medium</ezvalue>
+            <ezvalue key="offset">0</ezvalue>
+            <ezvalue key="limit">48</ezvalue>
+        </ezconfig>
+    </ezembed>
+</section>

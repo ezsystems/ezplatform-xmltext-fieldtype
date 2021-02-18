@@ -5,8 +5,8 @@
          xmlns:ezcustom="http://ez.no/xmlns/ezpublish/docbook/custom"
          version="5.0-variant ezpublish-1.0">
   <ezembed xlink:href="ezlocation://241190">
-    <ezlink xlink:href="#maincontent"/>
     <ezconfig><ezvalue key="size">original</ezvalue></ezconfig>
+    <ezlink xlink:href="#maincontent"/>
   </ezembed>
   <ezembed xlink:href="ezcontent://106" view="embed" xml:id="embed-id-1" ezxhtml:class="embed-class" ezxhtml:align="left">
     <ezconfig>

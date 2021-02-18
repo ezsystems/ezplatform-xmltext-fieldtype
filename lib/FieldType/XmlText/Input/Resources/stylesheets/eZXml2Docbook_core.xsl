@@ -142,6 +142,13 @@
 
   <xsl:template match="paragraph[@ez-temporary]">
     <xsl:apply-templates/>
+    <xsl:variable name="lines" select="line"/>
+    <xsl:for-each select="$lines">
+      <xsl:apply-templates/>
+      <xsl:if test='position() != last()'>
+        <xsl:text>&#xa;</xsl:text>
+      </xsl:if>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="line">

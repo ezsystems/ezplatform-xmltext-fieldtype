@@ -499,7 +499,14 @@
       </xsl:if>
       <xsl:if test="@custom:valign">
         <xsl:attribute name="valign">
-          <xsl:value-of select="@custom:valign"/>
+          <xsl:choose>
+            <xsl:when test="translate(@custom:valign, $uppercase, $lowercase) = 'center'">
+              <xsl:value-of select="'middle'"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="translate(@custom:valign, $uppercase, $lowercase)"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@xhtml:colspan">
@@ -545,7 +552,14 @@
       </xsl:if>
       <xsl:if test="@custom:valign">
         <xsl:attribute name="valign">
-          <xsl:value-of select="translate(@custom:valign, $uppercase, $lowercase)"/>
+          <xsl:choose>
+            <xsl:when test="translate(@custom:valign, $uppercase, $lowercase) = 'center'">
+              <xsl:value-of select="'middle'"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="translate(@custom:valign, $uppercase, $lowercase)"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:attribute>
       </xsl:if>
       <xsl:if test="@xhtml:colspan">

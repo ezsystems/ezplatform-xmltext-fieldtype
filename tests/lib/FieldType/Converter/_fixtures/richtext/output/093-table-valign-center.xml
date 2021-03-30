@@ -8,6 +8,9 @@
     <tbody>
       <tr>
         <td valign="middle">
+          <ezattribute>
+            <ezvalue key="valign">center</ezvalue>
+          </ezattribute>
           <para>Lorem ipsum</para>
         </td>
       </tr>

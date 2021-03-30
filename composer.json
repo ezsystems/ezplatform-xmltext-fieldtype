@@ -13,7 +13,7 @@
         "php": "^7.1",
         "ext-xsl": "*",
         "ext-dom": "*",
-        "ezsystems/ezpublish-kernel": "^7.5.1@dev",
+        "ezsystems/ezpublish-kernel": "^7.5.1",
         "ezsystems/repository-forms": "^2.5.0",
         "ezsystems/ezplatform-richtext": "^1.1"
     },

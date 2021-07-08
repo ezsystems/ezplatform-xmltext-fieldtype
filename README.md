@@ -21,7 +21,7 @@ _* While it does support editing via Platform Admin UI it is only editable as ra
 NOTE: This package comes already bundled with [Legacy Bridge](https://github.com/ezsystems/LegacyBridge). However if you would rather like to 1. migrate your content directly to eZ Platform to take full advantage of it, or 2. otherwise don't want to use legacy but need this field type for some legacy content usage within pure eZ Platform setup, then run the following:
 
 ```
-composer require --update-with-all-dependencies "ezsystems/ezplatform-xmltext-fieldtype"
+composer require --update-with-dependencies "ezsystems/ezplatform-xmltext-fieldtype"
 ```
 
 And lastly enable the bundle by adding `new EzSystems\EzPlatformXmlTextFieldTypeBundle\EzSystemsEzPlatformXmlTextFieldTypeBundle(),` to `app/AppKernel.php` list of bundles.
